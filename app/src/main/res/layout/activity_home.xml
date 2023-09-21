@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/card_background">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hello,"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="10dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/home_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="40dp"
+                    android:text="John Doe"
+                    android:textColor="@color/white"
+                    android:textSize="32dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/home_logo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_launcher_background"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="20dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/home_today_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="21 Jun 2023"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"/>
+
+        <!--recycler view-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/home_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="20dp"/>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|end"
+        app:icon="@drawable/ic_menu"
+        app:backgroundTint="@color/orange"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayExtended"
+        app:iconTint="@color/white"/>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="150dp"
+        app:icon="@drawable/ic_schedule"
+        android:backgroundTint="@color/blue"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceRoundOverlayExtended"
+        app:iconTint="@color/white"
+        android:visibility="invisible"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fab1_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="152dp"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Schedule"
+            android:textColor="@color/black"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" />
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="85dp"
+        android:layout_marginEnd="16dp"
+        app:icon="@drawable/ic_class"
+        android:backgroundTint="@color/blue"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceRoundOverlayExtended"
+        app:iconTint="@color/white"
+        android:visibility="invisible"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fab2_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="87dp"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All Class"
+            android:textColor="@color/black"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" />
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="215dp"
+        android:layout_marginEnd="16dp"
+        app:icon="@drawable/ic_chat"
+        android:backgroundTint="@color/blue"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceRoundOverlayExtended"
+        app:iconTint="@color/white"
+        android:visibility="invisible"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fab3_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="217dp"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Discuss"
+            android:textColor="@color/black"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" />
+    </androidx.cardview.widget.CardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
