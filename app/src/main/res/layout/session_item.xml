@@ -10,7 +10,7 @@
         app:cardCornerRadius="20dp"
         app:cardElevation="5dp"
         app:strokeWidth="2dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="20dp"
         app:strokeColor="@color/blue"
         app:cardBackgroundColor="@color/white">
 
@@ -38,11 +38,45 @@
                 android:textSize="16dp"
                 android:layout_marginBottom="5dp"/>
 
-            <TextView
-                android:id="@+id/item_class_time"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="07:20 AM"/>
+                android:layout_height="20dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="5dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_clock"
+                    android:layout_marginEnd="3dp"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/item_class_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="07:20 AM"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_location"
+                    android:layout_marginEnd="3dp"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/item_class_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Anggrek Campus"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
 
         </LinearLayout>
 
