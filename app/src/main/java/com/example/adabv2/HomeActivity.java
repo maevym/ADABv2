@@ -1,6 +1,8 @@
 package com.example.adabv2;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,6 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
@@ -34,11 +37,12 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private ExtendedFloatingActionButton fab, fab1, fab2, fab3;
     private CardView fab1Text, fab2Text, fab3Text;
     private TextView name, todayDate;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView logo;
     private RecyclerView rv;
     private SessionDatabase db;
@@ -83,11 +87,14 @@ public class HomeActivity extends AppCompatActivity {
         fab3Text = binding.fab3Text;
         logo = binding.logo;
         rv = binding.recyclerView;
+        swipeRefreshLayout = binding.swipe;
 
         rv.hasFixedSize();
         rv.setItemViewCacheSize(20);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(sessionAdapter);
+
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         db = Room.databaseBuilder(getApplicationContext(),
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
@@ -171,10 +178,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void updateSession () {
+        sessions.clear();
         for (Session session : db.sessionDAO().getAllSessions()) {
             Date date = DateFormatter.StringToDateMillisecond(session.getSessionStart());
 
-            if (currentDate.after(date)) {
+            if (date.after(currentDate)) {
                 sessions.add(session);
             }
             // TODO: hapus kalo udah bener
@@ -236,6 +244,18 @@ public class HomeActivity extends AppCompatActivity {
             fab2.setClickable(true);
             isOpen = true;
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateSession();
+                sessionAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1000);
     }
 }
 
