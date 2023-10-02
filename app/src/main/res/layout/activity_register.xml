@@ -76,6 +76,68 @@
         android:layout_marginTop="5dp"
         android:layout_weight="0.5">
         <EditText
+            android:id="@+id/nimRegister"
+            android:layout_width="380dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/format_form"
+            android:paddingLeft="21dp"
+            android:hint="NIM"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="7dp"
+            android:background="#ffffff"
+            android:text=" NIM "
+            android:textColor="#3C6DB9"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="0.5">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:background="@drawable/format_form"
+           android:layout_marginTop="15dp">
+
+           <Spinner
+               android:id="@+id/spinnerRole"
+               android:layout_width="match_parent"
+               android:layout_height="56dp"
+               android:spinnerMode="dropdown" />
+
+       </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="7dp"
+            android:background="#ffffff"
+            android:text=" Role "
+            android:textColor="#3C6DB9"/>
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="0.5">
+        <EditText
             android:id="@+id/passwordRegister"
             android:layout_width="380dp"
             android:layout_height="56dp"
@@ -93,49 +155,13 @@
             android:textColor="#3C6DB9"/>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_weight="0.5">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/titleRoleApp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:hint=""
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-            <AutoCompleteTextView
-                android:id="@+id/actionRoleApp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/format_form"
-                android:inputType="none"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="7dp"
-            android:background="#ffffff"
-            android:text=" Role "
-            android:textColor="#3C6DB9"/>
-
-    </RelativeLayout>
-
     <Button
         android:id="@+id/buttonRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         android:text="register"
         android:background="@drawable/button_regis_login"
         android:backgroundTint="@color/orange"
