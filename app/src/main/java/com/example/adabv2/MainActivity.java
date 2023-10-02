@@ -1,13 +1,13 @@
 package com.example.adabv2;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    private Button btn;
 
     TextView ad;
     Editable a;
@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Log.d("test", "test");
-
 
     }
 }
