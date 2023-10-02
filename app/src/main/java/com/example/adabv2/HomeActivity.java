@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import com.example.adabv2.Room.Session;
+import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.Response;
+import com.example.adabv2.Model.SessionRequest;
+import com.example.adabv2.Model.Session;
 import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.ActivityHomeBinding;
@@ -27,11 +30,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView rv;
     private SessionDatabase db;
 
-    private String role; // user role from user defaults
+    private String role; // user role from user preference
     private String userSecret;
     private Animation fabOpen, fabClose;
     private ActivityHomeBinding binding;
@@ -99,7 +100,7 @@ public class HomeActivity extends AppCompatActivity {
     public SessionRequest createSessionRequest() {
         SessionRequest sessionRequest = new SessionRequest();
         // TODO: Hapus ini
-        sessionRequest.setUser_secret("CpHrnZFctucj32eE8zb173lCwo/cs3ksBC2hvB0G0IU=");
+        sessionRequest.setUser_secret("3YjcxrRNR7gwSvC6m5ia/YYMCR3wsFpTjUKJi/aO+1M=");
         sessionRequest.setDate("2023-10-01");
 
         // TODO: Ganti jadi ini
@@ -109,13 +110,13 @@ public class HomeActivity extends AppCompatActivity {
         return sessionRequest;
     }
 
-    public void saveSession(SessionRequest sessionRequest) {
-        Call<SessionResponse> sessionResponseCall = ApiClient.request().saveSession(sessionRequest);
-        sessionResponseCall.enqueue(new Callback<SessionResponse>() {
+    private void saveSession(SessionRequest sessionRequest) {
+        Call<Response<Session>> sessionResponseCall = ApiClient.request().saveSession(sessionRequest);
+        sessionResponseCall.enqueue(new Callback<Response<Session>>() {
             @Override
-            public void onResponse(Call<SessionResponse> call, Response<SessionResponse> response) {
+            public void onResponse(Call<Response<Session>> call, retrofit2.Response<Response<Session>> response) {
                 if (response.isSuccessful()) {
-                    SessionResponse sessionResponse = response.body();
+                    Response sessionResponse = response.body();
                     List<Session> sessionList = sessionResponse.getValues();
                     for (int i=0; i<sessionList.size(); i++) {
                         Session newSession = new Session();
@@ -135,15 +136,16 @@ public class HomeActivity extends AppCompatActivity {
 
                 } else {
                     if (response.code() == 404) {
+                        // TODO: Ganti jadi tulisan no session today
                         Toast.makeText(HomeActivity.this, "No Session Today", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(HomeActivity.this, "Failed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(HomeActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<SessionResponse> call, Throwable t) {
+            public void onFailure(Call<Response<Session>> call, Throwable t) {
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
             }
         });
@@ -151,17 +153,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void sortItems () {
         sessions.clear();
-        for (Session session : db.sessionDAO().getAllSessions()) {
-            Date date = DateFormatter.StringToDateMillisecond(session.getSessionStart());
-
-            if (currentDate.after(date)) {
-                sessions.add(session);
-            }
-            // TODO: hapus kalo udah bener
-            else {
-                sessions.add(session);
-            }
-        }
+        updateSession();
 
         Collections.sort(sessions, new Comparator<Session>() {
             @Override
@@ -178,9 +170,18 @@ public class HomeActivity extends AppCompatActivity {
         sessionAdapter.notifyDataSetChanged();
     }
 
-    private void updateList() {
-        sessions.remove(0);
-        sessionAdapter.notifyItemChanged(0);
+    private void updateSession () {
+        for (Session session : db.sessionDAO().getAllSessions()) {
+            Date date = DateFormatter.StringToDateMillisecond(session.getSessionStart());
+
+            if (currentDate.after(date)) {
+                sessions.add(session);
+            }
+            // TODO: hapus kalo udah bener
+            else {
+                sessions.add(session);
+            }
+        }
     }
 
     private void menuOnClickListener () {
