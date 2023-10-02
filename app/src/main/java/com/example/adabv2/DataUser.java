@@ -1,26 +1,18 @@
 package com.example.adabv2;
 
 public class DataUser {
-    private String username;
     private String email;
     private String password;
-    private String role;
-    private String nim;
+    private String name;
+    private String user_type;
+    private String user_nim;
 
-    public DataUser(String username, String email, String password, String role, String nim) {
-        this.username = username;
+    public DataUser(String email, String password, String name, String user_type, String user_nim) {
         this.email = email;
         this.password = password;
-        this.role = role;
-        this.nim = nim;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+        this.name = name;
+        this.user_type = user_type;
+        this.user_nim = user_nim;
     }
 
     public String getEmail() {
@@ -39,19 +31,27 @@ public class DataUser {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getNim() {
-        return nim;
+    public String getUser_type() {
+        return user_type;
     }
 
-    public void setNim(String nim) {
-        this.nim = nim;
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+
+    public String getUser_nim() {
+        return user_nim;
+    }
+
+    public void setUser_nim(String user_nim) {
+        this.user_nim = user_nim;
     }
 }

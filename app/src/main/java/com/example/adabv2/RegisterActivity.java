@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -21,9 +22,17 @@ import android.widget.Toast;
 
 import com.example.adabv2.databinding.ActivityRegisterBinding;
 
+import java.lang.reflect.Method;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private ActivityRegisterBinding binding;
+    DataUser dataUser;
     String[] roleUniversity = {"Select Role","Mahasiswa", "Dosen"};
 
     @Override
@@ -134,12 +143,43 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         }
 
         else {
+            createRegister(dataUser);
 
         }
 
 
     }
 
+    public void createRegister(DataUser dataUser){
+        Call<ResponseBody> callRegister = ApiClient.request().createRegister(dataUser);
+        callRegister.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()){
+                    ResponseBody responseBody = response.body();
+                    dataUser.setEmail(dataUser.getEmail());
+                    dataUser.setPassword(dataUser.getPassword());
+                    dataUser.setName(dataUser.getName());
+                    dataUser.setUser_type(dataUser.getUser_type());
+                    dataUser.setUser_nim(dataUser.getUser_nim());
+
+                }
+                else{
+                    if(response.code() == 401){
+                        Toast.makeText(RegisterActivity.this, "Data sudah pernah diinput sebelumnya", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
