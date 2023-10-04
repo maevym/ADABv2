@@ -1,4 +1,6 @@
-package com.example.adabv2;
+package com.example.adabv2.Manager;
+
+import com.example.adabv2.Manager.ApiService;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

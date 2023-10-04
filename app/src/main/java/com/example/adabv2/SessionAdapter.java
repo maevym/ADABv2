@@ -2,14 +2,13 @@ package com.example.adabv2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.adabv2.Room.Session;
+import com.example.adabv2.Model.Session;
 import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.SessionItemBinding;
 
