@@ -43,32 +43,11 @@
 
         <activity
             android:name=".HomeActivity"
-<<<<<<< HEAD
             android:exported="false" />
-=======
-            android:exported="false" >
-
-
-
-        </activity>
->>>>>>> Home
 
         <activity
             android:name=".MainActivity"
-            android:exported="false">
-<<<<<<< HEAD
-        </activity>
-=======
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-
-
-
-
-        </activity>
-
->>>>>>> Home
+            android:exported="false"/>
     </application>
 
 </manifest>
