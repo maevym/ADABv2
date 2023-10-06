@@ -107,7 +107,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     public SessionRequest createSessionRequest() {
         SessionRequest sessionRequest = new SessionRequest();
         // TODO: Hapus ini
-        sessionRequest.setUser_secret("3YjcxrRNR7gwSvC6m5ia/YYMCR3wsFpTjUKJi/aO+1M=");
+        sessionRequest.setUser_secret("0+kx5lImFtBeLWobW8AVMjpN+rSobeLRjbD89L+S7x4=");
         sessionRequest.setDate("2023-10-01");
 
         // TODO: Ganti jadi ini
@@ -123,12 +123,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void onResponse(Call<Response<Session>> call, retrofit2.Response<Response<Session>> response) {
                 if (response.isSuccessful()) {
-<<<<<<< HEAD
                     Response sessionResponse = response.body();
-=======
-                    Log.wtf("berhasil",String.valueOf(response.code()));
-                    SessionResponse sessionResponse = response.body();
->>>>>>> register-and-login
                     List<Session> sessionList = sessionResponse.getValues();
                     for (int i=0; i<sessionList.size(); i++) {
                         Session newSession = new Session();
@@ -151,12 +146,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
                         // TODO: Ganti jadi tulisan no session today
                         Toast.makeText(HomeActivity.this, "No Session Today", Toast.LENGTH_LONG).show();
                     } else {
-<<<<<<< HEAD
                         Toast.makeText(HomeActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
-=======
-                        Toast.makeText(HomeActivity.this, "Failed", Toast.LENGTH_LONG).show();
-
->>>>>>> register-and-login
                     }
                 }
             }
