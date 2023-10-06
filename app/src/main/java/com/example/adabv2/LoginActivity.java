@@ -18,6 +18,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+    UserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        userPreferences = new UserPreferences(getApplicationContext());
 
         binding.buttonRegisterInLogin.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
@@ -54,28 +56,22 @@ public class LoginActivity extends AppCompatActivity {
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUser_email(email);
-        Log.wtf("masuk set email", "berhasil set email");
         loginRequest.setUser_password(password);
-        Log.wtf("masuk set pass", "berhasil set pass");
         Call<LoginResponse> callLogin = ApiClient.request().loginUser(loginRequest);
-        Log.wtf("masuk call", "berhasil call");
         callLogin.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 LoginResponse loginResponse = response.body();
-                Log.wtf("masuk response", String.valueOf(loginResponse));
                 if (loginResponse != null && loginResponse.getStatus() == 200) {
                     String message = loginResponse.getMessage();
-                    Log.wtf("masuk message", message);
-                    Log.wtf("masuk response status", String.valueOf(loginResponse.getStatus()));
                     ValueLoginResponse valueLoginResponse = loginResponse.getValues();
-                    Log.wtf("masuk response", String.valueOf(valueLoginResponse));
                     if (valueLoginResponse != null) {
                         String userSecret = valueLoginResponse.getUser_secret();
-                        Log.wtf("Masuk secret", userSecret);
                         String name = valueLoginResponse.getName();
-                        Log.wtf("Masuk name", name);
-//                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                        String userType = valueLoginResponse.getUser_type();
+                        userPreferences.setUserSecret(userSecret);
+                        userPreferences.setUserName(name);
+                        userPreferences.setUserType(userType);
                         Toast.makeText(LoginActivity.this, "success login", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(intent);
