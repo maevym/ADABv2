@@ -74,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         adapterRole.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerRole.setAdapter(adapterRole);
 
-            binding.buttonLoginInRegister.setOnClickListener(v -> {
+        binding.buttonLoginInRegister.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
 
@@ -175,9 +175,12 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 if (response.isSuccessful()){
                     ResponseBody responseBody = response.body();
                     Toast.makeText(RegisterActivity.this,"Register Successful", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+
                 } else {
                     if(response.code() == 401){
-                        Toast.makeText(RegisterActivity.this, "Data sudah pernah diinput sebelumnya", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Data has been registered", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(RegisterActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                     }
@@ -195,10 +198,10 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-        String selectedRole = (String) parent.getSelectedItem();
-        if(position > 0){
-            Toast.makeText(getApplicationContext(), "Selected : " + selectedRole, Toast.LENGTH_SHORT).show();
-        }
+//        String selectedRole = (String) parent.getSelectedItem();
+//        if(position > 0){
+//            Toast.makeText(getApplicationContext(), "Selected : " + selectedRole, Toast.LENGTH_SHORT).show();
+//        }
 
     }
 

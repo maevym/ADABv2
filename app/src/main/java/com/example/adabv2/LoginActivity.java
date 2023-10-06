@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     if(response.code() == 401){
-                        Toast.makeText(LoginActivity.this, "Data sudah pernah diinput sebelumnya", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Email or password invalid", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(LoginActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                     }

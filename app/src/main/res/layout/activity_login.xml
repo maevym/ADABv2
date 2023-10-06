@@ -42,6 +42,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/format_form"
             android:paddingLeft="21dp"
+            android:paddingRight="21dp"
             android:hint="Name"/>
         <TextView
             android:layout_width="wrap_content"
@@ -67,6 +68,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/format_form"
             android:paddingLeft="21dp"
+            android:paddingRight="21dp"
             android:hint="Password"
             android:inputType="textPassword"/>
         <TextView
