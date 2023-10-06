@@ -4,14 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.LoginRequest;
+import com.example.adabv2.Model.LoginResponse;
+import com.example.adabv2.Model.ValueLoginResponse;
 import com.example.adabv2.databinding.ActivityLoginBinding;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
