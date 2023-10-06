@@ -113,11 +113,11 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         SessionRequest sessionRequest = new SessionRequest();
         // TODO: Hapus ini
 //        sessionRequest.setUser_secret("0+kx5lImFtBeLWobW8AVMjpN+rSobeLRjbD89L+S7x4=");
-        sessionRequest.setDate("2023-10-01");
+//        sessionRequest.setDate("2023-10-01");
 
         // TODO: Ganti jadi ini
         sessionRequest.setUser_secret(userPreferences.getUserSecret());
-//        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
+        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
 
         return sessionRequest;
     }
