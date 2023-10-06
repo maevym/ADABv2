@@ -12,7 +12,10 @@ public interface ApiService {
     Call<ResponseBody> saveUser(@Body DataUser dataUser);
 
     @POST("login")
-    Call<ResponseBody> loginUser(@Body LoginRequest loginRequest);
+    Call<LoginResponse> loginUser(@Body LoginRequest loginRequest);
+
+//    @POST("login")
+//    Call<ResponseBody> loginUser(@Body LoginRequest loginRequest);
 
     @POST("user/sessions")
     Call<SessionResponse> saveSession(@Body SessionRequest sessionRequest);
