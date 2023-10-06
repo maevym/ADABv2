@@ -7,13 +7,6 @@ public class DataUser {
     private String user_type;
     private String user_nim;
 
-    public DataUser(String email, String password, String name, String user_type, String user_nim) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.user_type = user_type;
-        this.user_nim = user_nim;
-    }
 
     public String getEmail() {
         return email;

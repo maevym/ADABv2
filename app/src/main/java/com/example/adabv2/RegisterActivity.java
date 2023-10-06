@@ -11,6 +11,7 @@ import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,7 +33,6 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private ActivityRegisterBinding binding;
-    DataUser dataUser;
     String[] roleUniversity = {"Select Role","Mahasiswa", "Dosen"};
 
     @Override
@@ -69,13 +69,10 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 return view;
             }
 
-
         };
 
         adapterRole.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerRole.setAdapter(adapterRole);
-
-
 
             binding.buttonLoginInRegister.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
@@ -95,6 +92,9 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         String selectedValue = binding.spinnerRole.getSelectedItem().toString();
         String defaultRole = "Select Role";
         View selectedView = binding.spinnerRole.getSelectedView();
+        String mahasiwsaValue = "Mahasiswa";
+        String dosenValue = "Dosen";
+        String role = "";
 
 
         if(usernameText.isEmpty()){
@@ -121,6 +121,12 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             return;
         }
 
+        if(!emailText.contains("@")){
+            binding.emailRegister.setError("email invalid");
+            binding.emailRegister.requestFocus();
+            return;
+        }
+
         if(nimText.isEmpty()){
             binding.nimRegister.setError("email cannot be empty");
             binding.nimRegister.requestFocus();
@@ -130,9 +136,8 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         if (selectedValue.equals(defaultRole)){
             binding.spinnerRole.requestFocus();
             TextView selectedTextView = (TextView) selectedView;
-            selectedTextView.setError("error"); // any name of the error will do
-            selectedTextView.setTextColor(Color.RED); //text color in which you want your error message to be displayed
-//            Toast.makeText(RegisterActivity.this,"error role", Toast.LENGTH_SHORT).show();
+            selectedTextView.setError("error");
+            selectedTextView.setTextColor(Color.RED);
             return;
         }
 
@@ -142,54 +147,56 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             return;
         }
 
-        else {
-            createRegister(dataUser);
-
+        if (selectedValue.equals(mahasiwsaValue)){
+            role = "M";
+            Log.wtf("masuk mahasiswa",role);
         }
 
+        else if (selectedValue.equals(dosenValue)){
+            role = "D";
+            Log.wtf("masuk dosen",role);
+        }
 
-    }
-
-    public void createRegister(DataUser dataUser){
-        Call<ResponseBody> callRegister = ApiClient.request().createRegister(dataUser);
-        callRegister.enqueue(new Callback<ResponseBody>() {
+        DataUser dataUser = new DataUser();
+        dataUser.setEmail(emailText);
+        Log.wtf("masuk","berhasil data email" );
+        dataUser.setPassword(passwordText);
+        Log.wtf("masuk","berhasil data pass" );
+        dataUser.setName(usernameText);
+        Log.wtf("masuk","berhasil data name" );
+        dataUser.setUser_nim(nimText);
+        Log.wtf("masuk","berhasil data nim" );
+        dataUser.setUser_type(role);
+        Log.wtf("masuk","berhasil data role ");
+        Call<ResponseBody> dataUserCall = ApiClient.request().saveUser(dataUser);
+        dataUserCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()){
                     ResponseBody responseBody = response.body();
-                    dataUser.setEmail(dataUser.getEmail());
-                    dataUser.setPassword(dataUser.getPassword());
-                    dataUser.setName(dataUser.getName());
-                    dataUser.setUser_type(dataUser.getUser_type());
-                    dataUser.setUser_nim(dataUser.getUser_nim());
-
-                }
-                else{
+                    Toast.makeText(RegisterActivity.this,"Register Successful", Toast.LENGTH_LONG).show();
+                } else {
                     if(response.code() == 401){
                         Toast.makeText(RegisterActivity.this, "Data sudah pernah diinput sebelumnya", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(RegisterActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                Toast.makeText(RegisterActivity.this,"Register Failed", Toast.LENGTH_LONG).show();
             }
         });
+
+
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-//        Toast.makeText(getApplicationContext(), roleUniversity[position], Toast.LENGTH_LONG).show();
-//        Toast.makeText(parent.getContext(),
-//                "OnItemSelectedListener : " + parent.getItemAtPosition(position).toString(),
-//                Toast.LENGTH_SHORT).show();
         String selectedRole = (String) parent.getSelectedItem();
         if(position > 0){
-            // Notify the selected item text
             Toast.makeText(getApplicationContext(), "Selected : " + selectedRole, Toast.LENGTH_SHORT).show();
         }
 
@@ -197,6 +204,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-//        Toast.makeText(RegisterActivity.this, "Please select an option", Toast.LENGTH_SHORT).show();
+        Toast.makeText(RegisterActivity.this, "Please select an option", Toast.LENGTH_SHORT).show();
     }
 }

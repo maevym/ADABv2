@@ -115,6 +115,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<SessionResponse> call, Response<SessionResponse> response) {
                 if (response.isSuccessful()) {
+                    Log.wtf("berhasil",String.valueOf(response.code()));
                     SessionResponse sessionResponse = response.body();
                     List<Session> sessionList = sessionResponse.getValues();
                     for (int i=0; i<sessionList.size(); i++) {
@@ -138,6 +139,7 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(HomeActivity.this, "No Session Today", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(HomeActivity.this, "Failed", Toast.LENGTH_LONG).show();
+
                     }
                 }
             }

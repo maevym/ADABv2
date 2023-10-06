@@ -9,10 +9,10 @@ import retrofit2.http.POST;
 
 public interface ApiService {
     @POST("register")
-    Call<ResponseBody> createRegister(@Body DataUser dataUser);
+    Call<ResponseBody> saveUser(@Body DataUser dataUser);
 
     @POST("login")
-    Call<LoginResponse> login(@Body LoginRequest loginRequest);
+    Call<ResponseBody> loginUser(@Body LoginRequest loginRequest);
 
     @POST("user/sessions")
     Call<SessionResponse> saveSession(@Body SessionRequest sessionRequest);
