@@ -52,6 +52,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     private Animation fabOpen, fabClose;
     private ActivityHomeBinding binding;
     private SessionAdapter sessionAdapter;
+    private UserPreferences userPreferences;
 
     private boolean isOpen = false;
     private List<Session> sessions = new ArrayList<Session>();
@@ -75,6 +76,8 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
         sessionAdapter = new SessionAdapter(sessions);
+        userPreferences = new UserPreferences(getApplicationContext());
+        role = userPreferences.getUserType();
 
         fab = binding.fab;
         fab1 = binding.fab1;
@@ -88,6 +91,8 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         logo = binding.logo;
         rv = binding.recyclerView;
         swipeRefreshLayout = binding.swipe;
+
+        name.setText(userPreferences.getUserName());
 
         rv.hasFixedSize();
         rv.setItemViewCacheSize(20);
@@ -107,11 +112,11 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     public SessionRequest createSessionRequest() {
         SessionRequest sessionRequest = new SessionRequest();
         // TODO: Hapus ini
-        sessionRequest.setUser_secret("0+kx5lImFtBeLWobW8AVMjpN+rSobeLRjbD89L+S7x4=");
+//        sessionRequest.setUser_secret("0+kx5lImFtBeLWobW8AVMjpN+rSobeLRjbD89L+S7x4=");
         sessionRequest.setDate("2023-10-01");
 
         // TODO: Ganti jadi ini
-//        sessionRequest.setUserSecret(userSecret);
+        sessionRequest.setUser_secret(userPreferences.getUserSecret());
 //        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
 
         return sessionRequest;
