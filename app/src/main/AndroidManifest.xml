@@ -25,6 +25,12 @@
             android:name=".AllClassActivity"
             android:exported="false" />
         <activity
+            android:name=".TranscriptRealtimeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RecordRealtimeActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false">
             <meta-data
