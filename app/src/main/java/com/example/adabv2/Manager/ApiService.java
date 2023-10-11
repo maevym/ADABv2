@@ -1,8 +1,8 @@
 package com.example.adabv2.Manager;
 
-import com.example.adabv2.DataUser;
-import com.example.adabv2.LoginRequest;
-import com.example.adabv2.LoginResponse;
+import com.example.adabv2.Model.DataUser;
+import com.example.adabv2.Model.LoginRequest;
+import com.example.adabv2.Model.LoginResponse;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.Session;
 import com.example.adabv2.Model.SessionRequest;

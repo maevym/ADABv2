@@ -1,12 +1,15 @@
 package com.example.adabv2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,15 +46,17 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     private CardView fab1Text, fab2Text, fab3Text;
     private TextView name, todayDate;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayout noClassView;
     private ImageView logo;
     private RecyclerView rv;
     private SessionDatabase db;
 
-    private String role; // user role from user preference
+    private String role;
     private String userSecret;
     private Animation fabOpen, fabClose;
     private ActivityHomeBinding binding;
     private SessionAdapter sessionAdapter;
+    private UserPreferences userPreferences;
 
     private boolean isOpen = false;
     private List<Session> sessions = new ArrayList<Session>();
@@ -63,9 +68,6 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // TODO: Ganti jadi user preference
-        role = "M";
-
         init();
         saveSession(createSessionRequest());
         menuOnClickListener();
@@ -75,6 +77,9 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
         sessionAdapter = new SessionAdapter(sessions);
+        userPreferences = new UserPreferences(getApplicationContext());
+        role = userPreferences.getUserType();
+        userSecret = userPreferences.getUserSecret();
 
         fab = binding.fab;
         fab1 = binding.fab1;
@@ -88,6 +93,9 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         logo = binding.logo;
         rv = binding.recyclerView;
         swipeRefreshLayout = binding.swipe;
+        noClassView = binding.noClassView;
+
+        name.setText(userPreferences.getUserName());
 
         rv.hasFixedSize();
         rv.setItemViewCacheSize(20);
@@ -106,13 +114,9 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     public SessionRequest createSessionRequest() {
         SessionRequest sessionRequest = new SessionRequest();
-        // TODO: Hapus ini
-        sessionRequest.setUser_secret("0+kx5lImFtBeLWobW8AVMjpN+rSobeLRjbD89L+S7x4=");
-        sessionRequest.setDate("2023-10-01");
 
-        // TODO: Ganti jadi ini
-//        sessionRequest.setUserSecret(userSecret);
-//        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
+        sessionRequest.setUser_secret(userSecret);
+        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
 
         return sessionRequest;
     }
@@ -143,8 +147,8 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                 } else {
                     if (response.code() == 404) {
-                        // TODO: Ganti jadi tulisan no session today
-                        Toast.makeText(HomeActivity.this, "No Session Today", Toast.LENGTH_LONG).show();
+                        rv.setVisibility(View.INVISIBLE);
+                        noClassView.setVisibility(View.VISIBLE);
                     } else {
                         Toast.makeText(HomeActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
                     }
@@ -199,19 +203,20 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         fab1.setOnClickListener(view -> {
             animateFab();
-            // intent to schedule view
-
+            Intent intent = new Intent(this, ScheduleActivity.class);
+            startActivity(intent);
         });
 
         fab2.setOnClickListener(view -> {
             animateFab();
-            // intent to class view
-
+            Intent intent = new Intent(this, AllClassActivity.class);
+            startActivity(intent);
         });
 
         fab3.setOnClickListener(view -> {
             animateFab();
-            // intent to class view
+            Intent intent = new Intent(this, DiscussActivity.class);
+            startActivity(intent);
 
         });
     }

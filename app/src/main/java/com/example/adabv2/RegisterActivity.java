@@ -1,30 +1,21 @@
 package com.example.adabv2;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.DataUser;
 import com.example.adabv2.databinding.ActivityRegisterBinding;
-
-import java.lang.reflect.Method;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

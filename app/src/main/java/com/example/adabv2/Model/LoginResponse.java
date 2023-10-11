@@ -1,4 +1,4 @@
-package com.example.adabv2;
+package com.example.adabv2.Model;
 
 public class LoginResponse {
     private int status;
