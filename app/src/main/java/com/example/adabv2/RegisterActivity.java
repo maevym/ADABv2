@@ -128,7 +128,13 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         }
 
         if(nimText.isEmpty()){
-            binding.nimRegister.setError("email cannot be empty");
+            binding.nimRegister.setError("nim cannot be empty");
+            binding.nimRegister.requestFocus();
+            return;
+        }
+
+        if (nimText.length() > 10 || nimText.length() < 10){
+            binding.nimRegister.setError("nim must contain 10 numbers");
             binding.nimRegister.requestFocus();
             return;
         }
