@@ -77,10 +77,11 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void init () {
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
-        sessionAdapter = new SessionAdapter(sessions);
+        sessionAdapter = new SessionAdapter(sessions, this);
         userPreferences = new UserPreferences(getApplicationContext());
         role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
+        sessionAdapter.setUserType(role);
 
         fab = binding.fab;
         fab1 = binding.fab1;
@@ -117,8 +118,9 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         SessionRequest sessionRequest = new SessionRequest();
 
         sessionRequest.setUser_secret(userSecret);
-        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
+//        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
 
+        sessionRequest.setDate("2023-10-01");
         return sessionRequest;
     }
 
