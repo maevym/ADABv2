@@ -15,8 +15,10 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +29,6 @@ import com.example.adabv2.databinding.ActivityRecordRealtimeBinding;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicReference;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -36,12 +37,13 @@ public class RecordRealtimeActivity extends AppCompatActivity {
 
     private ActivityRecordRealtimeBinding binding;
     private ImageView backButton;
-    private TextView sessionNameTV, realTimeTextTV;
+    private TextView realTimeTextTV;
     private Button stopButton;
+    private ScrollView scrollView;
+
     public static final Integer PERMISSION_RECORD_AUDIO_REQUEST = 1;
     private SpeechRecognizer speechRecognizer;
     private Socket socket;
-    private String sessionName;
     private Integer sessionId;
     final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
@@ -51,8 +53,6 @@ public class RecordRealtimeActivity extends AppCompatActivity {
         binding = ActivityRecordRealtimeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         init();
         connectSocket();
         buttonOnclick();
@@ -60,9 +60,16 @@ public class RecordRealtimeActivity extends AppCompatActivity {
 
     private void init() {
         backButton = binding.buttonBack;
-        sessionNameTV = binding.sessionName;
+        TextView sessionNameTV = binding.sessionName;
         realTimeTextTV = binding.textRealTime;
         stopButton = binding.buttonStop;
+        scrollView = binding.scrollView;
+
+        // get data from intent
+        sessionId = getIntent().getIntExtra("sessionID", 0);
+        String sessionName = getIntent().getStringExtra("sessionName");
+
+        sessionNameTV.setText(sessionName);
     }
 
     private void buttonOnclick() {
@@ -111,6 +118,8 @@ public class RecordRealtimeActivity extends AppCompatActivity {
 
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         // TODO: ganti language sesuai kemauan user
+        // bisa auto detection -> cari buat data ini di google cloud speech
+        // kalo ga bisa ya indo aja defaultnya
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Start Speaking");
 
@@ -158,8 +167,8 @@ public class RecordRealtimeActivity extends AppCompatActivity {
                         realTimeTextTV.setText(data.get(0));
                         socket.emit("message", data.get(0));
                     }
+                    scrollView.fullScroll(View.FOCUS_DOWN);
                 }
-
                 speechRecognizer.startListening(speechRecognizerIntent);
             }
 

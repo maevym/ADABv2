@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +38,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -45,7 +45,6 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private ExtendedFloatingActionButton fab, fab1, fab2, fab3;
     private CardView fab1Text, fab2Text, fab3Text;
-    private TextView name, todayDate;
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout noClassView;
     private ImageView logo;
@@ -57,10 +56,9 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     private Animation fabOpen, fabClose;
     private ActivityHomeBinding binding;
     private SessionAdapter sessionAdapter;
-    private UserPreferences userPreferences;
 
     private boolean isOpen = false;
-    private List<Session> sessions = new ArrayList<Session>();
+    private final List<Session> sessions = new ArrayList<Session>();
     private final Date currentDate = new Date();
 
     @Override
@@ -78,7 +76,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
         sessionAdapter = new SessionAdapter(sessions, this);
-        userPreferences = new UserPreferences(getApplicationContext());
+        UserPreferences userPreferences = new UserPreferences(getApplicationContext());
         role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
         sessionAdapter.setUserType(role);
@@ -87,8 +85,8 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         fab1 = binding.fab1;
         fab2 = binding.fab2;
         fab3 = binding.fab3;
-        name = binding.name;
-        todayDate = binding.todayDate;
+        TextView name = binding.name;
+        TextView todayDate = binding.todayDate;
         fab1Text = binding.fab1Text;
         fab2Text = binding.fab2Text;
         fab3Text = binding.fab3Text;
@@ -120,6 +118,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         sessionRequest.setUser_secret(userSecret);
 //        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
 
+        // TODO: NANTI HAPUS KALO UDAH BENER
         sessionRequest.setDate("2023-10-01");
         return sessionRequest;
     }
@@ -128,12 +127,14 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         Call<Response<Session>> sessionResponseCall = ApiClient.request().saveSession(sessionRequest);
         sessionResponseCall.enqueue(new Callback<Response<Session>>() {
             @Override
-            public void onResponse(Call<Response<Session>> call, retrofit2.Response<Response<Session>> response) {
+            public void onResponse(@NonNull Call<Response<Session>> call, @NonNull retrofit2.Response<Response<Session>> response) {
                 if (response.isSuccessful()) {
-                    Response sessionResponse = response.body();
+                    Response<Session> sessionResponse = response.body();
+                    assert sessionResponse != null;
                     List<Session> sessionList = sessionResponse.getValues();
                     for (int i=0; i<sessionList.size(); i++) {
                         Session newSession = new Session();
+                        newSession.setSessionID(sessionList.get(i).getSessionID());
                         newSession.setClassName(sessionList.get(i).getClassName());
                         newSession.setClassID(sessionList.get(i).getClassID());
                         newSession.setClassCode(sessionList.get(i).getClassCode());
@@ -220,7 +221,6 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
             animateFab();
             Intent intent = new Intent(this, DiscussActivity.class);
             startActivity(intent);
-
         });
     }
 

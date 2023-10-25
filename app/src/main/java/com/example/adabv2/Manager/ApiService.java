@@ -22,8 +22,5 @@ public interface ApiService {
 
     @POST("login")
     Call<LoginResponse> loginUser(@Body LoginRequest loginRequest);
-
-//    @POST("login")
-//    Call<ResponseBody> loginUser(@Body LoginRequest loginRequest);
 }
 
