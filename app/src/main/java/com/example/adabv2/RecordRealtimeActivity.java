@@ -24,14 +24,23 @@ import android.widget.Toast;
 
 import android.Manifest;
 
+import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.Response;
+import com.example.adabv2.Model.Session;
+import com.example.adabv2.Model.SessionRequest;
+import com.example.adabv2.Model.TranscriptHistory;
+import com.example.adabv2.Model.TranscriptRequest;
 import com.example.adabv2.databinding.ActivityRecordRealtimeBinding;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class RecordRealtimeActivity extends AppCompatActivity {
 
@@ -42,9 +51,11 @@ public class RecordRealtimeActivity extends AppCompatActivity {
     private ScrollView scrollView;
 
     public static final Integer PERMISSION_RECORD_AUDIO_REQUEST = 1;
+    private String chosenLanguage;
     private SpeechRecognizer speechRecognizer;
     private Socket socket;
     private Integer sessionId;
+    private Boolean isStop = false;
     final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
     @Override
@@ -68,6 +79,7 @@ public class RecordRealtimeActivity extends AppCompatActivity {
         // get data from intent
         sessionId = getIntent().getIntExtra("sessionID", 0);
         String sessionName = getIntent().getStringExtra("sessionName");
+        chosenLanguage = getIntent().getStringExtra("chosenLanguage");
 
         sessionNameTV.setText(sessionName);
     }
@@ -75,18 +87,21 @@ public class RecordRealtimeActivity extends AppCompatActivity {
     private void buttonOnclick() {
         // back button
         backButton.setOnClickListener(v -> {
+            isStop = true;
             speechRecognizer.stopListening();
             stopConfirmation();
         });
 
         // stop record
         stopButton.setOnClickListener(v -> {
+            isStop = true;
             speechRecognizer.stopListening();
             stopConfirmation();
         });
     }
 
     private void connectSocket() {
+        getTranscriptHistory();
         try {
             socket = IO.socket("https://adab.arutala.dev/");
         } catch (URISyntaxException e) {
@@ -104,23 +119,49 @@ public class RecordRealtimeActivity extends AppCompatActivity {
             if (isPermissionGranted()) {
                 requestPermission();
             }
-            socket.emit("edit","");
+            if (realTimeTextTV.getText() == "") {
+                socket.emit("edit","");
+            }
             speechToText();
         } else {
             Log.d("Socket.io", "error");
         }
     }
 
+    private void getTranscriptHistory() {
+        TranscriptRequest transcriptRequest = new TranscriptRequest();
+        transcriptRequest.setSession_id(sessionId.toString());
+
+        Call<Response<TranscriptHistory>> transcriptResponseCall = ApiClient.request().saveTranscriptHistory(transcriptRequest);
+
+        transcriptResponseCall.enqueue(new Callback<Response<TranscriptHistory>>() {
+            @Override
+            public void onResponse(Call<Response<TranscriptHistory>> call, retrofit2.Response<Response<TranscriptHistory>> response) {
+                if (response.isSuccessful()) {
+                    Response<TranscriptHistory> transcriptHistoryResponse = response.body();
+                    assert transcriptHistoryResponse != null;
+                    List<TranscriptHistory> transcriptHistories = transcriptHistoryResponse.getValues();
+                    TranscriptHistory transcriptHistory = transcriptHistories.get(0);
+                    realTimeTextTV.setText(transcriptHistory.getMessage());
+                }
+                else {
+                    Log.e("Api Error", "Failed to Fetch Data");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<TranscriptHistory>> call, Throwable t) {
+                Log.wtf("responses", "Failed " + t.getLocalizedMessage());
+            }
+        });
+    }
+
     private void speechToText() {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.startListening(speechRecognizerIntent);
 
-
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        // TODO: ganti language sesuai kemauan user
-        // bisa auto detection -> cari buat data ini di google cloud speech
-        // kalo ga bisa ya indo aja defaultnya
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, chosenLanguage);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Start Speaking");
 
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -150,7 +191,7 @@ public class RecordRealtimeActivity extends AppCompatActivity {
             @Override
             public void onError(int i) {
                 // starts listening again
-                if (i == 7) {
+                if (i == 7 && !isStop) {
                     speechRecognizer.startListening(speechRecognizerIntent);
                 }
             }
@@ -161,8 +202,9 @@ public class RecordRealtimeActivity extends AppCompatActivity {
                 String prevText = String.valueOf(realTimeTextTV.getText());
                 if (data != null) {
                     if (!prevText.equals("")) {
+                        socket.emit("history",data.get(0));
                         realTimeTextTV.setText(prevText + "\n" + data.get(0));
-                        socket.emit("message", prevText + "\n" + data.get(0));
+                        socket.emit("message", "\n" + data.get(0));
                     } else {
                         realTimeTextTV.setText(data.get(0));
                         socket.emit("message", data.get(0));
@@ -205,6 +247,8 @@ public class RecordRealtimeActivity extends AppCompatActivity {
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        isStop = false;
                         speechRecognizer.startListening(speechRecognizerIntent);
                     }
                 }).show();

@@ -154,7 +154,8 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
                         rv.setVisibility(View.INVISIBLE);
                         noClassView.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(HomeActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
+                        Log.e("Api Error", "Failed to Fetch Data");
+//                        Toast.makeText(HomeActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
                     }
                 }
             }
