@@ -123,13 +123,11 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
 //                        newSearch.setClass_type(searchList.get(i).getClass_type());
 
                        // Log.wtf("masuk", "dapet searches" + searches.add(newSearch));
-//                            Log.wtf("masuk", "notify");
                         searches.add(newSearch);
                         database.searchDAO().insertSearchClass(newSearch);
 
                     }
                     searchAdapter.notifyDataSetChanged();
-//                    Toast.makeText(AllClassActivity.this,"Search Successful", Toast.LENGTH_LONG).show();
                 }
                 else {
                     if (response.code() == 404) {
@@ -176,7 +174,6 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
         int classId = search.getClass_id();
         userPreferences.setClassId(classId);
         Log.wtf("class id view woi", String.valueOf(classId));
-//        Intent intent = new Intent(ViewClassActivity.this, SelectedClassSessionActivity.class);
         Intent intent = new Intent(ViewClassActivity.this, ClassSessionActivity.class);
         startActivity(intent);
     }

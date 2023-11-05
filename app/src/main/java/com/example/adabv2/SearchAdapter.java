@@ -20,8 +20,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     List<Search> searches;
     View.OnClickListener onClickListener;
 
-
-    //new
     SearchClickListener searchClickListener;
 
     public interface SearchClickListener{
@@ -39,11 +37,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         notifyDataSetChanged();
     }
 
-    public void filterList(List<Search> filterlist) {
-        searches = filterlist;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public SearchAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,7 +47,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull SearchAdapter.MyViewHolder holder, int position) {
-//        Search item = searches.get(position);
         Search search = searches.get(position);
         holder.className.setText(searches.get(position).getClass_name());
         holder.classCode.setText(searches.get(position).getClass_code());

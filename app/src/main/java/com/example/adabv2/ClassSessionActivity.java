@@ -140,7 +140,6 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 
     }
 
-    //,
 
     public void preAdapter(){
         classSessionAdapter = new ClassSessionAdapter(classSessionList,this::selectedClassSession);
