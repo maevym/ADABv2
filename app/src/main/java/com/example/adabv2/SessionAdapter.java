@@ -1,6 +1,8 @@
 package com.example.adabv2;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adabv2.Model.Session;
@@ -58,10 +61,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
             // check if current time is within interval startDate and endDate
             if (currentDate.before(endDate) && currentDate.after(startDate) || currentDate.equals(startDate)) {
                 if (userType.equals("D")) {
-                    Intent intent = new Intent(context, RecordRealtimeActivity.class);
-                    intent.putExtra("sessionID", sessions.get(position).getSessionID());
-                    intent.putExtra("sessionName", sessions.get(position).getSessionName());
-                    context.startActivity(intent);
+                    chooseLanguage(position);
                 } else {
                     Intent intent = new Intent(context, TranscriptRealtimeActivity.class);
                     intent.putExtra("sessionID", sessions.get(position).getSessionID());
@@ -82,6 +82,38 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
         } else {
             return sessions.size();
         }
+    }
+
+    private void chooseLanguage(int position) {
+        final String[] languages = {"Indonesia", "Inggris", "Jepang", "Mandarin"};
+        final String[] languagesID = {"id-ID", "en-US", "ja-JP", "zh"};
+        final String[] selectedItem = {"id-ID"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
+        builder.setTitle("Pilih Bahasa")
+                .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setSingleChoiceItems(languages, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        selectedItem[0] = languagesID[i];
+                    }
+                })
+                .setPositiveButton("Lanjut", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(context, RecordRealtimeActivity.class);
+                        intent.putExtra("sessionID", sessions.get(position).getSessionID());
+                        intent.putExtra("sessionName", sessions.get(position).getSessionName());
+                        intent.putExtra("chosenLanguage", selectedItem[0]);
+                        context.startActivity(intent);
+                    }
+                })
+                .show();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

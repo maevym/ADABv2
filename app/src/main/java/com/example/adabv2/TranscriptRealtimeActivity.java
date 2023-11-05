@@ -10,19 +10,26 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.Response;
+import com.example.adabv2.Model.TranscriptHistory;
+import com.example.adabv2.Model.TranscriptRequest;
 import com.example.adabv2.databinding.ActivityHomeBinding;
 import com.example.adabv2.databinding.ActivityTranscriptRealtimeBinding;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class TranscriptRealtimeActivity extends AppCompatActivity {
 
     private ActivityTranscriptRealtimeBinding binding;
     private ImageView buttonBack;
-    private TextView sessionNameTV, textRealTimeTV;
+    private TextView textRealTimeTV;
     private ScrollView scrollView;
     private Socket socket;
     private Integer sessionId;
@@ -34,13 +41,14 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         init();
+        getTranscriptHistory();
         buttonOnClick();
         connectSocket();
     }
 
     private void init() {
         buttonBack = binding.buttonBack;
-        sessionNameTV = binding.sessionName;
+        TextView sessionNameTV = binding.sessionName;
         textRealTimeTV = binding.textRealTime;
         scrollView = binding.scrollView;
 
@@ -49,6 +57,34 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
         String sessionName = getIntent().getStringExtra("sessionName");
 
         sessionNameTV.setText(sessionName);
+    }
+
+    private void getTranscriptHistory() {
+        TranscriptRequest transcriptRequest = new TranscriptRequest();
+        transcriptRequest.setSession_id(sessionId.toString());
+
+        Call<Response<TranscriptHistory>> transcriptResponseCall = ApiClient.request().saveTranscriptHistory(transcriptRequest);
+
+        transcriptResponseCall.enqueue(new Callback<Response<TranscriptHistory>>() {
+            @Override
+            public void onResponse(Call<Response<TranscriptHistory>> call, retrofit2.Response<Response<TranscriptHistory>> response) {
+                if (response.isSuccessful()) {
+                    Response<TranscriptHistory> transcriptHistoryResponse = response.body();
+                    assert transcriptHistoryResponse != null;
+                    List<TranscriptHistory> transcriptHistories = transcriptHistoryResponse.getValues();
+                    TranscriptHistory transcriptHistory = transcriptHistories.get(0);
+                    textRealTimeTV.setText(transcriptHistory.getMessage());
+                }
+                else {
+                    Log.e("Api Error", "Failed to Fetch Data");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<TranscriptHistory>> call, Throwable t) {
+                Log.wtf("responses", "Failed " + t.getLocalizedMessage());
+            }
+        });
     }
 
     private void buttonOnClick() {
