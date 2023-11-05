@@ -1,6 +1,7 @@
 package com.example.adabv2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -9,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -18,6 +21,7 @@ import com.example.adabv2.Model.Search;
 import com.example.adabv2.Model.SearchRequest;
 import com.example.adabv2.Room.SearchDatabase;
 import com.example.adabv2.databinding.ActivityViewClassBinding;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +38,13 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
     private UserPreferences userPreferences;
     private String userSecret;
     private ActivityViewClassBinding binding;
-    SearchView searchView;
+    private SearchView searchView;
+
+    private String role;
+    private ExtendedFloatingActionButton fab, fab1, fab2, fab3;
+    private CardView fab1Text, fab2Text, fab3Text;
+    private Animation fabOpen, fabClose;
+    private boolean isOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +52,9 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
         binding = ActivityViewClassBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
 
         recyclerView = binding.rvViewClass;
         userPreferences = new UserPreferences(getApplicationContext());
@@ -59,10 +72,19 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
             }
         });
         userSecret = userPreferences.getUserSecret();
+        role = userPreferences.getUserType();
+        fab = binding.fab;
+        fab1 = binding.fab1;
+        fab2 = binding.fab2;
+        fab3 = binding.fab3;
+        fab1Text = binding.fab1Text;
+        fab2Text = binding.fab2Text;
+        fab3Text = binding.fab3Text;
         database = Room.databaseBuilder(getApplicationContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
         database.searchDAO().deleteAllSearch();
         setData(createSearchRequest());
         prepareRecyclerView();
+        menuOnClickListener();
 
     }
 
@@ -157,5 +179,61 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
 //        Intent intent = new Intent(ViewClassActivity.this, SelectedClassSessionActivity.class);
         Intent intent = new Intent(ViewClassActivity.this, ClassSessionActivity.class);
         startActivity(intent);
+    }
+
+
+    private void menuOnClickListener () {
+        fab.setOnClickListener(view -> {
+            animateFab();
+        });
+
+        fab1.setOnClickListener(view -> {
+            animateFab();
+            Intent intent = new Intent(this, ScheduleActivity.class);
+            startActivity(intent);
+        });
+
+        fab2.setOnClickListener(view -> {
+            animateFab();
+            Intent intent = new Intent(this, ViewClassActivity.class);
+            startActivity(intent);
+        });
+
+        fab3.setOnClickListener(view -> {
+            animateFab();
+            Intent intent = new Intent(this, DiscussActivity.class);
+            startActivity(intent);
+
+        });
+    }
+
+    private void animateFab() {
+        if (isOpen) {
+            if (!role.equals("L")) {
+                fab3.startAnimation(fabClose);
+                fab3Text.startAnimation(fabClose);
+                fab3.setClickable(false);
+            }
+            fab1.startAnimation(fabClose);
+            fab2.startAnimation(fabClose);
+            fab1Text.startAnimation(fabClose);
+            fab2Text.startAnimation(fabClose);
+            fab1.setClickable(false);
+            fab2.setClickable(false);
+            isOpen = false;
+        } else {
+            if (!role.equals("L")) {
+                fab3.startAnimation(fabOpen);
+                fab3Text.startAnimation(fabOpen);
+                fab3.setClickable(true);
+            }
+            fab1.startAnimation(fabOpen);
+            fab2.startAnimation(fabOpen);
+            fab1Text.startAnimation(fabOpen);
+            fab2Text.startAnimation(fabOpen);
+            fab1.setClickable(true);
+            fab2.setClickable(true);
+            isOpen = true;
+        }
     }
 }
