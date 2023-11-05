@@ -71,6 +71,7 @@
             app:cardBackgroundColor="@color/white">
 
             <ScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="16sp"
@@ -78,9 +79,9 @@
                 <TextView
                     android:id="@+id/text_real_time"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:scrollbars="vertical"
-                    android:text="test"
+                    android:text=""
                     android:textSize="16sp"/>
             </ScrollView>
 

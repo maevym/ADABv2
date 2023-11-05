@@ -35,14 +35,17 @@
         android:layout_marginTop="35dp"
         android:layout_weight="1"
         >
+
         <EditText
             android:id="@+id/emailLogin"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/format_form"
+            android:hint="Email"
             android:paddingLeft="21dp"
-            android:hint="Name"/>
+            android:paddingRight="21dp"
+            android:singleLine="true" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,7 +70,9 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/format_form"
             android:paddingLeft="21dp"
-            android:hint="Password"/>
+            android:paddingRight="21dp"
+            android:hint="Password"
+            android:inputType="textPassword"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

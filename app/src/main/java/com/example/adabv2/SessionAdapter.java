@@ -1,5 +1,7 @@
 package com.example.adabv2;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -17,9 +19,16 @@ import java.util.List;
 
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHolder> {
     List<Session> sessions;
+    String userType;
+    Context context;
 
-    public SessionAdapter(List<Session> sessions) {
+    public SessionAdapter(List<Session> sessions, Context context) {
         this.sessions = sessions;
+        this.context = context;
+    }
+
+    public void setUserType(String userType){
+        this.userType = userType;
     }
 
     @NonNull
@@ -42,7 +51,26 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
         holder.time.setText(time);
         holder.location.setText(sessions.get(position).getSessionLocation());
         holder.itemView.setOnClickListener(v -> {
-            // pindah ke halaman transkrip
+            Date startDate = DateFormatter.StringToDateMillisecond(sessions.get(position).sessionStart);
+            Date endDate = DateFormatter.StringToDateMillisecond(sessions.get(position).getSessionEnd());
+//            Date currentDate = new Date();
+            Date currentDate = DateFormatter.StringToDateMillisecond("2023-10-01 13:10:04.100");
+            // check if current time is within interval startDate and endDate
+            if (currentDate.before(endDate) && currentDate.after(startDate) || currentDate.equals(startDate)) {
+                if (userType.equals("D")) {
+                    Intent intent = new Intent(context, RecordRealtimeActivity.class);
+                    intent.putExtra("sessionID", sessions.get(position).getSessionID());
+                    intent.putExtra("sessionName", sessions.get(position).getSessionName());
+                    context.startActivity(intent);
+                } else {
+                    Intent intent = new Intent(context, TranscriptRealtimeActivity.class);
+                    intent.putExtra("sessionID", sessions.get(position).getSessionID());
+                    intent.putExtra("sessionName", sessions.get(position).getSessionName());
+                    context.startActivity(intent);
+                }
+            } else {
+                Log.d("session clicked", "class not started");
+            }
 
         });
     }

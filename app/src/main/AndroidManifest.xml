@@ -2,11 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.adabv2">
-    <!-- Internet Permission -->
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -22,20 +23,19 @@
             android:name=".TranscriptHistoryActivity"
             android:exported="false" />
         <activity
+            android:name=".DiscussActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AllClassActivity"
+            android:exported="false" />
+        <activity
             android:name=".TranscriptRealtimeActivity"
             android:exported="false" />
         <activity
             android:name=".RecordRealtimeActivity"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".LoginActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".RegisterActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -48,10 +48,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".HomeActivity"
-            android:exported="false" />
+            android:name=".RegisterActivity"
+            android:exported="false"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".HomeActivity"
             android:exported="false" />
     </application>
 
