@@ -1,6 +1,8 @@
 package com.example.adabv2.Manager;
 
 import com.example.adabv2.Model.DataUser;
+import com.example.adabv2.Model.Discuss;
+import com.example.adabv2.Model.DiscussRequest;
 import com.example.adabv2.Model.LoginRequest;
 import com.example.adabv2.Model.LoginResponse;
 import com.example.adabv2.Model.Response;
@@ -25,5 +27,8 @@ public interface ApiService {
 
 //    @POST("login")
 //    Call<ResponseBody> loginUser(@Body LoginRequest loginRequest);
+
+    @POST("user/getAllMember")
+    Call<Response<Discuss>> discussSearch(@Body DiscussRequest discussRequest);
 }
 
