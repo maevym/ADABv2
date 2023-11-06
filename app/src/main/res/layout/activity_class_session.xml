@@ -15,19 +15,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:orientation="vertical"
-            android:weightSum="0.1"
+            android:orientation="horizontal"
+            android:weightSum="0.6"
             android:background="@drawable/card_background"
-            android:layout_marginBottom="10dp">->
-            <TextView
-                android:id="@+id/name"
-                android:layout_weight="0.1"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:id="@+id/button_back_session"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_back"
+                android:layout_weight="0.1"/>
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_weight="0.4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingEnd="20dp"
-                android:text="Session"
+                android:text="Sesi"
                 android:textColor="@color/white"
+                android:gravity="center"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_marginTop="25dp"/>

@@ -59,6 +59,7 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
         recyclerView = binding.rvViewClass;
         userPreferences = new UserPreferences(getApplicationContext());
         searchView = binding.searchClasses;
+        searchView.setQueryHint("Cari Kelas");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

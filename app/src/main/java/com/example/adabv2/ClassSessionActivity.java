@@ -8,6 +8,7 @@ import androidx.room.Room;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.adabv2.Manager.ApiClient;
@@ -38,6 +39,7 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
     private ClassSessionAdapter classSessionAdapter;
     private List<ClassSession> classSessionList = new ArrayList<>();
     private ClassSessionDatabase database;
+    private ImageView backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,9 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
         View view = binding.getRoot();
         setContentView(view);
 
+
         recyclerViewClassSession = binding.recyclerViewClassSession;
+        backButton = binding.buttonBackSession;
 
         userPreferences = new UserPreferences(getApplicationContext());
         classId = userPreferences.getClassId();
@@ -59,6 +63,12 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
         Log.wtf("set Data", "masuk");
         prepareRecyclerView();
         Log.wtf("masuk on create","masuk");
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
     }
 
