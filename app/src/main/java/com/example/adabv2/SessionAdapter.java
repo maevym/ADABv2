@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adabv2.Model.Session;
+import com.example.adabv2.Model.TranscriptHistory;
 import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.SessionItemBinding;
 
@@ -56,8 +57,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
         holder.itemView.setOnClickListener(v -> {
             Date startDate = DateFormatter.StringToDateMillisecond(sessions.get(position).sessionStart);
             Date endDate = DateFormatter.StringToDateMillisecond(sessions.get(position).getSessionEnd());
-//            Date currentDate = new Date();
-            Date currentDate = DateFormatter.StringToDateMillisecond("2023-10-01 13:10:04.100");
+            Date currentDate = new Date();
             // check if current time is within interval startDate and endDate
             if (currentDate.before(endDate) && currentDate.after(startDate) || currentDate.equals(startDate)) {
                 if (userType.equals("D")) {
@@ -69,7 +69,10 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
                     context.startActivity(intent);
                 }
             } else {
-                Log.d("session clicked", "class not started");
+                Intent intent = new Intent(context, TranscriptHistoryActivity.class);
+                intent.putExtra("sessionID", sessions.get(position).getSessionID());
+                intent.putExtra("sessionName", sessions.get(position).getSessionName());
+                context.startActivity(intent);
             }
 
         });

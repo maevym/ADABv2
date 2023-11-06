@@ -11,7 +11,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,8 +22,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
-import com.example.adabv2.Model.SessionRequest;
 import com.example.adabv2.Model.Session;
+import com.example.adabv2.Model.SessionRequest;
 import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.ActivityHomeBinding;
@@ -34,9 +33,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     private SessionAdapter sessionAdapter;
 
     private boolean isOpen = false;
-    private final List<Session> sessions = new ArrayList<Session>();
+    private final List<Session> sessions = new ArrayList<>();
     private final Date currentDate = new Date();
 
     @Override
@@ -161,7 +161,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
 
             @Override
-            public void onFailure(Call<Response<Session>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Response<Session>> call, @NonNull Throwable t) {
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
             }
         });
@@ -171,15 +171,12 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         sessions.clear();
         updateSession();
 
-        Collections.sort(sessions, new Comparator<Session>() {
-            @Override
-            public int compare(Session session, Session t1) {
-                try {
-                    return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(session.getSessionStart()).compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(t1.getSessionStart()));
-                } catch (ParseException e) {
-                    Log.wtf("error", e);
-                    return 0;
-                }
+        Collections.sort(sessions, (session, t1) -> {
+            try {
+                return Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).parse(session.getSessionStart())).compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).parse(t1.getSessionStart()));
+            } catch (ParseException e) {
+                Log.wtf("error", e);
+                return 0;
             }
         });
 
@@ -202,9 +199,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void menuOnClickListener () {
-        fab.setOnClickListener(view -> {
-            animateFab();
-        });
+        fab.setOnClickListener(view -> animateFab());
 
         fab1.setOnClickListener(view -> {
             animateFab();
@@ -257,13 +252,10 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateSession();
-                sessionAdapter.notifyDataSetChanged();
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            updateSession();
+            sessionAdapter.notifyDataSetChanged();
+            swipeRefreshLayout.setRefreshing(false);
         }, 1000);
     }
 }

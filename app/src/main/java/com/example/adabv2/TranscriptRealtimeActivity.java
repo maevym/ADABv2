@@ -1,12 +1,13 @@
 package com.example.adabv2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.res.ObbInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -14,7 +15,6 @@ import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.TranscriptHistory;
 import com.example.adabv2.Model.TranscriptRequest;
-import com.example.adabv2.databinding.ActivityHomeBinding;
 import com.example.adabv2.databinding.ActivityTranscriptRealtimeBinding;
 
 import java.net.URISyntaxException;
@@ -30,6 +30,7 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
     private ActivityTranscriptRealtimeBinding binding;
     private ImageView buttonBack;
     private TextView textRealTimeTV;
+    private LinearLayout noTranscript;
     private ScrollView scrollView;
     private Socket socket;
     private Integer sessionId;
@@ -51,11 +52,11 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
         TextView sessionNameTV = binding.sessionName;
         textRealTimeTV = binding.textRealTime;
         scrollView = binding.scrollView;
+        noTranscript = binding.noTranscriptView;
 
         // get data from intent
         sessionId = getIntent().getIntExtra("sessionID", 0);
         String sessionName = getIntent().getStringExtra("sessionName");
-
         sessionNameTV.setText(sessionName);
     }
 
@@ -67,13 +68,18 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
 
         transcriptResponseCall.enqueue(new Callback<Response<TranscriptHistory>>() {
             @Override
-            public void onResponse(Call<Response<TranscriptHistory>> call, retrofit2.Response<Response<TranscriptHistory>> response) {
+            public void onResponse(@NonNull Call<Response<TranscriptHistory>> call, @NonNull retrofit2.Response<Response<TranscriptHistory>> response) {
                 if (response.isSuccessful()) {
                     Response<TranscriptHistory> transcriptHistoryResponse = response.body();
                     assert transcriptHistoryResponse != null;
                     List<TranscriptHistory> transcriptHistories = transcriptHistoryResponse.getValues();
                     TranscriptHistory transcriptHistory = transcriptHistories.get(0);
-                    textRealTimeTV.setText(transcriptHistory.getMessage());
+                    if (transcriptHistory.getMessage().isEmpty()) {
+                        noTranscript.setVisibility(View.VISIBLE);
+                        scrollView.setVisibility(View.INVISIBLE);
+                    } else {
+                        textRealTimeTV.setText(transcriptHistory.getMessage());
+                    }
                 }
                 else {
                     Log.e("Api Error", "Failed to Fetch Data");
@@ -81,16 +87,14 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Response<TranscriptHistory>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Response<TranscriptHistory>> call, @NonNull Throwable t) {
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
             }
         });
     }
 
     private void buttonOnClick() {
-        buttonBack.setOnClickListener(v -> {
-            finish();
-        });
+        buttonBack.setOnClickListener(v -> finish());
     }
 
     private void connectSocket() {
@@ -107,11 +111,11 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
 
         socket.emit("join_room", String.valueOf(sessionId));
 
-        socket.on("message", args -> {
+        socket.on("message", args ->
             runOnUiThread(() -> {
                 textRealTimeTV.setText(args[0].toString());
                 scrollView.fullScroll(View.FOCUS_DOWN);
-            });
-        });
+            })
+        );
     }
 }

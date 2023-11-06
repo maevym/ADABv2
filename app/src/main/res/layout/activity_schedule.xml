@@ -16,21 +16,47 @@
             android:layout_height="wrap_content"
             android:background="@drawable/card_background"
             android:orientation="vertical"
-            android:layout_weight="1.1">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginVertical="20dp"
-                android:gravity="center"
-                android:text="@string/transcript"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
+            android:layout_weight="0.8"
+            android:weightSum="2">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.35"
+                android:background="@drawable/card_background">
+
+                <ImageView
+                    android:id="@+id/button_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/ic_back"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="4"
+                    android:text="@string/transcriptHeading"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1.54"
                 android:layout_marginHorizontal="20sp"
                 app:cardBackgroundColor="@color/white"
                 app:cardElevation="5dp"
@@ -42,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:theme="@style/CalenderViewCustom"
                     android:dateTextAppearance="@style/CalenderViewDateCustomText"
-                    android:weekDayTextAppearance="@style/CalenderViewWeekCustomText" />
+                    android:weekDayTextAppearance="@style/CalenderViewWeekCustomText"/>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
@@ -50,7 +76,7 @@
             android:id="@+id/today_date"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:text="21 Jun 2023"
+            android:text="07 Nov 2023"
             android:gravity="center"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -69,24 +95,25 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="invisible">
 
                 <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/nothing" />
+                    android:src="@drawable/learn"
+                    android:contentDescription="@string/noClass" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/no_class"
-                    android:textSize="20sp"
+                    android:text="@string/noClass"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -141,7 +168,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Schedule"
+            android:text="@string/menuSchedule"
             android:textColor="@color/black"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
@@ -177,7 +204,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All Class"
+            android:text="@string/menuClass"
             android:textColor="@color/black"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
@@ -213,7 +240,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Discuss"
+            android:text="@string/menuDiscussion"
             android:textColor="@color/black"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
