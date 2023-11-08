@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
     private String userSecret;
     private ActivityViewClassBinding binding;
     private SearchView searchView;
+    private LinearLayout noClassView;
 
     private String role;
     private ExtendedFloatingActionButton fab, fab1, fab2, fab3;
@@ -56,6 +58,7 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
 
+        noClassView = binding.noClassView;
         recyclerView = binding.rvViewClass;
         userPreferences = new UserPreferences(getApplicationContext());
         searchView = binding.searchClasses;
@@ -98,9 +101,13 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
         }
 
         if (filteredList.isEmpty()){
-            Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show();
+            recyclerView.setVisibility(View.INVISIBLE);
+            noClassView.setVisibility(View.VISIBLE);
+//            Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show();
         }
         else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noClassView.setVisibility(View.INVISIBLE);
             searchAdapter.setFilteredList(filteredList);
         }
     }
