@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ADABv2</string>
+    <string name="transcriptHeading">Transkrip</string>
+    <string name="scheduleHeading">Jadwal</string>
+    <string name="noTranscript">Tidak Ada Transkrip</string>
+    <string name="back">Back Button</string>
+    <string name="greetings">Halo,</string>
+    <string name="noClass">Tidak Ada Kelas</string>
+    <string name="menuSchedule">Jadwal</string>
+    <string name="menuClass">Kelas</string>
+    <string name="menuDiscussion">Diskusi</string>
+    <string name="stopRecButton">BERHENTI</string>
 </resources>

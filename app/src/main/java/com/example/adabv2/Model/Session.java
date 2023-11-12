@@ -10,7 +10,9 @@ import java.util.Date;
 
 @Entity
 public class Session {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
+    @ColumnInfo(name = "session_id")
+    @SerializedName("session_id")
     public int sessionID;
     @ColumnInfo(name = "class_id")
     @SerializedName("class_id")

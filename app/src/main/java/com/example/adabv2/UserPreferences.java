@@ -2,7 +2,10 @@ package com.example.adabv2;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
+
+import androidx.core.content.res.ResourcesCompat;
 
 public class UserPreferences {
     private static final String KEY_USER_NAME = "name";
@@ -46,7 +49,6 @@ public class UserPreferences {
     public String getUserType(){
         return getSharedPreference().getString(KEY_USER_TYPE,"");
     }
-
 
     public void setClassId(int classId){
         SharedPreferences.Editor editor = getSharedPreference().edit();

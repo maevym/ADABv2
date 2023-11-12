@@ -15,49 +15,47 @@ import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.TranscriptHistory;
 import com.example.adabv2.Model.TranscriptRequest;
-import com.example.adabv2.databinding.ActivityTranscriptRealtimeBinding;
+import com.example.adabv2.databinding.ActivityTranscriptHistoryBinding;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class TranscriptRealtimeActivity extends AppCompatActivity {
+public class TranscriptHistoryActivity extends AppCompatActivity {
 
-    private ActivityTranscriptRealtimeBinding binding;
+    private ActivityTranscriptHistoryBinding binding;
     private ImageView buttonBack;
-    private TextView textRealTimeTV;
+    private TextView textTranscript;
     private LinearLayout noTranscript;
     private ScrollView scrollView;
-    private Socket socket;
     private Integer sessionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityTranscriptRealtimeBinding.inflate(getLayoutInflater());
+        binding = ActivityTranscriptHistoryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         init();
         getTranscriptHistory();
         buttonOnClick();
-        connectSocket();
     }
 
     private void init() {
         buttonBack = binding.buttonBack;
         TextView sessionNameTV = binding.sessionName;
-        textRealTimeTV = binding.textRealTime;
+        textTranscript = binding.transcriptText;
         scrollView = binding.scrollView;
         noTranscript = binding.noTranscriptView;
 
-        // get data from intent
         sessionId = getIntent().getIntExtra("sessionID", 0);
         String sessionName = getIntent().getStringExtra("sessionName");
         sessionNameTV.setText(sessionName);
+    }
+
+    private void buttonOnClick() {
+        buttonBack.setOnClickListener(v -> finish());
     }
 
     private void getTranscriptHistory() {
@@ -65,7 +63,6 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
         transcriptRequest.setSession_id(sessionId.toString());
 
         Call<Response<TranscriptHistory>> transcriptResponseCall = ApiClient.request().saveTranscriptHistory(transcriptRequest);
-
         transcriptResponseCall.enqueue(new Callback<Response<TranscriptHistory>>() {
             @Override
             public void onResponse(@NonNull Call<Response<TranscriptHistory>> call, @NonNull retrofit2.Response<Response<TranscriptHistory>> response) {
@@ -78,10 +75,12 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
                         noTranscript.setVisibility(View.VISIBLE);
                         scrollView.setVisibility(View.INVISIBLE);
                     } else {
-                        textRealTimeTV.setText(transcriptHistory.getMessage());
+                        textTranscript.setText(transcriptHistory.getMessage());
                     }
                 }
                 else {
+                    noTranscript.setVisibility(View.VISIBLE);
+                    scrollView.setVisibility(View.INVISIBLE);
                     Log.e("Api Error", "Failed to Fetch Data");
                 }
             }
@@ -91,31 +90,5 @@ public class TranscriptRealtimeActivity extends AppCompatActivity {
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
             }
         });
-    }
-
-    private void buttonOnClick() {
-        buttonBack.setOnClickListener(v -> finish());
-    }
-
-    private void connectSocket() {
-        try {
-            socket = IO.socket("https://adab.arutala.dev/");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        socket.connect();
-
-        while (!socket.connected()) {
-            Log.d("Socket.io", "connecting...");
-        }
-
-        socket.emit("join_room", String.valueOf(sessionId));
-
-        socket.on("message", args ->
-            runOnUiThread(() -> {
-                textRealTimeTV.setText(args[0].toString());
-                scrollView.fullScroll(View.FOCUS_DOWN);
-            })
-        );
     }
 }
