@@ -1,32 +1,28 @@
 package com.example.adabv2;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.CalendarView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.Session;
 import com.example.adabv2.Model.SessionRequest;
-import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.Util.DateFormatter;
-import com.example.adabv2.databinding.ActivityHomeBinding;
+import com.example.adabv2.databinding.ActivityScheduleBinding;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.text.ParseException;
@@ -41,22 +37,21 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
-
+public class ScheduleActivity extends AppCompatActivity {
+    private ActivityScheduleBinding binding;
+    private CalendarView calendarView;
+    private LinearLayout noClassView;
+    private RecyclerView rv;
     private ExtendedFloatingActionButton fab, fab1, fab2, fab3;
     private CardView fab1Text, fab2Text, fab3Text;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private LinearLayout noClassView;
-    private ImageView logo;
-    private RecyclerView rv;
-    private SessionDatabase db;
+    private TextView todayDate;
+    private ImageView buttonBack;
 
-    private String role;
+    private String chosenDate;
     private String userSecret;
+    private String role;
     private Animation fabOpen, fabClose;
-    private ActivityHomeBinding binding;
     private SessionAdapter sessionAdapter;
-
     private boolean isOpen = false;
     private final List<Session> sessions = new ArrayList<>();
     private final Date currentDate = new Date();
@@ -64,15 +59,16 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        binding = ActivityScheduleBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         init();
-        saveSession(createSessionRequest());
+        pickDate();
         menuOnClickListener();
+        buttonOnClick();
     }
 
-    private void init () {
+    private void init() {
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
         sessionAdapter = new SessionAdapter(sessions, this);
@@ -85,45 +81,45 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         fab1 = binding.fab1;
         fab2 = binding.fab2;
         fab3 = binding.fab3;
-        TextView name = binding.name;
-        TextView todayDate = binding.todayDate;
+        todayDate = binding.todayDate;
         fab1Text = binding.fab1Text;
         fab2Text = binding.fab2Text;
         fab3Text = binding.fab3Text;
-        logo = binding.logo;
         rv = binding.recyclerView;
-        swipeRefreshLayout = binding.swipe;
         noClassView = binding.noClassView;
-
-        name.setText(userPreferences.getUserName());
+        calendarView = binding.calendarView;
+        buttonBack = binding.buttonBack;
 
         rv.hasFixedSize();
         rv.setItemViewCacheSize(20);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(sessionAdapter);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
-
-        db = Room.databaseBuilder(getApplicationContext(),
-                SessionDatabase.class,"session-database").allowMainThreadQueries().build();
-        db.sessionDAO().deleteAll();
-
         String date = DateFormatter.DateToStringDate(currentDate);
         todayDate.setText(date);
+        chosenDate = DateFormatter.DateToString(currentDate);
+        getSessions();
     }
 
-    public SessionRequest createSessionRequest() {
+    private void pickDate() {
+        calendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
+            if (i2 < 10) {
+                chosenDate = i + "-" + (i1+1) + "-0" + i2;
+            } else {
+                chosenDate = i + "-" + (i1+1) + "-" + i2;
+            }
+            Date date = DateFormatter.StringToDate(chosenDate);
+            todayDate.setText(DateFormatter.DateToStringDate(date));
+            getSessions();
+        });
+    }
+
+    private void getSessions() {
+        sessions.clear();
         SessionRequest sessionRequest = new SessionRequest();
-
         sessionRequest.setUser_secret(userSecret);
-        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
+        sessionRequest.setDate(chosenDate);
 
-        // TODO: NANTI HAPUS KALO UDAH BENER
-//        sessionRequest.setDate("2023-10-01");
-        return sessionRequest;
-    }
-
-    private void saveSession(SessionRequest sessionRequest) {
         Call<Response<Session>> sessionResponseCall = ApiClient.request().saveSession(sessionRequest);
         sessionResponseCall.enqueue(new Callback<Response<Session>>() {
             @Override
@@ -132,34 +128,17 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
                     Response<Session> sessionResponse = response.body();
                     assert sessionResponse != null;
                     List<Session> sessionList = sessionResponse.getValues();
-                    for (int i=0; i<sessionList.size(); i++) {
-                        Session newSession = new Session();
-                        newSession.setSessionID(sessionList.get(i).getSessionID());
-                        newSession.setClassName(sessionList.get(i).getClassName());
-                        newSession.setClassID(sessionList.get(i).getClassID());
-                        newSession.setClassCode(sessionList.get(i).getClassCode());
-                        newSession.setSessionEnd(sessionList.get(i).getSessionEnd());
-                        newSession.setSessionID(sessionList.get(i).getSessionID());
-                        newSession.setSessionLocation(sessionList.get(i).getSessionLocation());
-                        newSession.setSessionName(sessionList.get(i).getSessionName());
-                        newSession.setSessionStart(sessionList.get(i).getSessionStart());
-                        newSession.setSessionEnd(sessionList.get(i).getSessionEnd());
-
-                        db.sessionDAO().insertAllSession(newSession);
-                    }
+                    sessions.addAll(sessionList);
                     sortItems();
-
                 } else {
                     if (response.code() == 404) {
                         rv.setVisibility(View.INVISIBLE);
                         noClassView.setVisibility(View.VISIBLE);
                     } else {
                         Log.e("Api Error", "Failed to Fetch Data");
-//                        Toast.makeText(HomeActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
                     }
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<Response<Session>> call, @NonNull Throwable t) {
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
@@ -168,8 +147,10 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void sortItems () {
-        sessions.clear();
-        updateSession();
+        if(!sessions.isEmpty()){
+            rv.setVisibility(View.VISIBLE);
+            noClassView.setVisibility(View.INVISIBLE);
+        }
 
         Collections.sort(sessions, (session, t1) -> {
             try {
@@ -183,19 +164,8 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         sessionAdapter.notifyDataSetChanged();
     }
 
-    private void updateSession () {
-        sessions.clear();
-        for (Session session : db.sessionDAO().getAllSessions()) {
-            Date date = DateFormatter.StringToDateMillisecond(session.getSessionStart());
-
-            if (date.after(currentDate)) {
-                sessions.add(session);
-            }
-            // TODO: hapus kalo udah bener
-//            else {
-//                sessions.add(session);
-//            }
-        }
+    private void buttonOnClick() {
+        buttonBack.setOnClickListener(v -> finish());
     }
 
     private void menuOnClickListener () {
@@ -249,14 +219,4 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
             isOpen = true;
         }
     }
-
-    @Override
-    public void onRefresh() {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            updateSession();
-            sessionAdapter.notifyDataSetChanged();
-            swipeRefreshLayout.setRefreshing(false);
-        }, 1000);
-    }
 }
-

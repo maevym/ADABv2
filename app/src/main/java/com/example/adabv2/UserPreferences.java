@@ -42,7 +42,7 @@ public class UserPreferences {
         editor.apply();
     }
 
-    public String getUserToken(){
+    public String getUserType(){
         return getSharedPreference().getString(KEY_USER_TYPE,"");
     }
 }

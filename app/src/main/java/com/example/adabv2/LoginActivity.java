@@ -1,6 +1,7 @@
 package com.example.adabv2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.LoginRequest;
+import com.example.adabv2.Model.LoginResponse;
+import com.example.adabv2.Model.ValueLoginResponse;
 import com.example.adabv2.databinding.ActivityLoginBinding;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         userPreferences = new UserPreferences(getApplicationContext());
 
         binding.buttonRegisterInLogin.setOnClickListener(v -> {
@@ -85,12 +90,11 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-
+                Log.wtf("error", t);
             }
         });
 //        Call<ResponseBody> callLogin = ApiClient.request().loginUser(loginRequest);

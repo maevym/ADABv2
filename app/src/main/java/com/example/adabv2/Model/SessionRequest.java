@@ -1,4 +1,4 @@
-package com.example.adabv2;
+package com.example.adabv2.Model;
 
 import com.google.gson.annotations.SerializedName;
 

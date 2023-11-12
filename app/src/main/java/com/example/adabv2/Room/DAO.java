@@ -1,9 +1,10 @@
 package com.example.adabv2.Room;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.example.adabv2.Model.Session;
 
 import java.util.List;
 
