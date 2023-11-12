@@ -10,6 +10,8 @@ import com.example.adabv2.Model.Search;
 import com.example.adabv2.Model.SearchRequest;
 import com.example.adabv2.Model.Session;
 import com.example.adabv2.Model.SessionRequest;
+import com.example.adabv2.Model.TranscriptHistory;
+import com.example.adabv2.Model.TranscriptRequest;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -35,5 +37,7 @@ public interface ApiService {
 
 //    @POST("login")
 //    Call<ResponseBody> loginUser(@Body LoginRequest loginRequest);
+    @POST("user/getTranscriptHistory")
+    Call<Response<TranscriptHistory>> saveTranscriptHistory(@Body TranscriptRequest transcriptRequest);
 }
 
