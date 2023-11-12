@@ -60,7 +60,4 @@ public class UserPreferences {
         return getSharedPreference().getInt(KEY_CLASS_ID,0);
     }
 
-
-
-
 }
