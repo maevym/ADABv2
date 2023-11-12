@@ -31,7 +31,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:text="Hello,"
+                        android:text="@string/greetings"
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         android:paddingStart="20dp"
@@ -46,7 +46,7 @@
                         android:layout_height="wrap_content"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
-                        android:text="John Doe"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="32sp"
                         android:textStyle="bold" />
@@ -63,17 +63,18 @@
                     android:layout_height="50dp"
                     android:src="@drawable/ic_launcher_background"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="20dp"/>
+                    android:layout_marginEnd="20dp"
+                    android:contentDescription="logo" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/today_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="21 Jun 2023"
+                android:text=""
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:layout_marginStart="20dp"
                 android:layout_weight="0.3"/>
           
@@ -113,14 +114,15 @@
                         android:layout_height="0dp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:src="@drawable/learn" />
+                        android:src="@drawable/learn"
+                        android:contentDescription="@string/noClass" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_gravity="center"
                         android:layout_weight="0.2"
-                        android:text="No Class Today"
+                        android:text="@string/noClass"
                         android:textSize="22sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -170,7 +172,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Schedule"
+            android:text="@string/menuSchedule"
             android:textColor="@color/black"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
@@ -206,7 +208,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All Class"
+            android:text="@string/menuClass"
             android:textColor="@color/black"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
@@ -242,7 +244,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Discuss"
+            android:text="@string/menuDiscussion"
             android:textColor="@color/black"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
