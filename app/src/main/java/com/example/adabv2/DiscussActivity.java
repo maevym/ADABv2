@@ -203,7 +203,7 @@ public class DiscussActivity extends AppCompatActivity implements DiscussAdapter
 
         fab2.setOnClickListener(view -> {
             animateFab();
-            Intent intent = new Intent(this, AllClassActivity.class);
+            Intent intent = new Intent(this, ViewClassActivity.class);
             startActivity(intent);
         });
 

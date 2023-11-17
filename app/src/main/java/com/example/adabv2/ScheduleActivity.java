@@ -179,7 +179,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
         fab2.setOnClickListener(view -> {
             animateFab();
-            Intent intent = new Intent(this, AllClassActivity.class);
+            Intent intent = new Intent(this, ViewClassActivity.class);
             startActivity(intent);
         });
 
