@@ -172,13 +172,13 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()){
                     ResponseBody responseBody = response.body();
-                    Toast.makeText(RegisterActivity.this,"Daftar akun berhasil", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this,"Registrasi berhasil", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(intent);
 
                 } else {
                     if(response.code() == 401){
-                        Toast.makeText(RegisterActivity.this, "Email sudah didaftarkan sebelumnya", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Akun sudah diregistrasi", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(RegisterActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                     }
@@ -187,7 +187,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this,"Gagal mendaftarkan", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this,"Registrasi gagal", Toast.LENGTH_SHORT).show();
             }
         });
 

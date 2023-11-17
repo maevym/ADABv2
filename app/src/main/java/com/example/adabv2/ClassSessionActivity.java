@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adabv2.Manager.ApiClient;
@@ -40,6 +42,8 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
     private List<ClassSession> classSessionList = new ArrayList<>();
     private ClassSessionDatabase database;
     private ImageView backButton;
+    private TextView textViewNameClass;
+    private LinearLayout noSessionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,8 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 
         recyclerViewClassSession = binding.recyclerViewClassSession;
         backButton = binding.buttonBackSession;
+        textViewNameClass = binding.choosenClassName;
+        noSessionView = binding.noSessionView;
 
         userPreferences = new UserPreferences(getApplicationContext());
         classId = userPreferences.getClassId();
@@ -69,6 +75,8 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
                 onBackPressed();
             }
         });
+        textViewNameClass.setText(getIntent().getStringExtra("class"));
+
 
     }
 
@@ -118,6 +126,7 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
                 else {
                     if (response.code() == 404) {
                         recyclerViewClassSession.setVisibility(View.INVISIBLE);
+                        noSessionView.setVisibility(View.VISIBLE);
 
                     } else {
                         Toast.makeText(ClassSessionActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
@@ -127,7 +136,7 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 
             @Override
             public void onFailure(Call<Response<ClassSession>> call, Throwable t) {
-
+                Toast.makeText(ClassSessionActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show();
             }
         });
 
