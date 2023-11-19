@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class RecordRealtimeActivity extends AppCompatActivity {
     private TextView realTimeTextTV;
     private Button stopButton;
     private ScrollView scrollView;
+    private LinearLayout noTranscript;
 
     public static final Integer PERMISSION_RECORD_AUDIO_REQUEST = 1;
     private String chosenLanguage;
@@ -75,6 +77,7 @@ public class RecordRealtimeActivity extends AppCompatActivity {
         realTimeTextTV = binding.textRealTime;
         stopButton = binding.buttonStop;
         scrollView = binding.scrollView;
+        noTranscript = binding.noTranscriptView;
 
         // get data from intent
         sessionId = getIntent().getIntExtra("sessionID", 0);
@@ -142,7 +145,11 @@ public class RecordRealtimeActivity extends AppCompatActivity {
                     assert transcriptHistoryResponse != null;
                     List<TranscriptHistory> transcriptHistories = transcriptHistoryResponse.getValues();
                     TranscriptHistory transcriptHistory = transcriptHistories.get(0);
-                    realTimeTextTV.setText(transcriptHistory.getMessage());
+                    if (transcriptHistory.getMessage().isEmpty()) {
+                        noTranscript.setVisibility(View.VISIBLE);
+                    } else {
+                        realTimeTextTV.setText(transcriptHistory.getMessage());
+                    }
                 }
                 else {
                     Log.e("Api Error", "Failed to Fetch Data");

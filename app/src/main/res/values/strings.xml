@@ -9,5 +9,9 @@
     <string name="menuSchedule">Jadwal</string>
     <string name="menuClass">Kelas</string>
     <string name="menuDiscussion">Diskusi</string>
+    <string name="menuHome">Home</string>
     <string name="stopRecButton">BERHENTI</string>
+    <string name="classNotStarted">Kelas belum dimulai</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
