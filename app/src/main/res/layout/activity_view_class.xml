@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    tools:context=".DiscussActivity">
+    tools:context=".ViewClassActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,19 +26,18 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="Diskusi"
+                android:text="Kelas"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_marginTop="15dp"/>
 
             <SearchView
-                android:layout_marginTop="10dp"
-                android:id="@+id/searchDiscuss"
+                android:id="@+id/searchClasses"
                 android:layout_weight="0.1"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/round_search_discuss"
+                android:background="@drawable/round_search"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
@@ -56,7 +55,7 @@
             tools:context=".ViewClassActivity">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvDiscussMember"
+                android:id="@+id/rvViewClass"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -65,10 +64,10 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </LinearLayout>
+
     <LinearLayout
-        android:id="@+id/no_member_view"
+        android:id="@+id/noClassView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -84,14 +83,14 @@
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:src="@drawable/namenotfound" />
+            android:src="@drawable/learn" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="0.2"
-            android:text="Nama Tidak Ditemukan"
+            android:text="Kelas Tidak Ditemukan"
             android:textSize="22sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -216,3 +215,9 @@
     </androidx.cardview.widget.CardView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+
+
+

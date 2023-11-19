@@ -209,7 +209,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         fab2.setOnClickListener(view -> {
             animateFab();
-            Intent intent = new Intent(this, AllClassActivity.class);
+            Intent intent = new Intent(this, ViewClassActivity.class);
             startActivity(intent);
         });
 
