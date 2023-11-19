@@ -16,6 +16,7 @@ import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
@@ -135,6 +136,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         rv.setVisibility(View.INVISIBLE);
                         noClassView.setVisibility(View.VISIBLE);
                     } else {
+                        Toast.makeText(ScheduleActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show();
                         Log.e("Api Error", "Failed to Fetch Data");
                     }
                 }
@@ -179,7 +181,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
         fab2.setOnClickListener(view -> {
             animateFab();
-            Intent intent = new Intent(this, AllClassActivity.class);
+            Intent intent = new Intent(this, ViewClassActivity.class);
             startActivity(intent);
         });
 
