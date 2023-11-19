@@ -60,7 +60,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
             Date endDate = DateFormatter.StringToDateMillisecond(sessions.get(position).getSessionEnd());
             Date currentDate = new Date();
             // check if current time is within interval startDate and endDate
-            if (currentDate.after(startDate)) {
+            if (currentDate.before(startDate)) {
                 Toast.makeText(context, R.string.classNotStarted, Toast.LENGTH_LONG).show();
             }
             else if (currentDate.before(endDate) && currentDate.after(startDate) || currentDate.equals(startDate)) {

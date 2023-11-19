@@ -1,6 +1,5 @@
 package com.example.adabv2.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,9 +17,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.adabv2.HomeActivity;
 import com.example.adabv2.Model.Session;
-import com.example.adabv2.R;
 import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.SessionAdapter;
 import com.example.adabv2.UserPreferences;
@@ -74,12 +71,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(sessionAdapter);
 
+        UserPreferences userPreferences = new UserPreferences(requireContext());
+        name.setText(userPreferences.getUserName());
+        String role = userPreferences.getUserType();
+
         swipeRefreshLayout.setOnRefreshListener(this);
         fabSetting.setOnClickListener(this);
         sessionAdapter = new SessionAdapter(sessions, getContext());
-
-        UserPreferences userPreferences = new UserPreferences(requireContext());
-        name.setText(userPreferences.getUserName());
+        sessionAdapter.setUserType(role);
 
         db = Room.databaseBuilder(requireContext(),
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
