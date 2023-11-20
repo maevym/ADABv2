@@ -8,13 +8,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.adabv2.Fragment.ClassFragment;
@@ -24,8 +25,8 @@ import com.example.adabv2.Fragment.ScheduleFragment;
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.Session;
-import com.example.adabv2.Model.SessionRequest;
 import com.example.adabv2.Room.SessionDatabase;
+import com.example.adabv2.Model.SessionRequest;
 import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.ActivityMainBinding;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -39,7 +40,7 @@ import retrofit2.Callback;
 public class MainActivity extends AppCompatActivity {
 
     private ExtendedFloatingActionButton fabMenu, fabClass, fabSchedule, fabDiscuss, fabHome;
-    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText;
+    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, progressBar;
     private FrameLayout popUp;
     private Animation fabOpen, fabClose;
     private ActivityMainBinding binding;
@@ -64,10 +65,10 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
+
         UserPreferences userPreferences = new UserPreferences(getApplicationContext());
         role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
-        switchFragment(new HomeFragment());
 
         fabMenu = binding.fabMenu;
         fabClass = binding.fabClass;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         fabHomeText = binding.fabHomeText;
         fabDiscussText = binding.fabDiscussText;
         popUp = binding.popUp;
+        progressBar = binding.progressBar;
 
         dbSession = Room.databaseBuilder(getApplicationContext(),
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         fabHome.setOnClickListener(view -> {
             animateFab();
-            switchFragment(new HomeFragment());
+            switchFragment(new HomeFragment(getApplicationContext()));
         });
 
         fabDiscuss.setOnClickListener(view -> {
@@ -176,29 +178,30 @@ public class MainActivity extends AppCompatActivity {
                         newSession.setClassID(sessionList.get(i).getClassID());
                         newSession.setClassCode(sessionList.get(i).getClassCode());
                         newSession.setSessionEnd(sessionList.get(i).getSessionEnd());
-                        newSession.setSessionID(sessionList.get(i).getSessionID());
                         newSession.setSessionLocation(sessionList.get(i).getSessionLocation());
                         newSession.setSessionName(sessionList.get(i).getSessionName());
                         newSession.setSessionStart(sessionList.get(i).getSessionStart());
-                        newSession.setSessionEnd(sessionList.get(i).getSessionEnd());
 
                         dbSession.sessionDAO().insertAllSession(newSession);
                     }
-
                 } else {
                     if (response.code() == 404) {
-                        // pastiin kalo datanya jadi kosong
                         dbSession.sessionDAO().deleteAll();
                     } else {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
                 }
+                progressBar.setVisibility(View.INVISIBLE);
+                popUp.setVisibility(View.INVISIBLE);
+                switchFragment(new HomeFragment(getApplicationContext()));
             }
 
             @Override
             public void onFailure(@NonNull Call<Response<Session>> call, @NonNull Throwable t) {
                 Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
+                progressBar.setVisibility(View.INVISIBLE);
+                switchFragment(new HomeFragment(getApplicationContext()));
             }
         });
     }

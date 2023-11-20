@@ -34,9 +34,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ScheduleActivity"
-            android:exported="false" />
-        <activity
             android:name=".TranscriptHistoryActivity"
             android:exported="false" />
         <activity

@@ -1,8 +1,9 @@
 package com.example.adabv2.Fragment;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,9 +19,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.adabv2.HomeActivity;
 import com.example.adabv2.Model.Session;
-import com.example.adabv2.R;
 import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.SessionAdapter;
 import com.example.adabv2.UserPreferences;
@@ -48,9 +47,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
     private final List<Session> sessions = new ArrayList<>();
     private final Date currentDate = new Date();
     private SessionDatabase db;
+    private final Context applicationContext;
+
+    public HomeFragment(Context applicationContect) {
+        this.applicationContext = applicationContect;
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
@@ -69,21 +73,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
         rv = binding.recyclerView;
         fabSetting = binding.fabSetting;
 
+        UserPreferences userPreferences = new UserPreferences(applicationContext);
+        name.setText(userPreferences.getUserName());
+        String role = userPreferences.getUserType();
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+        fabSetting.setOnClickListener(this);
+        sessionAdapter = new SessionAdapter(sessions, getContext());
+        sessionAdapter.setUserType(role);
+
         rv.hasFixedSize();
         rv.setItemViewCacheSize(20);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(sessionAdapter);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
-        fabSetting.setOnClickListener(this);
-        sessionAdapter = new SessionAdapter(sessions, getContext());
-
-        UserPreferences userPreferences = new UserPreferences(requireContext());
-        name.setText(userPreferences.getUserName());
-
-        db = Room.databaseBuilder(requireContext(),
+        db = Room.databaseBuilder(applicationContext,
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
-        db.sessionDAO().deleteAll();
 
         String date = DateFormatter.DateToStringDate(currentDate);
         todayDate.setText(date);
