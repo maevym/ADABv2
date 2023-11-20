@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="4"
-            android:text="Setting"
+            android:text="@string/setting"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -44,9 +44,10 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
+        android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="John Doe"
+        android:text=""
         android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="@color/blue"
@@ -54,12 +55,12 @@
         android:layout_weight="1.4"/>
 
     <Button
-        android:id="@+id/button_help"
+        android:id="@+id/button_change_profile"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="40dp"
-        android:text="Help"
+        android:text="@string/changeProfile"
         android:textStyle="bold"
         android:background="@drawable/button_regis_login"
         android:backgroundTint="@color/blue"
@@ -71,12 +72,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="20dp"
-        android:text="Log Out"
+        android:text="@string/logout"
         android:textStyle="bold"
         android:background="@drawable/button_regis_login"
         android:backgroundTint="@color/orange"
         app:backgroundTint="@null"
         android:layout_weight="0.5"/>
-
-
 </LinearLayout>

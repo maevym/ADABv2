@@ -1,6 +1,7 @@
 package com.example.adabv2.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.example.adabv2.Model.Session;
 import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.SessionAdapter;
+import com.example.adabv2.SettingActivity;
 import com.example.adabv2.UserPreferences;
 import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.FragmentHomeBinding;
@@ -128,9 +130,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
     @Override
     public void onClick(View view) {
         if (view == fabSetting) {
-            // TODO: intent ke setting activity
-//            Intent intent = new Intent(getContext(), HomeActivity.class);
-//            startActivity(intent);
+            Intent intent = new Intent(getContext(), SettingActivity.class);
+            startActivity(intent);
         }
     }
 
