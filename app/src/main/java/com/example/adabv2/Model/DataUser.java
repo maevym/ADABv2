@@ -1,4 +1,4 @@
-package com.example.adabv2;
+package com.example.adabv2.Model;
 
 public class DataUser {
     private String email;

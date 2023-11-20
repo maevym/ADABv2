@@ -1,30 +1,21 @@
 package com.example.adabv2;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.DataUser;
 import com.example.adabv2.databinding.ActivityRegisterBinding;
-
-import java.lang.reflect.Method;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -99,37 +90,43 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
 
         if(usernameText.isEmpty()){
-            binding.usernameRegister.setError("username cannot be empty");
+            binding.usernameRegister.setError("nama tidak boleh kosong");
             binding.usernameRegister.requestFocus();
             return;
         }
 
         if(usernameText.length() > 20){
-            binding.usernameRegister.setError("username invalid");
+            binding.usernameRegister.setError("username tidak boleh lebih dari 20 karakter");
             binding.usernameRegister.requestFocus();
             return;
         }
 
         if(emailText.isEmpty()){
-            binding.emailRegister.setError("email cannot be empty");
+            binding.emailRegister.setError("email tidak boleh kosong");
             binding.emailRegister.requestFocus();
             return;
         }
 
         if(!emailText.endsWith(".com")){
-            binding.emailRegister.setError("email invalid");
+            binding.emailRegister.setError("email harus mengandung com");
             binding.emailRegister.requestFocus();
             return;
         }
 
         if(!emailText.contains("@")){
-            binding.emailRegister.setError("email invalid");
+            binding.emailRegister.setError("email harus mengandung @");
             binding.emailRegister.requestFocus();
             return;
         }
 
         if(nimText.isEmpty()){
-            binding.nimRegister.setError("email cannot be empty");
+            binding.nimRegister.setError("nim tidak boleh kosong");
+            binding.nimRegister.requestFocus();
+            return;
+        }
+
+        if (nimText.length() > 10 || nimText.length() < 10){
+            binding.nimRegister.setError("nim harus mengandung 10 karakter");
             binding.nimRegister.requestFocus();
             return;
         }
@@ -143,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         }
 
         if(passwordText.isEmpty()){
-            binding.passwordRegister.setError("password cannot be empty");
+            binding.passwordRegister.setError("password tidak boleh kosong");
             binding.passwordRegister.requestFocus();
             return;
         }
@@ -175,13 +172,13 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()){
                     ResponseBody responseBody = response.body();
-                    Toast.makeText(RegisterActivity.this,"Register Successful", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this,"Daftar akun berhasil", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(intent);
 
                 } else {
                     if(response.code() == 401){
-                        Toast.makeText(RegisterActivity.this, "Data has been registered", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Email sudah didaftarkan sebelumnya", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(RegisterActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                     }
@@ -190,7 +187,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this,"Register Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegisterActivity.this,"Gagal mendaftarkan", Toast.LENGTH_SHORT).show();
             }
         });
 

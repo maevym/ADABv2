@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.adabv2.Model.Search;
 import com.example.adabv2.Model.Session;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface DAO {
 
     @Query("DELETE FROM session")
     void deleteAll();
+
 }

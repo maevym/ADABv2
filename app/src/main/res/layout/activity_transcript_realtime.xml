@@ -28,15 +28,15 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="20dp"/>
+                android:layout_marginStart="20dp"
+                android:contentDescription="@string/back" />
 
             <TextView
-                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="4"
-                android:text="Transcript"
+                android:text="@string/transcriptHeading"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
-            android:text="Session 1"
+            android:text=""
             android:layout_marginHorizontal="20dp"
             android:layout_marginVertical="15dp"
             android:textColor="@color/blue"
@@ -70,7 +70,42 @@
             app:strokeColor="@color/blue"
             app:cardBackgroundColor="@color/white">
 
+            <LinearLayout
+                android:id="@+id/no_transcript_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="invisible">
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.9" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:src="@drawable/nothing"
+                    android:contentDescription="@string/noTranscript" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:text="@string/noTranscript"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
             <ScrollView
+                android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="16sp"
@@ -78,9 +113,9 @@
                 <TextView
                     android:id="@+id/text_real_time"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:scrollbars="vertical"
-                    android:text="test"
+                    android:text=""
                     android:textSize="16sp"/>
             </ScrollView>
 
