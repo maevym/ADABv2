@@ -1,6 +1,10 @@
 package com.example.adabv2.Fragment;
 
+<<<<<<< Updated upstream
 import android.content.Intent;
+=======
+import android.content.Context;
+>>>>>>> Stashed changes
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -48,6 +52,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
     private final List<Session> sessions = new ArrayList<>();
     private final Date currentDate = new Date();
     private SessionDatabase db;
+    private Context applicationContext;
+
+    public HomeFragment(Context applicationContect) {
+        this.applicationContext = applicationContect;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,10 +78,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
         rv = binding.recyclerView;
         fabSetting = binding.fabSetting;
 
+<<<<<<< Updated upstream
         rv.hasFixedSize();
         rv.setItemViewCacheSize(20);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(sessionAdapter);
+=======
+        UserPreferences userPreferences = new UserPreferences(applicationContext);
+        name.setText(userPreferences.getUserName());
+        String role = userPreferences.getUserType();
+>>>>>>> Stashed changes
 
         swipeRefreshLayout.setOnRefreshListener(this);
         fabSetting.setOnClickListener(this);
@@ -81,9 +96,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
         UserPreferences userPreferences = new UserPreferences(requireContext());
         name.setText(userPreferences.getUserName());
 
-        db = Room.databaseBuilder(requireContext(),
+        rv.hasFixedSize();
+        rv.setItemViewCacheSize(20);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setAdapter(sessionAdapter);
+
+        db = Room.databaseBuilder(applicationContext,
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
-        db.sessionDAO().deleteAll();
 
         String date = DateFormatter.DateToStringDate(currentDate);
         todayDate.setText(date);
