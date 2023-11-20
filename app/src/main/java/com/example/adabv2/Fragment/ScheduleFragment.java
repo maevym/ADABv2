@@ -2,33 +2,46 @@ package com.example.adabv2.Fragment;
 
 import android.os.Bundle;
 
-<<<<<<< Updated upstream
-=======
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
->>>>>>> Stashed changes
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< Updated upstream
-=======
 import android.widget.CalendarView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
->>>>>>> Stashed changes
 
-import com.example.adabv2.R;
-import com.example.adabv2.databinding.FragmentHomeBinding;
+import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.Response;
+import com.example.adabv2.Model.Session;
+import com.example.adabv2.Model.SessionRequest;
+import com.example.adabv2.Room.SessionDatabase;
+import com.example.adabv2.SessionAdapter;
+import com.example.adabv2.UserPreferences;
+import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.FragmentScheduleBinding;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class ScheduleFragment extends Fragment {
     private FragmentScheduleBinding binding;
-<<<<<<< Updated upstream
-=======
     private CalendarView calendarView;
     private LinearLayout noClassView;
     private FrameLayout progressBar;
@@ -40,18 +53,17 @@ public class ScheduleFragment extends Fragment {
     private final List<Session> sessions = new ArrayList<>();
     private final Date currentDate = new Date();
     private SessionDatabase db;
->>>>>>> Stashed changes
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentScheduleBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        init();
+        pickDate();
         return view;
     }
-<<<<<<< Updated upstream
-=======
 
     private void init() {
         sessionAdapter = new SessionAdapter(sessions, getContext());
@@ -164,5 +176,4 @@ public class ScheduleFragment extends Fragment {
 
         sessionAdapter.notifyDataSetChanged();
     }
->>>>>>> Stashed changes
 }
