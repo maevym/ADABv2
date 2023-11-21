@@ -180,7 +180,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                     if(response.code() == 401){
                         Toast.makeText(RegisterActivity.this, "Akun sudah diregistrasi", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Register gagal", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

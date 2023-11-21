@@ -24,7 +24,10 @@ import com.example.adabv2.Fragment.HomeFragment;
 import com.example.adabv2.Fragment.ScheduleFragment;
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
+import com.example.adabv2.Model.Search;
+import com.example.adabv2.Model.SearchRequest;
 import com.example.adabv2.Model.Session;
+import com.example.adabv2.Room.SearchDatabase;
 import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.Model.SessionRequest;
 import com.example.adabv2.Util.DateFormatter;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private String role;
     private String userSecret;
     private SessionDatabase dbSession;
+    private SearchDatabase dbClassSearch;
     private final Date currentDate = new Date();
 
     @Override
@@ -85,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         dbSession = Room.databaseBuilder(getApplicationContext(),
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
         dbSession.sessionDAO().deleteAll();
+
+        dbClassSearch = Room.databaseBuilder(getApplicationContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
+        dbClassSearch.searchDAO().deleteAllSearch();
     }
 
     private void menuOnClickListener () {
@@ -205,4 +212,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }
