@@ -1,19 +1,19 @@
-package com.example.adabv2;
+package com.example.adabv2.Fragment;
+
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.ViewGroup;
 import android.widget.CalendarView;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,9 +22,11 @@ import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.Session;
 import com.example.adabv2.Model.SessionRequest;
+import com.example.adabv2.Room.SessionDatabase;
+import com.example.adabv2.SessionAdapter;
+import com.example.adabv2.UserPreferences;
 import com.example.adabv2.Util.DateFormatter;
-import com.example.adabv2.databinding.ActivityScheduleBinding;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.example.adabv2.databinding.FragmentScheduleBinding;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,68 +40,73 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class ScheduleActivity extends AppCompatActivity {
-    private ActivityScheduleBinding binding;
+public class ScheduleFragment extends Fragment {
+    private FragmentScheduleBinding binding;
     private CalendarView calendarView;
     private LinearLayout noClassView;
+    private FrameLayout progressBar;
     private RecyclerView rv;
-    private ExtendedFloatingActionButton fab, fab1, fab2, fab3;
-    private CardView fab1Text, fab2Text, fab3Text;
     private TextView todayDate;
-    private ImageView buttonBack;
-
     private String chosenDate;
     private String userSecret;
-    private String role;
-    private Animation fabOpen, fabClose;
     private SessionAdapter sessionAdapter;
-    private boolean isOpen = false;
     private final List<Session> sessions = new ArrayList<>();
     private final Date currentDate = new Date();
+    private SessionDatabase db;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityScheduleBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentScheduleBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
         init();
         pickDate();
-        menuOnClickListener();
-        buttonOnClick();
+        return view;
     }
 
     private void init() {
-        fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
-        sessionAdapter = new SessionAdapter(sessions, this);
-        UserPreferences userPreferences = new UserPreferences(getApplicationContext());
-        role = userPreferences.getUserType();
+        sessionAdapter = new SessionAdapter(sessions, getContext());
+        UserPreferences userPreferences = new UserPreferences(requireContext());
+        String role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
         sessionAdapter.setUserType(role);
 
-        fab = binding.fab;
-        fab1 = binding.fab1;
-        fab2 = binding.fab2;
-        fab3 = binding.fab3;
         todayDate = binding.todayDate;
-        fab1Text = binding.fab1Text;
-        fab2Text = binding.fab2Text;
-        fab3Text = binding.fab3Text;
         rv = binding.recyclerView;
         noClassView = binding.noClassView;
         calendarView = binding.calendarView;
-        buttonBack = binding.buttonBack;
+        progressBar = binding.progressBar;
+        progressBar.setVisibility(View.INVISIBLE);
+
+        db = Room.databaseBuilder(requireContext(),
+                SessionDatabase.class,"session-database").allowMainThreadQueries().build();
 
         rv.hasFixedSize();
         rv.setItemViewCacheSize(20);
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(sessionAdapter);
 
         String date = DateFormatter.DateToStringDate(currentDate);
         todayDate.setText(date);
         chosenDate = DateFormatter.DateToString(currentDate);
-        getSessions();
+
+        getTodayData();
+    }
+
+    private void getTodayData() {
+        sessions.clear();
+        for (Session session : db.sessionDAO().getAllSessions()) {
+            Date date = DateFormatter.StringToDateMillisecond(session.getSessionStart());
+            if (date.after(currentDate)) {
+                sessions.add(session);
+            }
+        }
+        if (sessions.isEmpty()) {
+            rv.setVisibility(View.INVISIBLE);
+            noClassView.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void pickDate() {
@@ -111,11 +118,12 @@ public class ScheduleActivity extends AppCompatActivity {
             }
             Date date = DateFormatter.StringToDate(chosenDate);
             todayDate.setText(DateFormatter.DateToStringDate(date));
-            getSessions();
+            getSessionsFromAPI();
         });
     }
 
-    private void getSessions() {
+    private void getSessionsFromAPI() {
+        progressBar.setVisibility(View.VISIBLE);
         sessions.clear();
         SessionRequest sessionRequest = new SessionRequest();
         sessionRequest.setUser_secret(userSecret);
@@ -136,14 +144,17 @@ public class ScheduleActivity extends AppCompatActivity {
                         rv.setVisibility(View.INVISIBLE);
                         noClassView.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(ScheduleActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Gagal mengambil data", Toast.LENGTH_SHORT).show();
                         Log.e("Api Error", "Failed to Fetch Data");
                     }
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
             @Override
             public void onFailure(@NonNull Call<Response<Session>> call, @NonNull Throwable t) {
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
+                Toast.makeText(getContext(), "Gagal mengambil data", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -164,61 +175,5 @@ public class ScheduleActivity extends AppCompatActivity {
         });
 
         sessionAdapter.notifyDataSetChanged();
-    }
-
-    private void buttonOnClick() {
-        buttonBack.setOnClickListener(v -> finish());
-    }
-
-    private void menuOnClickListener () {
-        fab.setOnClickListener(view -> animateFab());
-
-        fab1.setOnClickListener(view -> {
-            animateFab();
-            Intent intent = new Intent(this, ScheduleActivity.class);
-            startActivity(intent);
-        });
-
-        fab2.setOnClickListener(view -> {
-            animateFab();
-            Intent intent = new Intent(this, ViewClassActivity.class);
-            startActivity(intent);
-        });
-
-        fab3.setOnClickListener(view -> {
-            animateFab();
-            Intent intent = new Intent(this, DiscussActivity.class);
-            startActivity(intent);
-        });
-    }
-
-    private void animateFab() {
-        if (isOpen) {
-            if (!role.equals("L")) {
-                fab3.startAnimation(fabClose);
-                fab3Text.startAnimation(fabClose);
-                fab3.setClickable(false);
-            }
-            fab1.startAnimation(fabClose);
-            fab2.startAnimation(fabClose);
-            fab1Text.startAnimation(fabClose);
-            fab2Text.startAnimation(fabClose);
-            fab1.setClickable(false);
-            fab2.setClickable(false);
-            isOpen = false;
-        } else {
-            if (!role.equals("L")) {
-                fab3.startAnimation(fabOpen);
-                fab3Text.startAnimation(fabOpen);
-                fab3.setClickable(true);
-            }
-            fab1.startAnimation(fabOpen);
-            fab2.startAnimation(fabOpen);
-            fab1Text.startAnimation(fabOpen);
-            fab2Text.startAnimation(fabOpen);
-            fab1.setClickable(true);
-            fab2.setClickable(true);
-            isOpen = true;
-        }
     }
 }

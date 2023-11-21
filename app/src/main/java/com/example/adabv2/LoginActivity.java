@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                         userPreferences.setUserName(name);
                         userPreferences.setUserType(userType);
                         Toast.makeText(LoginActivity.this, "login berhasil", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
                 }
