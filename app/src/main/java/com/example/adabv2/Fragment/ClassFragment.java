@@ -35,7 +35,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class ClassFragment extends Fragment implements SearchAdapter.SearchClickListener{
+public class ClassFragment extends Fragment implements SearchAdapter.SearchClickListener {
     private FragmentClassBinding binding;
     private RecyclerView recyclerView;
     private SearchAdapter searchAdapter;
