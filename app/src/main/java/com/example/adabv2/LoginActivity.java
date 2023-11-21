@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     if(response.code() == 401){
-                        Toast.makeText(LoginActivity.this, "Email dan password tidak terdaftar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Email tidak ditemukan", Toast.LENGTH_SHORT).show();
                     }
                     else {
                         Toast.makeText(LoginActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
@@ -94,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Login gagal", Toast.LENGTH_SHORT).show();
                 Log.wtf("error", t);
             }
         });

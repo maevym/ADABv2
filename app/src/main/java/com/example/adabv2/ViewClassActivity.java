@@ -40,7 +40,7 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
     private String userSecret;
     private ActivityViewClassBinding binding;
     private SearchView searchView;
-    private LinearLayout noClassView;
+    private LinearLayout classNotFoundView, noClassView;
 
     private String role;
     private ExtendedFloatingActionButton fab, fab1, fab2, fab3;
@@ -58,6 +58,7 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
 
+        classNotFoundView = binding.classNotFoundView;
         noClassView = binding.noClassView;
         recyclerView = binding.rvViewClass;
         userPreferences = new UserPreferences(getApplicationContext());
@@ -102,12 +103,12 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
 
         if (filteredList.isEmpty()){
             recyclerView.setVisibility(View.INVISIBLE);
-            noClassView.setVisibility(View.VISIBLE);
+            classNotFoundView.setVisibility(View.VISIBLE);
 //            Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show();
         }
         else {
             recyclerView.setVisibility(View.VISIBLE);
-            noClassView.setVisibility(View.INVISIBLE);
+            classNotFoundView.setVisibility(View.INVISIBLE);
             searchAdapter.setFilteredList(filteredList);
         }
     }
@@ -139,7 +140,9 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
                 }
                 else {
                     if (response.code() == 404) {
+                        //mesti di cek ulang, kalo success tapi kelas ga ada
                         recyclerView.setVisibility(View.INVISIBLE);
+                        noClassView.setVisibility(View.VISIBLE);
 
                     } else {
                         Toast.makeText(ViewClassActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
@@ -149,7 +152,7 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
 
             @Override
             public void onFailure(Call<Response<Search>> call, Throwable t) {
-
+                Toast.makeText(ViewClassActivity.this,"Gagal mengambil data", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -183,6 +186,7 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
         userPreferences.setClassId(classId);
         Log.wtf("class id view woi", String.valueOf(classId));
         Intent intent = new Intent(ViewClassActivity.this, ClassSessionActivity.class);
+        intent.putExtra("class", search.getClass_name());
         startActivity(intent);
     }
 
