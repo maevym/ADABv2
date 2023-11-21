@@ -30,9 +30,6 @@
             android:name=".TranscriptHistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".DiscussActivity"
-            android:exported="false" />
-        <activity
             android:name=".TranscriptRealtimeActivity"
             android:exported="false" />
         <activity
