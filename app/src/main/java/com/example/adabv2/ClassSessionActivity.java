@@ -61,7 +61,10 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
         noSessionView = binding.noSessionView;
 
         dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
-//        callFuncAPI();
+        //dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
+        dbClassSession.classSessionDAO().deleteAllClassSession();
+
+        //        callFuncAPI();
         setData(createClassSessionRequest());
         prepareRecyclerView();
         Log.wtf("masuk on create","masuk");
