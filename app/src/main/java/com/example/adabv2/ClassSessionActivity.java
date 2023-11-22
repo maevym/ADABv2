@@ -123,16 +123,17 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
                 else {
                     if (response.code() == 404) {
                         recyclerViewClassSession.setVisibility(View.INVISIBLE);
+                        noSessionView.setVisibility(View.VISIBLE);
 
                     } else {
-                        Toast.makeText(ClassSessionActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ClassSessionActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<Response<ClassSession>> call, Throwable t) {
-
+                Toast.makeText(ClassSessionActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show();
             }
         });
 
