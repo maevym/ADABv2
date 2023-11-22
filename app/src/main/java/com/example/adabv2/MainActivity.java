@@ -256,12 +256,13 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     if (response.code() == 404) {
+                        //errornya mau nampilin apa
                         //mesti di cek ulang, kalo success tapi kelas ga ada
 //                        recyclerView.setVisibility(View.INVISIBLE);
 //                        noClassView.setVisibility(View.VISIBLE);
 
                     } else {
-                        Toast.makeText(MainActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -324,10 +325,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     if (response.code() == 404) {
-
+                        //errornya mau nampilin apa
 
                     } else {
-                        Toast.makeText(MainActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
                 }
             }
