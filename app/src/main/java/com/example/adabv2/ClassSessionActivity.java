@@ -40,8 +40,10 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
     private List<ClassSession> classSessionList = new ArrayList<>();
     private ClassSessionDatabase dbClassSession;
     private ImageView backButton;
+    private int classId;
     private TextView textViewNameClass;
     private LinearLayout noSessionView;
+    private UserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +53,16 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
         setContentView(view);
 
 
+        userPreferences = new UserPreferences(getApplicationContext());
+        classId = userPreferences.getClassId();
         recyclerViewClassSession = binding.recyclerViewClassSession;
         backButton = binding.buttonBackSession;
         textViewNameClass = binding.choosenClassName;
         noSessionView = binding.noSessionView;
 
         dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
-        callFuncAPI();
+//        callFuncAPI();
+        setData(createClassSessionRequest());
         prepareRecyclerView();
         Log.wtf("masuk on create","masuk");
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -72,21 +77,91 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 
     }
 
-    public void callFuncAPI (){
-        classSessionList.clear();
-        List<ClassSession> classSessions = dbClassSession.classSessionDAO().getAllClassSession();
-        for (ClassSession classSession : classSessions) {
-            classSessionList.add(classSession);
-        }
+    public void setData(ClassSessionRequest classSessionRequest){
+        Call<Response<ClassSession>> responseCallClassSession = ApiClient.request().classSessionAPI(classSessionRequest);
+        Log.wtf("masuk", "dapet panggil retrofit");
+        responseCallClassSession.enqueue(new Callback<Response<ClassSession>>(){
+            @Override
+            public void onResponse(Call<Response<ClassSession>> call, retrofit2.Response<Response<ClassSession>> response) {
+                if (response.isSuccessful()) {
+                    classSessionList.clear();
+                    Response<ClassSession> classSessionResponse  = response.body();
+                    List<ClassSession> sessionList = classSessionResponse.getValues();
+                    for (int i=0; i<sessionList.size(); i++) {
+                        ClassSession newSession = new ClassSession();
+                        newSession.setSession_id(sessionList.get(i).getSession_id());
 
-        if (classSessionList.isEmpty()) {
-            recyclerViewClassSession.setVisibility(View.INVISIBLE);
-            noSessionView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerViewClassSession.setVisibility(View.VISIBLE);
-            noSessionView.setVisibility(View.INVISIBLE);
-        }
+                        Log.wtf("berhasil session id ", String.valueOf(sessionList.get(i).getSession_id()));
+
+                        newSession.setSession_name(sessionList.get(i).getSession_name());
+                        Log.wtf("berhasil session name ", sessionList.get(i).getSession_name());
+
+                        newSession.setClass_id(sessionList.get(i).getClass_id());
+                        Log.wtf("berhasil class id ", String.valueOf(sessionList.get(i).getClass_id()));
+
+                        newSession.setSession_start(sessionList.get(i).getSession_start());
+                        Log.wtf("berhasil session start ", sessionList.get(i).getSession_start());
+
+                        newSession.setSession_end(sessionList.get(i).getSession_end());
+                        Log.wtf("berhasil session end ", sessionList.get(i).getSession_end());
+
+                        newSession.setTime_start(sessionList.get(i).getTime_start());
+                        Log.wtf("berhasil time start ", sessionList.get(i).getTime_start());
+
+                        newSession.setTime_end(sessionList.get(i).getTime_end());
+                        Log.wtf("berhasil time end ", sessionList.get(i).getTime_end());
+
+                        //Log.wtf("masuk", "dapet class add" + classSessionList.add(newSession));
+                        classSessionList.add(newSession);
+                        dbClassSession.classSessionDAO().insertClassSession(newSession);
+
+                    }
+                    classSessionAdapter.notifyDataSetChanged();
+                    Log.wtf("masuk notify","masuk");
+//                    Toast.makeText(AllClassActivity.this,"Search Successful", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    if (response.code() == 404) {
+                        recyclerViewClassSession.setVisibility(View.INVISIBLE);
+
+                    } else {
+                        Toast.makeText(ClassSessionActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<ClassSession>> call, Throwable t) {
+
+            }
+        });
+
     }
+
+
+    public ClassSessionRequest createClassSessionRequest(){
+        ClassSessionRequest classSessionRequest = new ClassSessionRequest();
+        classSessionRequest.setClass_id(classId);
+        Log.wtf("masuk class id", String.valueOf(classId));
+
+        return classSessionRequest;
+    }
+
+//    public void callFuncAPI (){
+//        classSessionList.clear();
+//        List<ClassSession> classSessions = dbClassSession.classSessionDAO().getAllClassSession();
+//        for (ClassSession classSession : classSessions) {
+//            classSessionList.add(classSession);
+//        }
+//
+//        if (classSessionList.isEmpty()) {
+//            recyclerViewClassSession.setVisibility(View.INVISIBLE);
+//            noSessionView.setVisibility(View.VISIBLE);
+//        } else {
+//            recyclerViewClassSession.setVisibility(View.VISIBLE);
+//            noSessionView.setVisibility(View.INVISIBLE);
+//        }
+//    }
 
     public void prepareRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);

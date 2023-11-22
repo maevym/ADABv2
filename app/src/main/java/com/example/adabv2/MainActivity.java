@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private SessionDatabase dbSession;
     private SearchDatabase dbClassSearch;
     private ClassSessionDatabase dbClassSession;
+    private LinearLayout noClassView;
     private final Date currentDate = new Date();
     private int classId;
 
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         menuOnClickListener();
         saveSession();
         saveSearchDataClass();
-        saveClassSession();
+//        saveClassSession();
     }
 
     private void init() {
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         fabDiscussText = binding.fabDiscussText;
         popUp = binding.popUp;
         progressBar = binding.progressBar;
+        noClassView = binding.noClassView;
 
 
         dbSession = Room.databaseBuilder(getApplicationContext(),
@@ -256,10 +258,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     if (response.code() == 404) {
-                        //errornya mau nampilin apa
-                        //mesti di cek ulang, kalo success tapi kelas ga ada
-//                        recyclerView.setVisibility(View.INVISIBLE);
-//                        noClassView.setVisibility(View.VISIBLE);
+                        noClassView.setVisibility(View.VISIBLE);
 
                     } else {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
@@ -279,53 +278,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void saveClassSession(){
-        ClassSessionRequest classSessionRequest = new ClassSessionRequest();
-        classSessionRequest.setClass_id(classId);
-        Log.wtf("masuk class id", String.valueOf(classId));
 
-
-        Call<Response<ClassSession>> responseCallClassSession = ApiClient.request().classSessionAPI(classSessionRequest);
-        Log.wtf("masuk", "dapet panggil retrofit");
-        responseCallClassSession.enqueue(new Callback<Response<ClassSession>>(){
-            @Override
-            public void onResponse(Call<Response<ClassSession>> call, retrofit2.Response<Response<ClassSession>> response) {
-                if (response.isSuccessful()) {
-                    Response<ClassSession> classSessionResponse  = response.body();
-                    List<ClassSession> sessionList = classSessionResponse.getValues();
-                    for (int i=0; i<sessionList.size(); i++) {
-                        ClassSession newSession = new ClassSession();
-                        newSession.setSession_id(sessionList.get(i).getSession_id());
-                        newSession.setSession_name(sessionList.get(i).getSession_name());
-                        newSession.setClass_id(sessionList.get(i).getClass_id());
-                        newSession.setSession_start(sessionList.get(i).getSession_start());
-                        newSession.setSession_end(sessionList.get(i).getSession_end());
-                        newSession.setTime_start(sessionList.get(i).getTime_start());
-                        newSession.setTime_end(sessionList.get(i).getTime_end());
-                        dbClassSession.classSessionDAO().insertClassSession(newSession);
-
-                    }
-                   // classSessionAdapter.notifyDataSetChanged();
-//                    Toast.makeText(AllClassActivity.this,"Search Successful", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    if (response.code() == 404) {
-                        //errornya mau nampilin apa
-
-                    } else {
-                        Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Response<ClassSession>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-        });
-
-    }
 
 }
