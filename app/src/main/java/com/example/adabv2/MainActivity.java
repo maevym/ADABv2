@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         saveSession();
         saveSearchDataClass();
 //        saveClassSession();
+
     }
 
     private void init() {
@@ -277,8 +278,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-
 
 
 }

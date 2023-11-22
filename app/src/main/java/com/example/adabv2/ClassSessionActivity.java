@@ -162,8 +162,6 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 //        }
 //    }
 
-    
-
     public void prepareRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewClassSession.setLayoutManager(linearLayoutManager);
