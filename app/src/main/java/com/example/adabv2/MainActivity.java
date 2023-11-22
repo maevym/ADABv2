@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         init();
         menuOnClickListener();
         saveSession();
+        saveSearchDataClass();
     }
 
     private void init() {
@@ -211,6 +212,52 @@ public class MainActivity extends AppCompatActivity {
                 switchFragment(new HomeFragment(getApplicationContext()));
             }
         });
+    }
+
+
+    private void saveSearchDataClass(){
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setUser_secret(userSecret);
+
+        Call<Response<Search>> responseCallSearch = ApiClient.request().searchClass(searchRequest);
+        Log.wtf("masuk", "dapet panggil retrofit");
+        responseCallSearch.enqueue(new Callback<Response<Search>>(){
+            @Override
+            public void onResponse(Call<Response<Search>> call, retrofit2.Response<Response<Search>> response) {
+                if (response.isSuccessful()) {
+                    Response<Search> searchResponse  = response.body();
+                    List<Search> searchList = searchResponse.getValues();
+                    for (int i=0; i<searchList.size(); i++) {
+                        Search newSearch = new Search();
+                        newSearch.setClass_code(searchList.get(i).getClass_code());
+                        newSearch.setClass_name(searchList.get(i).getClass_name());
+                        newSearch.setClass_id(searchList.get(i).getClass_id());
+                        newSearch.setClass_lecturer_id(searchList.get(i).getClass_lecturer_id());
+//                        newSearch.setClass_type(searchList.get(i).getClass_type());
+                        dbClassSearch.searchDAO().insertSearchClass(newSearch);
+                        Log.wtf("berhasil get all", "coba" + dbClassSearch.searchDAO().getAllSearch());
+
+                    }
+//                    searchAdapter.notifyDataSetChanged();
+                }
+                else {
+                    if (response.code() == 404) {
+                        //mesti di cek ulang, kalo success tapi kelas ga ada
+//                        recyclerView.setVisibility(View.INVISIBLE);
+//                        noClassView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        Toast.makeText(MainActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<Search>> call, Throwable t) {
+                Toast.makeText(MainActivity.this,"Gagal mengambil data", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 }
