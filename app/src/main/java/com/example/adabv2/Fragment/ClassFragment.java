@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -21,15 +22,18 @@ import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.Search;
 import com.example.adabv2.Model.SearchRequest;
+import com.example.adabv2.Model.Session;
 import com.example.adabv2.R;
 import com.example.adabv2.Room.SearchDatabase;
 import com.example.adabv2.SearchAdapter;
 import com.example.adabv2.UserPreferences;
+import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.ViewClassActivity;
 import com.example.adabv2.databinding.FragmentClassBinding;
 import com.example.adabv2.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,11 +44,12 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
     private RecyclerView recyclerView;
     private SearchAdapter searchAdapter;
     private List<Search> searches = new ArrayList<>();
-    private SearchDatabase database;
+    private SearchDatabase dbSearch;
     private UserPreferences userPreferences;
     private String userSecret;
     private SearchView searchView;
     private LinearLayout classNotFoundView, noClassView;
+    private FrameLayout progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +62,8 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
         recyclerView = binding.rvViewClass;
         userPreferences = new UserPreferences(requireContext());
         searchView = binding.searchClasses;
+        progressBar = binding.progressBar;
+        progressBar.setVisibility(View.INVISIBLE);
         searchView.setQueryHint("Cari Kelas");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -71,9 +78,8 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
             }
         });
         userSecret = userPreferences.getUserSecret();
-        database = Room.databaseBuilder(requireContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
-        database.searchDAO().deleteAllSearch();
-        setData(createSearchRequest());
+        dbSearch = Room.databaseBuilder(requireContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
+        callFuncAPI();
         prepareRecyclerView();
 
         return view;
@@ -109,67 +115,35 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
         }
     }
 
-    public void setData(SearchRequest searchRequest){
-        Call<Response<Search>> responseCallSearch = ApiClient.request().searchClass(searchRequest);
-        Log.wtf("masuk", "dapet panggil retrofit");
-        responseCallSearch.enqueue(new Callback<Response<Search>>(){
-            @Override
-            public void onResponse(Call<Response<Search>> call, retrofit2.Response<Response<Search>> response) {
-                if (response.isSuccessful()) {
-                    searches.clear();
-                    Response<Search> searchResponse  = response.body();
-                    List<Search> searchList = searchResponse.getValues();
-                    for (int i=0; i<searchList.size(); i++) {
-                        Search newSearch = new Search();
-                        newSearch.setClass_code(searchList.get(i).getClass_code());
-                        newSearch.setClass_name(searchList.get(i).getClass_name());
-                        newSearch.setClass_id(searchList.get(i).getClass_id());
-                        newSearch.setClass_lecturer_id(searchList.get(i).getClass_lecturer_id());
-//                        newSearch.setClass_type(searchList.get(i).getClass_type());
+    private void callFuncAPI (){
+        progressBar.setVisibility(View.VISIBLE);
+        searches.clear();
+        List<Search> search = dbSearch.searchDAO().getAllSearch();
+        for (Search searching : search) {
+            Log.wtf("get di add ","coba ");
+            searches.add(searching);
+            Log.wtf("searching di add ","coba ");
+        }
 
-                        // Log.wtf("masuk", "dapet searches" + searches.add(newSearch));
-                        searches.add(newSearch);
-                        database.searchDAO().insertSearchClass(newSearch);
-
-                    }
-                    searchAdapter.notifyDataSetChanged();
-                }
-                else {
-                    if (response.code() == 404) {
-                        //mesti di cek ulang, kalo success tapi kelas ga ada
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        noClassView.setVisibility(View.VISIBLE);
-
-                    } else {
-                        Toast.makeText(getContext(), "Failed to Fetch Data", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Response<Search>> call, Throwable t) {
-                Toast.makeText(getContext(),"Gagal mengambil data", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        if (searches.isEmpty()) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            noClassView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noClassView.setVisibility(View.INVISIBLE);
+        }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
-    public SearchRequest createSearchRequest(){
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.setUser_secret(userSecret);
-        Log.wtf("masuk", "user secret" + userSecret);
-        Log.wtf("masuk", "dapet user secret");
 
-        return searchRequest;
-    }
-    public void prepareRecyclerView(){
+    private void prepareRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         preAdapter();
 
     }
 
-    public void preAdapter(){
+    private void preAdapter(){
         searchAdapter = new SearchAdapter(searches, this::selectedSearch);
         recyclerView.setAdapter(searchAdapter);
     }
