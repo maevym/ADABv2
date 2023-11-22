@@ -23,10 +23,13 @@ import com.example.adabv2.Fragment.DiscussFragment;
 import com.example.adabv2.Fragment.HomeFragment;
 import com.example.adabv2.Fragment.ScheduleFragment;
 import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.ClassSession;
+import com.example.adabv2.Model.ClassSessionRequest;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.Search;
 import com.example.adabv2.Model.SearchRequest;
 import com.example.adabv2.Model.Session;
+import com.example.adabv2.Room.ClassSessionDatabase;
 import com.example.adabv2.Room.SearchDatabase;
 import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.Model.SessionRequest;
@@ -53,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private String userSecret;
     private SessionDatabase dbSession;
     private SearchDatabase dbClassSearch;
+    private ClassSessionDatabase dbClassSession;
     private final Date currentDate = new Date();
+    private int classId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         menuOnClickListener();
         saveSession();
         saveSearchDataClass();
+        saveClassSession();
     }
 
     private void init() {
@@ -74,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         UserPreferences userPreferences = new UserPreferences(getApplicationContext());
         role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
+        classId = userPreferences.getClassId();
+        Log.wtf("class", String.valueOf(classId));
+
 
         fabMenu = binding.fabMenu;
         fabClass = binding.fabClass;
@@ -87,12 +96,17 @@ public class MainActivity extends AppCompatActivity {
         popUp = binding.popUp;
         progressBar = binding.progressBar;
 
+
         dbSession = Room.databaseBuilder(getApplicationContext(),
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
         dbSession.sessionDAO().deleteAll();
 
         dbClassSearch = Room.databaseBuilder(getApplicationContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
         dbClassSearch.searchDAO().deleteAllSearch();
+
+
+        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
+        dbClassSession.classSessionDAO().deleteAllClassSession();
     }
 
     private void menuOnClickListener () {
@@ -255,6 +269,72 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Response<Search>> call, Throwable t) {
                 Toast.makeText(MainActivity.this,"Gagal mengambil data", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+    private void saveClassSession(){
+        ClassSessionRequest classSessionRequest = new ClassSessionRequest();
+        classSessionRequest.setClass_id(classId);
+        Log.wtf("masuk class id", String.valueOf(classId));
+
+
+        Call<Response<ClassSession>> responseCallClassSession = ApiClient.request().classSessionAPI(classSessionRequest);
+        Log.wtf("masuk", "dapet panggil retrofit");
+        responseCallClassSession.enqueue(new Callback<Response<ClassSession>>(){
+            @Override
+            public void onResponse(Call<Response<ClassSession>> call, retrofit2.Response<Response<ClassSession>> response) {
+                if (response.isSuccessful()) {
+                    Response<ClassSession> classSessionResponse  = response.body();
+                    List<ClassSession> sessionList = classSessionResponse.getValues();
+                    for (int i=0; i<sessionList.size(); i++) {
+                        ClassSession newSession = new ClassSession();
+                        newSession.setSession_id(sessionList.get(i).getSession_id());
+
+                        Log.wtf("berhasil session id ", String.valueOf(sessionList.get(i).getSession_id()));
+
+                        newSession.setSession_name(sessionList.get(i).getSession_name());
+                        Log.wtf("berhasil session name ", sessionList.get(i).getSession_name());
+
+                        newSession.setClass_id(sessionList.get(i).getClass_id());
+                        Log.wtf("berhasil class id ", String.valueOf(sessionList.get(i).getClass_id()));
+
+                        newSession.setSession_start(sessionList.get(i).getSession_start());
+                        Log.wtf("berhasil session start ", sessionList.get(i).getSession_start());
+
+                        newSession.setSession_end(sessionList.get(i).getSession_end());
+                        Log.wtf("berhasil session end ", sessionList.get(i).getSession_end());
+
+                        newSession.setTime_start(sessionList.get(i).getTime_start());
+                        Log.wtf("berhasil time start ", sessionList.get(i).getTime_start());
+
+                        newSession.setTime_end(sessionList.get(i).getTime_end());
+                        Log.wtf("berhasil time end ", sessionList.get(i).getTime_end());
+
+                        //Log.wtf("masuk", "dapet class add" + classSessionList.add(newSession));
+                        //classSessionList.add(newSession);
+                        dbClassSession.classSessionDAO().insertClassSession(newSession);
+
+                    }
+                   // classSessionAdapter.notifyDataSetChanged();
+                    Log.wtf("masuk notify","masuk");
+//                    Toast.makeText(AllClassActivity.this,"Search Successful", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    if (response.code() == 404) {
+
+
+                    } else {
+                        Toast.makeText(MainActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<ClassSession>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show();
             }
         });
 

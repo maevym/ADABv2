@@ -111,7 +111,7 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
         }
     }
 
-    public void callFuncAPI (){
+    private void callFuncAPI (){
         searches.clear();
         List<Search> search = dbSearch.searchDAO().getAllSearch();
         for (Search searching : search) {
