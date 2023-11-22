@@ -109,6 +109,7 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
 //            Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show();
         }
         else {
+            recyclerView.setVisibility(View.VISIBLE);
             classNotFoundView.setVisibility(View.INVISIBLE);
             searchAdapter.setFilteredList(filteredList);
         }

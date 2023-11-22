@@ -109,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
         dbClassSearch.searchDAO().deleteAllSearch();
 
 
-        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
-        dbClassSession.classSessionDAO().deleteAllClassSession();
+//        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
+//        dbClassSession.classSessionDAO().deleteAllClassSession();
     }
 
     private void menuOnClickListener () {
