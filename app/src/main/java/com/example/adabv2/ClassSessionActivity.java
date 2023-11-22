@@ -59,9 +59,10 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
         backButton = binding.buttonBackSession;
         textViewNameClass = binding.choosenClassName;
         noSessionView = binding.noSessionView;
+
+        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
 //        callFuncAPI();
         setData(createClassSessionRequest());
-
         prepareRecyclerView();
         Log.wtf("masuk on create","masuk");
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +138,13 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 
     }
 
+    public ClassSessionRequest createClassSessionRequest(){
+        ClassSessionRequest classSessionRequest = new ClassSessionRequest();
+        classSessionRequest.setClass_id(classId);
+        Log.wtf("masuk class id", String.valueOf(classId));
+
+        return classSessionRequest;
+    }
 
 //    public void callFuncAPI (){
 //        classSessionList.clear();
