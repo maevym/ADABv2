@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         noClassView = binding.noClassView;
 
 
+
         dbSession = Room.databaseBuilder(getApplicationContext(),
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
         dbSession.sessionDAO().deleteAll();
