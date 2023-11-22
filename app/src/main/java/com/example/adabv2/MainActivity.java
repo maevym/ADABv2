@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         saveSession();
         saveSearchDataClass();
 //        saveClassSession();
+
     }
 
     private void init() {
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         popUp = binding.popUp;
         progressBar = binding.progressBar;
         noClassView = binding.noClassView;
+
 
 
         dbSession = Room.databaseBuilder(getApplicationContext(),
@@ -276,8 +278,5 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-
-
 
 }
