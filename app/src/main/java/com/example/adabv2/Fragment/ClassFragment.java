@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
     private String userSecret;
     private SearchView searchView;
     private LinearLayout classNotFoundView, noClassView;
+    private FrameLayout progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +62,8 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
         recyclerView = binding.rvViewClass;
         userPreferences = new UserPreferences(requireContext());
         searchView = binding.searchClasses;
+        progressBar = binding.progressBar;
+        progressBar.setVisibility(View.INVISIBLE);
         searchView.setQueryHint("Cari Kelas");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -112,6 +116,7 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
     }
 
     private void callFuncAPI (){
+        progressBar.setVisibility(View.VISIBLE);
         searches.clear();
         List<Search> search = dbSearch.searchDAO().getAllSearch();
         for (Search searching : search) {
@@ -127,6 +132,7 @@ public class ClassFragment extends Fragment implements SearchAdapter.SearchClick
             recyclerView.setVisibility(View.VISIBLE);
             noClassView.setVisibility(View.INVISIBLE);
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 

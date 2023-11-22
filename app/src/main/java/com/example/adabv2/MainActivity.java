@@ -265,11 +265,14 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<Response<Search>> call, Throwable t) {
                 Toast.makeText(MainActivity.this,"Gagal mengambil data", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
+                switchFragment(new ClassFragment());
             }
         });
 
@@ -293,34 +296,16 @@ public class MainActivity extends AppCompatActivity {
                     for (int i=0; i<sessionList.size(); i++) {
                         ClassSession newSession = new ClassSession();
                         newSession.setSession_id(sessionList.get(i).getSession_id());
-
-                        Log.wtf("berhasil session id ", String.valueOf(sessionList.get(i).getSession_id()));
-
                         newSession.setSession_name(sessionList.get(i).getSession_name());
-                        Log.wtf("berhasil session name ", sessionList.get(i).getSession_name());
-
                         newSession.setClass_id(sessionList.get(i).getClass_id());
-                        Log.wtf("berhasil class id ", String.valueOf(sessionList.get(i).getClass_id()));
-
                         newSession.setSession_start(sessionList.get(i).getSession_start());
-                        Log.wtf("berhasil session start ", sessionList.get(i).getSession_start());
-
                         newSession.setSession_end(sessionList.get(i).getSession_end());
-                        Log.wtf("berhasil session end ", sessionList.get(i).getSession_end());
-
                         newSession.setTime_start(sessionList.get(i).getTime_start());
-                        Log.wtf("berhasil time start ", sessionList.get(i).getTime_start());
-
                         newSession.setTime_end(sessionList.get(i).getTime_end());
-                        Log.wtf("berhasil time end ", sessionList.get(i).getTime_end());
-
-                        //Log.wtf("masuk", "dapet class add" + classSessionList.add(newSession));
-                        //classSessionList.add(newSession);
                         dbClassSession.classSessionDAO().insertClassSession(newSession);
 
                     }
                    // classSessionAdapter.notifyDataSetChanged();
-                    Log.wtf("masuk notify","masuk");
 //                    Toast.makeText(AllClassActivity.this,"Search Successful", Toast.LENGTH_LONG).show();
                 }
                 else {
@@ -329,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
 
                     } else {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -336,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Response<ClassSession>> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 

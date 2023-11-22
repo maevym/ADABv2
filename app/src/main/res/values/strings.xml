@@ -23,6 +23,8 @@
     <string name="adab">ADAB</string>
     <string name="signinuntukmelanjutkan">Sign in untuk melanjutkan</string>
     <string name="buttonlogin">LOGIN</string>
+    <string name="kelas">Kelas</string>
+    <string name="sesi">Sesi</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
