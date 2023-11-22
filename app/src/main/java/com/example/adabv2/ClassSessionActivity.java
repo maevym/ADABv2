@@ -138,6 +138,13 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 
     }
 
+    public ClassSessionRequest createClassSessionRequest(){
+        ClassSessionRequest classSessionRequest = new ClassSessionRequest();
+        classSessionRequest.setClass_id(classId);
+        Log.wtf("masuk class id", String.valueOf(classId));
+
+        return classSessionRequest;
+    }
 
 //    public void callFuncAPI (){
 //        classSessionList.clear();
