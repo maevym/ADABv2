@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
+import com.example.adabv2.ChatGroupActivity;
 import com.example.adabv2.ClassSessionActivity;
 import com.example.adabv2.DiscussAdapter;
 import com.example.adabv2.Model.Discuss;
@@ -75,11 +76,11 @@ public class DiscussFragment extends Fragment implements DiscussAdapter.DiscussC
 
     @Override
     public void selectedMember(Discuss discuss) {
-        int classId = discuss.getClass_id();
-        userPreferences.setClassId(classId);
-        Log.wtf("class id view woi", String.valueOf(classId));
-        Intent intent = new Intent(getActivity(), ClassSessionActivity.class);
-        intent.putExtra("class", discuss.getClass_name());
+//        int classId = discuss.getClass_id();
+//        userPreferences.setClassId(classId);
+//        Log.wtf("class id view woi", String.valueOf(classId));
+        Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
+//        intent.putExtra("class", discuss.getClass_name());
         startActivity(intent);
     }
 

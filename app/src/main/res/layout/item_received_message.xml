@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_received_message"
+    android:layout_marginTop="19dp"
+    android:layout_marginStart="19dp"
+    android:layout_marginEnd="85dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp">
+
+        <TextView
+            android:id="@+id/nameMemberChat"
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Nama Member"
+            android:textSize="16dp"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:textColor="@color/blue"/>
+
+        <TextView
+            android:id="@+id/fieldReceivedTextMessage"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lorem Ipsum is simply dummy text of the printing "
+            android:textSize="16dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/timeReceived"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="11:45"
+            android:textSize="16dp"
+            android:layout_gravity="right" />
+
+    </LinearLayout>
+
+
+</FrameLayout>
