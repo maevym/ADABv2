@@ -208,12 +208,12 @@ public class ViewClassActivity extends AppCompatActivity implements SearchAdapte
             startActivity(intent);
         });
 
-        fab3.setOnClickListener(view -> {
-            animateFab();
-            Intent intent = new Intent(this, DiscussActivity.class);
-            startActivity(intent);
-
-        });
+//        fab3.setOnClickListener(view -> {
+//            animateFab();
+//            Intent intent = new Intent(this, DiscussActivity.class);
+//            startActivity(intent);
+//
+//        });
     }
 
     private void animateFab() {

@@ -40,8 +40,9 @@ public interface ApiService {
 //    @POST("login")
 //    Call<ResponseBody> loginUser(@Body LoginRequest loginRequest);
 
-    @POST("user/getAllMember")
+    @POST("user/getAllClass")
     Call<Response<Discuss>> discussSearch(@Body DiscussRequest discussRequest);
+
     @POST("user/getTranscriptHistory")
     Call<Response<TranscriptHistory>> saveTranscriptHistory(@Body TranscriptRequest transcriptRequest);
 }

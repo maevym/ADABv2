@@ -25,6 +25,7 @@
     <string name="buttonlogin">LOGIN</string>
     <string name="kelas">Kelas</string>
     <string name="sesi">Sesi</string>
+    <string name="diskusi">Diskusi</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

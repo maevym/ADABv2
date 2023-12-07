@@ -1,5 +1,6 @@
 package com.example.adabv2.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,170 +12,131 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.example.adabv2.DiscussActivity;
+import com.example.adabv2.ClassSessionActivity;
 import com.example.adabv2.DiscussAdapter;
-import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Discuss;
-import com.example.adabv2.Model.DiscussRequest;
-import com.example.adabv2.Model.Response;
-import com.example.adabv2.R;
 import com.example.adabv2.Room.DiscussDatabase;
 import com.example.adabv2.UserPreferences;
-import com.example.adabv2.databinding.FragmentDiscussBinding;
-import com.example.adabv2.databinding.FragmentHomeBinding;
+import com.example.adabv2.databinding.FragmentClassBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-
 public class DiscussFragment extends Fragment implements DiscussAdapter.DiscussClickListener {
-    private FragmentDiscussBinding binding;
-    private RecyclerView recyclerViewDiscussMember;
+    private FragmentClassBinding binding;
+    private RecyclerView recyclerView;
     private DiscussAdapter discussAdapter;
-    private List<Discuss> discussList = new ArrayList<>();
+    private List<Discuss> discusses = new ArrayList<>();
+    private DiscussDatabase dbDiscuss;
     private UserPreferences userPreferences;
-    private int class_id;
-    private DiscussDatabase database;
-    private SearchView searchViewDiscuss;
-    private LinearLayout noMemberView;
+    private String userSecret;
+    private SearchView searchView;
+    private LinearLayout classNotFoundView, noClassView;
+    private FrameLayout progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentDiscussBinding.inflate(inflater, container, false);
+        binding = FragmentClassBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        noMemberView = binding.noMemberView;
-        recyclerViewDiscussMember = binding.rvDiscussMember;
+        classNotFoundView = binding.classNotFoundView;
+        noClassView = binding.noClassView;
+        recyclerView = binding.rvViewClass;
         userPreferences = new UserPreferences(requireContext());
-        searchViewDiscuss = binding.searchDiscuss;
-        searchViewDiscuss.setQueryHint("Cari Nama");
-
-        searchViewDiscuss.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView = binding.searchClasses;
+        progressBar = binding.progressBar;
+        progressBar.setVisibility(View.INVISIBLE);
+        searchView.setQueryHint("Cari Kelas");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.wtf("berhasil masuk text submit", "search");
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 filterList(newText);
-                Log.wtf("berhasil masuk text change", "search 2");
                 return true;
             }
         });
-
-
-        userPreferences = new UserPreferences(requireContext());
-        class_id = userPreferences.getClassId();
-        database = Room.databaseBuilder(requireContext(), DiscussDatabase.class, "discuss-database").allowMainThreadQueries().build();
-        database.discussWithMember().deleteAllSMember();
-        setData(createDiscussRequest());
+        userSecret = userPreferences.getUserSecret();
+        dbDiscuss = Room.databaseBuilder(requireContext(), DiscussDatabase.class, "searchdiscuss-database").allowMainThreadQueries().build();
+        callFuncAPI();
         prepareRecyclerView();
-
 
         return view;
     }
 
+
+    @Override
+    public void selectedMember(Discuss discuss) {
+        int classId = discuss.getClass_id();
+        userPreferences.setClassId(classId);
+        Log.wtf("class id view woi", String.valueOf(classId));
+        Intent intent = new Intent(getActivity(), ClassSessionActivity.class);
+        intent.putExtra("class", discuss.getClass_name());
+        startActivity(intent);
+    }
+
     private void filterList(String text) {
         List<Discuss> filteredList = new ArrayList<>();
-        for(Discuss discuss : discussList){
-            Log.wtf("berhasil filter", discuss.getName());
-            Log.wtf("berhasil filter 2", discuss.getUser_unique());
-            if(discuss.getName().toLowerCase().contains(text.toLowerCase())){
+        for(Discuss discuss : discusses){
+            if(discuss.getClass_code().toLowerCase().contains(text.toLowerCase()) || discuss.getClass_name().toLowerCase().contains(text.toLowerCase())){
                 filteredList.add(discuss);
             }
         }
 
         if (filteredList.isEmpty()){
-            recyclerViewDiscussMember.setVisibility(View.INVISIBLE);
-            noMemberView.setVisibility(View.VISIBLE);
-            //Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show();
+            recyclerView.setVisibility(View.INVISIBLE);
+            classNotFoundView.setVisibility(View.VISIBLE);
+//            Toast.makeText(this, "No data found", Toast.LENGTH_SHORT).show();
         }
         else {
-            recyclerViewDiscussMember.setVisibility(View.VISIBLE);
-            noMemberView.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+            classNotFoundView.setVisibility(View.INVISIBLE);
             discussAdapter.setFilteredList(filteredList);
         }
     }
 
+    private void callFuncAPI (){
+        progressBar.setVisibility(View.VISIBLE);
+        discusses.clear();
+        List<Discuss> discuss = dbDiscuss.discussWithMember().getAllMember();
+        for (Discuss discussing : discuss) {
+            Log.wtf("get di add ","coba ");
+            discusses.add(discussing);
+            Log.wtf("searching di add ","coba ");
+        }
 
-    public void setData(DiscussRequest discussRequest){
-        Call<Response<Discuss>> responseCallDiscuss = ApiClient.request().discussSearch(discussRequest);
-        Log.wtf("masuk", "dapet panggil retrofit");
-        responseCallDiscuss.enqueue(new Callback<Response<Discuss>>() {
-            @Override
-            public void onResponse(Call<Response<Discuss>> call, retrofit2.Response<Response<Discuss>> response) {
-                if (response.isSuccessful()) {
-                    discussList.clear();
-                    Response<Discuss> discussResponse  = response.body();
-                    List<Discuss> discusses = discussResponse.getValues();
-                    for (int i=0; i<discusses.size(); i++) {
-                        Discuss newMember = new Discuss();
-                        newMember.setName(discusses.get(i).getName());
-                        Log.wtf("berhasil name", discusses.get(i).getName());
-                        newMember.setUser_unique(discusses.get(i).getUser_unique());
-                        Log.wtf("berhasil nim", discusses.get(i).getUser_unique());
-                        newMember.setUser_id(discusses.get(i).getUser_id());
-                        Log.wtf("berhasil id", String.valueOf(discusses.get(i).getUser_id()));
-
-                        // Log.wtf("masuk", "dapet searches" + searches.add(newSearch));
-                        discussList.add(newMember);
-                        //Log.wtf("masuk", "dapet searches" + discussList.add(newMember));
-                        database.discussWithMember().insertDiscussMember(newMember);
-
-                    }
-                    discussAdapter.notifyDataSetChanged();
-                }
-                else {
-                    if (response.code() == 404) {
-                        recyclerViewDiscussMember.setVisibility(View.INVISIBLE);
-                        //recyclerViewDiscussMember.setVisibility(View.INVISIBLE);
-                        noMemberView.setVisibility(View.VISIBLE);
-                    } else {
-                        Toast.makeText(getContext(), "Failed to Fetch Data", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<Response<Discuss>> call, Throwable t) {
-
-            }
-        });
-
-
+        if (discusses.isEmpty()) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            noClassView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noClassView.setVisibility(View.INVISIBLE);
+        }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
-    public DiscussRequest createDiscussRequest(){
-        DiscussRequest discussRequest = new DiscussRequest();
-        discussRequest.setClass_id(class_id);
-        Log.wtf("masuk", "class id " + class_id);
-        return discussRequest;
-    }
 
-    public void prepareRecyclerView(){
+    private void prepareRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerViewDiscussMember.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutManager(linearLayoutManager);
         preAdapter();
 
     }
 
-    public void preAdapter(){
-        discussAdapter = new DiscussAdapter(discussList, this::selectedMember);
-        recyclerViewDiscussMember.setAdapter(discussAdapter);
+    private void preAdapter(){
+        discussAdapter = new DiscussAdapter(discusses, this::selectedMember);
+        recyclerView.setAdapter(discussAdapter);
     }
 
-    @Override
-    public void selectedMember(Discuss discuss) {
 
-    }
+
+
 }

@@ -1,13 +1,22 @@
 package com.example.adabv2.Model;
 
 public class DiscussRequest {
-    private int class_id;
+    private String user_secret;
+    private String query;
 
-    public int getClass_id() {
-        return class_id;
+    public String getUser_secret() {
+        return user_secret;
     }
 
-    public void setClass_id(int class_id) {
-        this.class_id = class_id;
+    public void setUser_secret(String user_secret) {
+        this.user_secret = user_secret;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
     }
 }
