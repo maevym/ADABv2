@@ -20,13 +20,6 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ViewClassActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".ClassSessionActivity"
             android:exported="false">
             <meta-data
@@ -35,9 +28,6 @@
         </activity>
         <activity
             android:name=".TranscriptHistoryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DiscussActivity"
             android:exported="false" />
         <activity
             android:name=".TranscriptRealtimeActivity"

@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adabv2.Manager.ApiClient;
@@ -34,12 +36,14 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 
     private ActivityClassSessionBinding binding;
     private RecyclerView recyclerViewClassSession;
-    private UserPreferences userPreferences;
-    private int classId;
     private ClassSessionAdapter classSessionAdapter;
     private List<ClassSession> classSessionList = new ArrayList<>();
-    private ClassSessionDatabase database;
+    private ClassSessionDatabase dbClassSession;
     private ImageView backButton;
+    private int classId;
+    private TextView textViewNameClass;
+    private LinearLayout noSessionView;
+    private UserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +53,19 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
         setContentView(view);
 
 
-        recyclerViewClassSession = binding.recyclerViewClassSession;
-        backButton = binding.buttonBackSession;
-
         userPreferences = new UserPreferences(getApplicationContext());
         classId = userPreferences.getClassId();
-        Log.wtf("class", String.valueOf(classId));
+        recyclerViewClassSession = binding.recyclerViewClassSession;
+        backButton = binding.buttonBackSession;
+        textViewNameClass = binding.choosenClassName;
+        noSessionView = binding.noSessionView;
 
-        database = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
-        database.classSessionDAO().deleteAllClassSession();
-        Log.wtf("database", String.valueOf(database));
+        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
+        //dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
+        dbClassSession.classSessionDAO().deleteAllClassSession();
+
+        //        callFuncAPI();
         setData(createClassSessionRequest());
-        Log.wtf("set Data", "masuk");
         prepareRecyclerView();
         Log.wtf("masuk on create","masuk");
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +74,9 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
                 onBackPressed();
             }
         });
+        textViewNameClass.setText(getIntent().getStringExtra("class"));
+
+
 
     }
 
@@ -108,7 +116,7 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 
                         //Log.wtf("masuk", "dapet class add" + classSessionList.add(newSession));
                         classSessionList.add(newSession);
-                        database.classSessionDAO().insertClassSession(newSession);
+                        dbClassSession.classSessionDAO().insertClassSession(newSession);
 
                     }
                     classSessionAdapter.notifyDataSetChanged();
@@ -118,21 +126,21 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
                 else {
                     if (response.code() == 404) {
                         recyclerViewClassSession.setVisibility(View.INVISIBLE);
+                        noSessionView.setVisibility(View.VISIBLE);
 
                     } else {
-                        Toast.makeText(ClassSessionActivity.this, "Failed to Fetch Data", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ClassSessionActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<Response<ClassSession>> call, Throwable t) {
-
+                Toast.makeText(ClassSessionActivity.this, "Gagal mengambil data", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-
 
     public ClassSessionRequest createClassSessionRequest(){
         ClassSessionRequest classSessionRequest = new ClassSessionRequest();
@@ -141,6 +149,22 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
 
         return classSessionRequest;
     }
+
+//    public void callFuncAPI (){
+//        classSessionList.clear();
+//        List<ClassSession> classSessions = dbClassSession.classSessionDAO().getAllClassSession();
+//        for (ClassSession classSession : classSessions) {
+//            classSessionList.add(classSession);
+//        }
+//
+//        if (classSessionList.isEmpty()) {
+//            recyclerViewClassSession.setVisibility(View.INVISIBLE);
+//            noSessionView.setVisibility(View.VISIBLE);
+//        } else {
+//            recyclerViewClassSession.setVisibility(View.VISIBLE);
+//            noSessionView.setVisibility(View.INVISIBLE);
+//        }
+//    }
 
     public void prepareRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
