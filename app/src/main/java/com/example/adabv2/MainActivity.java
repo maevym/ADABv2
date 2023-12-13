@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,8 +46,8 @@ import retrofit2.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ExtendedFloatingActionButton fabMenu, fabClass, fabSchedule, fabDiscuss, fabHome;
-    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, progressBar;
+    private ExtendedFloatingActionButton fabMenu, fabClass, fabSchedule, fabDiscuss, fabHome, fabRegister;
+    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, fabRegisterText, progressBar;
     private FrameLayout popUp;
     private Animation fabOpen, fabClose;
     private ActivityMainBinding binding;
@@ -71,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
         menuOnClickListener();
         saveSession();
         saveSearchDataClass();
-//        saveClassSession();
-
     }
 
     private void init() {
@@ -80,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
 
         UserPreferences userPreferences = new UserPreferences(getApplicationContext());
-        role = userPreferences.getUserType();
+//        role = userPreferences.getUserType();
+        role = "L";
         userSecret = userPreferences.getUserSecret();
         classId = userPreferences.getClassId();
         Log.wtf("class", String.valueOf(classId));
@@ -91,26 +91,23 @@ public class MainActivity extends AppCompatActivity {
         fabSchedule = binding.fabSchedule;
         fabHome = binding.fabHome;
         fabDiscuss = binding.fabDiscuss;
+        fabRegister = binding.fabRegister;
         fabClassText = binding.fabClassText;
         fabScheduleText = binding.fabScheduleText;
         fabHomeText = binding.fabHomeText;
         fabDiscussText = binding.fabDiscussText;
+        fabRegisterText = binding.fabRegisterText;
         popUp = binding.popUp;
         progressBar = binding.progressBar;
         noClassView = binding.noClassView;
 
-
-
+        // save data to local database
         dbSession = Room.databaseBuilder(getApplicationContext(),
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
         dbSession.sessionDAO().deleteAll();
 
         dbClassSearch = Room.databaseBuilder(getApplicationContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
         dbClassSearch.searchDAO().deleteAllSearch();
-
-
-//        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
-//        dbClassSession.classSessionDAO().deleteAllClassSession();
     }
 
     private void menuOnClickListener () {
@@ -135,12 +132,22 @@ public class MainActivity extends AppCompatActivity {
             animateFab();
             switchFragment(new DiscussFragment());
         });
+
+        fabRegister.setOnClickListener(view -> {
+            animateFab();
+            Intent i = new Intent(this, RegisterActivity.class);
+            startActivity(i);
+        });
     }
 
     private void animateFab() {
         if (isOpen) {
             popUp.setVisibility(View.INVISIBLE);
-            if (!role.equals("L")) {
+            if (role.equals("L")) {
+                fabRegister.startAnimation(fabClose);
+                fabRegisterText.startAnimation(fabClose);
+                fabRegister.setClickable(false);
+            } else {
                 fabDiscuss.startAnimation(fabClose);
                 fabDiscussText.startAnimation(fabClose);
                 fabDiscuss.setClickable(false);
@@ -158,7 +165,12 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             popUp.setVisibility(View.VISIBLE);
-            if (!role.equals("L")) {
+            if (role.equals("L")) {
+                fabRegister.startAnimation(fabOpen);
+                fabRegisterText.startAnimation(fabOpen);
+                fabRegister.setClickable(true);
+            }
+            else {
                 fabDiscuss.startAnimation(fabOpen);
                 fabDiscussText.startAnimation(fabOpen);
                 fabDiscuss.setClickable(true);

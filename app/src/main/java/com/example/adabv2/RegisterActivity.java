@@ -66,10 +66,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         adapterRole.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinnerRole.setAdapter(adapterRole);
 
-        binding.buttonLoginInRegister.setOnClickListener(v -> {
-            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-        });
-
         binding.buttonRegister.setOnClickListener(v -> {
             validate();
         });

@@ -10,6 +10,7 @@
     <string name="menuClass">Kelas</string>
     <string name="menuDiscussion">Diskusi</string>
     <string name="menuHome">Home</string>
+    <string name="menuRegister">Register</string>
     <string name="stopRecButton">BERHENTI</string>
     <string name="classNotStarted">Kelas belum dimulai</string>
     <string name="loading">Mengambil data...</string>

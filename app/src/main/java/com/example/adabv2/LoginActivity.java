@@ -33,10 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         userPreferences = new UserPreferences(getApplicationContext());
 
-        binding.buttonRegisterInLogin.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-        });
-
         binding.buttonLogin.setOnClickListener(v -> {
             validasi();
         });
