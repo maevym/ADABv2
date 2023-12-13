@@ -15,29 +15,16 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.example.adabv2.ClassSessionActivity;
-import com.example.adabv2.Manager.ApiClient;
-import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.Search;
-import com.example.adabv2.Model.SearchRequest;
-import com.example.adabv2.Model.Session;
-import com.example.adabv2.R;
 import com.example.adabv2.Room.SearchDatabase;
 import com.example.adabv2.SearchAdapter;
 import com.example.adabv2.UserPreferences;
-import com.example.adabv2.Util.DateFormatter;
-import com.example.adabv2.ViewClassActivity;
 import com.example.adabv2.databinding.FragmentClassBinding;
-import com.example.adabv2.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
 
 public class ClassFragment extends Fragment implements SearchAdapter.SearchClickListener {
     private FragmentClassBinding binding;
