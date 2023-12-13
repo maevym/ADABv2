@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.adabv2.Fragment.ClassFragment;
 import com.example.adabv2.Fragment.DiscussFragment;
 import com.example.adabv2.Fragment.HomeFragment;
+import com.example.adabv2.Fragment.RegisterFragment;
 import com.example.adabv2.Fragment.ScheduleFragment;
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.ClassSession;
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private SessionDatabase dbSession;
     private SearchDatabase dbClassSearch;
     private ClassSessionDatabase dbClassSession;
-    private LinearLayout noClassView;
     private final Date currentDate = new Date();
     private int classId;
 
@@ -79,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
 
         UserPreferences userPreferences = new UserPreferences(getApplicationContext());
-//        role = userPreferences.getUserType();
-        role = "L";
+        role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
         classId = userPreferences.getClassId();
         Log.wtf("class", String.valueOf(classId));
@@ -99,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
         fabRegisterText = binding.fabRegisterText;
         popUp = binding.popUp;
         progressBar = binding.progressBar;
-        noClassView = binding.noClassView;
 
         // save data to local database
         dbSession = Room.databaseBuilder(getApplicationContext(),
@@ -135,8 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
         fabRegister.setOnClickListener(view -> {
             animateFab();
-            Intent i = new Intent(this, RegisterActivity.class);
-            startActivity(i);
+            switchFragment(new RegisterFragment());
         });
     }
 
@@ -272,8 +269,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     if (response.code() == 404) {
-                        noClassView.setVisibility(View.VISIBLE);
-
+                        dbClassSearch.searchDAO().deleteAllSearch();
                     } else {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
