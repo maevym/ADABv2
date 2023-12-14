@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Buat Akun"
+        android:text="@string/buatakun"
         android:layout_marginTop="50dp"
         android:layout_marginLeft="16dp"
         android:textColor="#3C6DB9"
@@ -31,16 +31,17 @@
             android:layout_height="56dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/format_form"
-            android:paddingLeft="21dp"
+            android:paddingLeft="16dp"
             android:paddingRight="21dp"
-            android:hint="Nama"/>
+            android:hint="@string/Nama"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
             android:background="#ffffff"
-            android:text=" Nama "
+            android:text="@string/Nama"
+            android:padding="1dp"
             android:textColor="#3C6DB9"/>
     </RelativeLayout>
 
@@ -57,9 +58,9 @@
             android:layout_height="56dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/format_form"
-            android:paddingLeft="21dp"
+            android:paddingLeft="16dp"
             android:paddingRight="21dp"
-            android:hint="Email"/>
+            android:hint="@string/Email"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,8 +68,9 @@
             android:layout_marginTop="7dp"
             android:background="#ffffff"
             android:paddingHorizontal="2dp"
-            android:text="Email"
-            android:textColor="#3C6DB9"/>
+            android:text="@string/Email"
+            android:textColor="#3C6DB9"
+            android:padding="1dp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -84,17 +86,18 @@
             android:layout_height="56dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/format_form"
-            android:paddingLeft="21dp"
+            android:paddingLeft="16dp"
             android:paddingRight="21dp"
-            android:hint="NIM"/>
+            android:hint="@string/ID"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
             android:background="#ffffff"
-            android:text=" NIM "
-            android:textColor="#3C6DB9"/>
+            android:text="@string/ID"
+            android:textColor="#3C6DB9"
+            android:padding="1dp"/>
     </RelativeLayout>
 
 
@@ -128,7 +131,8 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
             android:background="#ffffff"
-            android:text=" Peran "
+            android:text="@string/Peran"
+            android:padding="1dp"
             android:textColor="#3C6DB9"/>
 
     </RelativeLayout>
@@ -148,9 +152,9 @@
             android:layout_height="56dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/format_form"
-            android:paddingLeft="21dp"
+            android:paddingLeft="16dp"
             android:paddingRight="21dp"
-            android:hint="Kata Sandi"
+            android:hint="@string/katasandi"
             android:inputType="textPassword"/>
         <TextView
             android:layout_width="wrap_content"
@@ -158,7 +162,8 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
             android:background="#ffffff"
-            android:text=" Kata Sandi "
+            android:text="@string/katasandi"
+            android:padding="1dp"
             android:textColor="#3C6DB9"/>
     </RelativeLayout>
 
@@ -169,34 +174,9 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:text="Daftar"
+        android:text="@string/buttondaftar"
         android:background="@drawable/button_regis_login"
         android:backgroundTint="@color/orange"
         app:backgroundTint="@null"
         android:layout_weight="0.5"/>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="0.5">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="110dp"
-            android:text="Sudah punya akun?" />
-
-        <TextView
-            android:id="@+id/buttonLoginInRegister"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:textColor="#ED7445"
-            android:text="Login" />
-
-    </LinearLayout>
-
-
 </LinearLayout>

@@ -33,10 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         userPreferences = new UserPreferences(getApplicationContext());
 
-        binding.buttonRegisterInLogin.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-        });
-
         binding.buttonLogin.setOnClickListener(v -> {
             validasi();
         });
@@ -77,23 +73,24 @@ public class LoginActivity extends AppCompatActivity {
                         userPreferences.setUserSecret(userSecret);
                         userPreferences.setUserName(name);
                         userPreferences.setUserType(userType);
-                        Toast.makeText(LoginActivity.this, "login berhasil", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Login berhasil", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
                 }
                 else {
                     if(response.code() == 401){
-                        Toast.makeText(LoginActivity.this, "Email dan password tidak terdaftar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Email tidak ditemukan", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        Toast.makeText(LoginActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Login gagal", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Login gagal", Toast.LENGTH_SHORT).show();
                 Log.wtf("error", t);
             }
         });

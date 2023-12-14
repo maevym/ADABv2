@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,10 +22,17 @@ import android.widget.Toast;
 import com.example.adabv2.Fragment.ClassFragment;
 import com.example.adabv2.Fragment.DiscussFragment;
 import com.example.adabv2.Fragment.HomeFragment;
+import com.example.adabv2.Fragment.RegisterFragment;
 import com.example.adabv2.Fragment.ScheduleFragment;
 import com.example.adabv2.Manager.ApiClient;
+import com.example.adabv2.Model.ClassSession;
+import com.example.adabv2.Model.ClassSessionRequest;
 import com.example.adabv2.Model.Response;
+import com.example.adabv2.Model.Search;
+import com.example.adabv2.Model.SearchRequest;
 import com.example.adabv2.Model.Session;
+import com.example.adabv2.Room.ClassSessionDatabase;
+import com.example.adabv2.Room.SearchDatabase;
 import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.Model.SessionRequest;
 import com.example.adabv2.Util.DateFormatter;
@@ -39,8 +47,8 @@ import retrofit2.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ExtendedFloatingActionButton fabMenu, fabClass, fabSchedule, fabDiscuss, fabHome;
-    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, progressBar;
+    private ExtendedFloatingActionButton fabMenu, fabClass, fabSchedule, fabDiscuss, fabHome, fabRegister;
+    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, fabRegisterText, progressBar;
     private FrameLayout popUp;
     private Animation fabOpen, fabClose;
     private ActivityMainBinding binding;
@@ -49,7 +57,10 @@ public class MainActivity extends AppCompatActivity {
     private String role;
     private String userSecret;
     private SessionDatabase dbSession;
+    private SearchDatabase dbClassSearch;
+    private ClassSessionDatabase dbClassSession;
     private final Date currentDate = new Date();
+    private int classId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         init();
         menuOnClickListener();
         saveSession();
+        saveSearchDataClass();
     }
 
     private void init() {
@@ -69,22 +81,31 @@ public class MainActivity extends AppCompatActivity {
         UserPreferences userPreferences = new UserPreferences(getApplicationContext());
         role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
+        classId = userPreferences.getClassId();
+        Log.wtf("class", String.valueOf(classId));
+
 
         fabMenu = binding.fabMenu;
         fabClass = binding.fabClass;
         fabSchedule = binding.fabSchedule;
         fabHome = binding.fabHome;
         fabDiscuss = binding.fabDiscuss;
+        fabRegister = binding.fabRegister;
         fabClassText = binding.fabClassText;
         fabScheduleText = binding.fabScheduleText;
         fabHomeText = binding.fabHomeText;
         fabDiscussText = binding.fabDiscussText;
+        fabRegisterText = binding.fabRegisterText;
         popUp = binding.popUp;
         progressBar = binding.progressBar;
 
+        // save data to local database
         dbSession = Room.databaseBuilder(getApplicationContext(),
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
         dbSession.sessionDAO().deleteAll();
+
+        dbClassSearch = Room.databaseBuilder(getApplicationContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
+        dbClassSearch.searchDAO().deleteAllSearch();
     }
 
     private void menuOnClickListener () {
@@ -109,12 +130,21 @@ public class MainActivity extends AppCompatActivity {
             animateFab();
             switchFragment(new DiscussFragment());
         });
+
+        fabRegister.setOnClickListener(view -> {
+            animateFab();
+            switchFragment(new RegisterFragment());
+        });
     }
 
     private void animateFab() {
         if (isOpen) {
             popUp.setVisibility(View.INVISIBLE);
-            if (!role.equals("L")) {
+            if (role.equals("L")) {
+                fabRegister.startAnimation(fabClose);
+                fabRegisterText.startAnimation(fabClose);
+                fabRegister.setClickable(false);
+            } else {
                 fabDiscuss.startAnimation(fabClose);
                 fabDiscussText.startAnimation(fabClose);
                 fabDiscuss.setClickable(false);
@@ -132,7 +162,12 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             popUp.setVisibility(View.VISIBLE);
-            if (!role.equals("L")) {
+            if (role.equals("L")) {
+                fabRegister.startAnimation(fabOpen);
+                fabRegisterText.startAnimation(fabOpen);
+                fabRegister.setClickable(true);
+            }
+            else {
                 fabDiscuss.startAnimation(fabOpen);
                 fabDiscussText.startAnimation(fabOpen);
                 fabDiscuss.setClickable(true);
@@ -205,4 +240,52 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    private void saveSearchDataClass(){
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setUser_secret(userSecret);
+
+        Call<Response<Search>> responseCallSearch = ApiClient.request().searchClass(searchRequest);
+        Log.wtf("masuk", "dapet panggil retrofit");
+        responseCallSearch.enqueue(new Callback<Response<Search>>(){
+            @Override
+            public void onResponse(Call<Response<Search>> call, retrofit2.Response<Response<Search>> response) {
+                if (response.isSuccessful()) {
+                    Response<Search> searchResponse  = response.body();
+                    List<Search> searchList = searchResponse.getValues();
+                    for (int i=0; i<searchList.size(); i++) {
+                        Search newSearch = new Search();
+                        newSearch.setClass_code(searchList.get(i).getClass_code());
+                        newSearch.setClass_name(searchList.get(i).getClass_name());
+                        newSearch.setClass_id(searchList.get(i).getClass_id());
+                        newSearch.setClass_lecturer_id(searchList.get(i).getClass_lecturer_id());
+//                        newSearch.setClass_type(searchList.get(i).getClass_type());
+                        dbClassSearch.searchDAO().insertSearchClass(newSearch);
+                        Log.wtf("berhasil get all", "coba" + dbClassSearch.searchDAO().getAllSearch());
+
+                    }
+//                    searchAdapter.notifyDataSetChanged();
+                }
+                else {
+                    if (response.code() == 404) {
+                        dbClassSearch.searchDAO().deleteAllSearch();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
+                    }
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<Response<Search>> call, Throwable t) {
+                Toast.makeText(MainActivity.this,"Gagal mengambil data", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
+                switchFragment(new ClassFragment());
+            }
+        });
+
+    }
+
+
 }
