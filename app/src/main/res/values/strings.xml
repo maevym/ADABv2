@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ADABv2</string>
+    <string name="app_name">ADAB</string>
     <string name="setting">Setting</string>
     <string name="transcriptHeading">Transkrip</string>
     <string name="scheduleHeading">Jadwal</string>
@@ -14,7 +14,6 @@
     <string name="menuRegister">Register</string>
     <string name="stopRecButton">BERHENTI</string>
     <string name="classNotStarted">Kelas belum dimulai</string>
-    <string name="changeProfile">Ubah Profil</string>
     <string name="logout">Log Out</string>
     <string name="loading">Mengambil data...</string>
     <string name="buatakun">Buat Akun</string>
@@ -23,12 +22,16 @@
     <string name="ID">ID</string>
     <string name="Peran">Peran</string>
     <string name="katasandi">Kata Sandi</string>
+    <string name="oldPassword">Kata Sandi Lama</string>
+    <string name="newPassword">Kata Sandi Baru</string>
     <string name="buttondaftar">DAFTAR</string>
+    <!-- TODO: hapus yang dibawah ini -->
     <string name="adab">ADAB</string>
     <string name="signinuntukmelanjutkan">Sign in untuk melanjutkan</string>
     <string name="buttonlogin">LOGIN</string>
+    <!-- TODO: hapus yang dibawah ini -->
     <string name="kelas">Kelas</string>
     <string name="sesi">Sesi</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="changePassword">Ubah Kata Sandi</string>
+    <string name="saveButton">SIMPAN</string>
 </resources>

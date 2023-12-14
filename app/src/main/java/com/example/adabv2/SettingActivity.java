@@ -11,38 +11,26 @@ import android.widget.TextView;
 import com.example.adabv2.databinding.ActivitySettingBinding;
 
 public class SettingActivity extends AppCompatActivity {
-
-    private ActivitySettingBinding binding;
-    private ImageView buttonBack;
-    private Button changeProfileBtn, logOutBtn;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySettingBinding.inflate(getLayoutInflater());
+        ActivitySettingBinding binding = ActivitySettingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        init();
-        buttonOnClick();
-    }
-
-    private void init() {
         TextView name = binding.userName;
-        buttonBack = binding.buttonBack;
-        changeProfileBtn = binding.buttonChangeProfile;
-        logOutBtn = binding.buttonLogout;
+        ImageView buttonBack = binding.buttonBack;
+        Button changePasswordBtn = binding.buttonChangePassword;
+        Button logOutBtn = binding.buttonLogout;
 
         UserPreferences userPreferences = new UserPreferences(getApplicationContext());
         name.setText(userPreferences.getUserName());
-    }
 
-    private void buttonOnClick() {
         buttonBack.setOnClickListener(v -> finish());
 
         logOutBtn.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
 
-        changeProfileBtn.setOnClickListener(v -> {
-            // pindah ke change profile activity
+        changePasswordBtn.setOnClickListener(v -> {
+            startActivity(new Intent(this, ChangePasswordActivity.class));
         });
     }
 }
