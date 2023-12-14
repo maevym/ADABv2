@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -48,17 +49,17 @@ import retrofit2.Callback;
 public class MainActivity extends AppCompatActivity {
 
     private ExtendedFloatingActionButton fabMenu, fabClass, fabSchedule, fabDiscuss, fabHome, fabRegister;
-    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, fabRegisterText, progressBar;
+    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, fabRegisterText, progressBar, noInternet;
     private FrameLayout popUp;
     private Animation fabOpen, fabClose;
     private ActivityMainBinding binding;
+    private Button backToLoginBtn;
 
     private boolean isOpen = false;
     private String role;
     private String userSecret;
     private SessionDatabase dbSession;
     private SearchDatabase dbClassSearch;
-    private ClassSessionDatabase dbClassSession;
     private final Date currentDate = new Date();
     private int classId;
 
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         classId = userPreferences.getClassId();
         Log.wtf("class", String.valueOf(classId));
 
-
         fabMenu = binding.fabMenu;
         fabClass = binding.fabClass;
         fabSchedule = binding.fabSchedule;
@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
         fabRegisterText = binding.fabRegisterText;
         popUp = binding.popUp;
         progressBar = binding.progressBar;
+        noInternet = binding.noInternet;
+        backToLoginBtn = binding.buttonBackToLogin;
+
+        fabMenu.setVisibility(View.INVISIBLE);
 
         // save data to local database
         dbSession = Room.databaseBuilder(getApplicationContext(),
@@ -106,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
         dbClassSearch = Room.databaseBuilder(getApplicationContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
         dbClassSearch.searchDAO().deleteAllSearch();
+
+        backToLoginBtn.setOnClickListener(v -> finish());
     }
 
     private void menuOnClickListener () {
@@ -194,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveSession() {
         SessionRequest sessionRequest = new SessionRequest();
-
         sessionRequest.setUser_secret(userSecret);
         sessionRequest.setDate(DateFormatter.DateToString(currentDate));
 
@@ -226,17 +231,13 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
                 }
-                progressBar.setVisibility(View.INVISIBLE);
-                popUp.setVisibility(View.INVISIBLE);
-                switchFragment(new HomeFragment(getApplicationContext()));
             }
 
             @Override
             public void onFailure(@NonNull Call<Response<Session>> call, @NonNull Throwable t) {
-                Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
                 progressBar.setVisibility(View.INVISIBLE);
-                switchFragment(new HomeFragment(getApplicationContext()));
+                noInternet.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -260,12 +261,9 @@ public class MainActivity extends AppCompatActivity {
                         newSearch.setClass_name(searchList.get(i).getClass_name());
                         newSearch.setClass_id(searchList.get(i).getClass_id());
                         newSearch.setClass_lecturer_id(searchList.get(i).getClass_lecturer_id());
-//                        newSearch.setClass_type(searchList.get(i).getClass_type());
                         dbClassSearch.searchDAO().insertSearchClass(newSearch);
                         Log.wtf("berhasil get all", "coba" + dbClassSearch.searchDAO().getAllSearch());
-
                     }
-//                    searchAdapter.notifyDataSetChanged();
                 }
                 else {
                     if (response.code() == 404) {
@@ -275,17 +273,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 progressBar.setVisibility(View.INVISIBLE);
+                popUp.setVisibility(View.INVISIBLE);
+                fabMenu.setVisibility(View.VISIBLE);
+                switchFragment(new HomeFragment(getApplicationContext()));
             }
 
             @Override
             public void onFailure(Call<Response<Search>> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Gagal mengambil data", Toast.LENGTH_SHORT).show();
+                Log.wtf("responses", "Failed " + t.getLocalizedMessage());
                 progressBar.setVisibility(View.INVISIBLE);
-                switchFragment(new ClassFragment());
+                noInternet.setVisibility(View.VISIBLE);
             }
         });
-
     }
-
-
 }
