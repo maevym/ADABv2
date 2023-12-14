@@ -34,4 +34,6 @@
     <string name="sesi">Sesi</string>
     <string name="changePassword">Ubah Kata Sandi</string>
     <string name="saveButton">SIMPAN</string>
+    <string name="noInternet">Tidak Ada Koneksi</string>
+    <string name="backToLogin">KEMBALI KE LOGIN</string>
 </resources>

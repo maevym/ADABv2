@@ -30,13 +30,10 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".TranscriptHistoryActivity"
-            android:exported="false" />
-        <activity
             android:name=".SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".TranscriptRealtimeActivity"
+            android:name=".TranscriptActivity"
             android:exported="false" />
         <activity
             android:name=".RecordRealtimeActivity"

@@ -65,17 +65,19 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
                 if (userType.equals("D")) {
                     chooseLanguage(position);
                 } else {
-                    Intent intent = new Intent(context, TranscriptRealtimeActivity.class);
+                    Intent intent = new Intent(context, TranscriptActivity.class);
                     intent.putExtra("sessionID", sessions.get(position).getSessionID());
                     intent.putExtra("sessionName", sessions.get(position).getSessionName());
+                    intent.putExtra("sessionHasPassed", false);
                     context.startActivity(intent);
                 }
             }
             // check if class already in the past
             else {
-                Intent intent = new Intent(context, TranscriptHistoryActivity.class);
+                Intent intent = new Intent(context, TranscriptActivity.class);
                 intent.putExtra("sessionID", sessions.get(position).getSessionID());
                 intent.putExtra("sessionName", sessions.get(position).getSessionName());
+                intent.putExtra("sessionHasPassed", true);
                 context.startActivity(intent);
             }
         });
