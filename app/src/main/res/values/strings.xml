@@ -10,13 +10,14 @@
     <string name="menuClass">Kelas</string>
     <string name="menuDiscussion">Diskusi</string>
     <string name="menuHome">Home</string>
+    <string name="menuRegister">Register</string>
     <string name="stopRecButton">BERHENTI</string>
     <string name="classNotStarted">Kelas belum dimulai</string>
     <string name="loading">Mengambil data...</string>
     <string name="buatakun">Buat Akun</string>
     <string name="Nama">Nama</string>
     <string name="Email">Email</string>
-    <string name="NIM">NIM</string>
+    <string name="ID">ID</string>
     <string name="Peran">Peran</string>
     <string name="katasandi">Kata Sandi</string>
     <string name="buttondaftar">DAFTAR</string>

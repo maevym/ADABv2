@@ -17,20 +17,14 @@ import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.ClassSession;
 import com.example.adabv2.Model.ClassSessionRequest;
 import com.example.adabv2.Model.Response;
-import com.example.adabv2.Model.Search;
-import com.example.adabv2.Model.SearchRequest;
 import com.example.adabv2.Room.ClassSessionDatabase;
-import com.example.adabv2.Room.SearchDatabase;
 import com.example.adabv2.databinding.ActivityClassSessionBinding;
-import com.example.adabv2.databinding.ActivityViewClassBinding;
-import com.example.adabv2.databinding.ClassSessionItemBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-
 
 public class ClassSessionActivity extends AppCompatActivity implements ClassSessionAdapter.ClassSessionClickListener{
 

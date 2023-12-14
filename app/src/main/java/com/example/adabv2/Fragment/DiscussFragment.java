@@ -15,17 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.adabv2.DiscussActivity;
 import com.example.adabv2.DiscussAdapter;
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Discuss;
 import com.example.adabv2.Model.DiscussRequest;
 import com.example.adabv2.Model.Response;
-import com.example.adabv2.R;
 import com.example.adabv2.Room.DiscussDatabase;
 import com.example.adabv2.UserPreferences;
 import com.example.adabv2.databinding.FragmentDiscussBinding;
-import com.example.adabv2.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
 import java.util.List;
