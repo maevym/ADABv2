@@ -82,29 +82,32 @@ public class ChatGroupActivity extends AppCompatActivity {
         classType = getIntent().getStringExtra("classType");
         UserPreferences userPreferences = new UserPreferences(getApplicationContext());
         username = userPreferences.getUserName();
-        Log.wtf("berhasil get username", username);
+        Log.wtf("success get username", username);
         roomId = "CL" + classId + classType;
 
-        Log.wtf("berhasil roomId", roomId);
+        Log.wtf("success roomId", roomId);
         nameGroupChat.setText(roomId);
 
         if (!hasConnection){
-            socket.connect();
             socket.on("join_room", args -> {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String roomId = args[0].toString();
+//                        String roomId = args[0].toString();
                         try {
                             JSONObject object = new JSONObject(roomId);
                             roomId = object.getString("roomId");
+
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Log.wtf("gagal dalam join room", roomId);
                         }
                         Chat chat = new Chat(null, null,null, roomId);
                         chatRoomAdapter.add(chat);
                         listViewChat.smoothScrollToPosition(0);
                         listViewChat.scrollTo(0, chatRoomAdapter.getCount()-1);
+                        socket.connect();
+                        socket.emit("join_room", roomId);
                     }
                 });
             });
@@ -162,9 +165,7 @@ public class ChatGroupActivity extends AppCompatActivity {
             data.put("roomId", roomId);
             data.put("timestamp", dateChat);
 
-            Log.wtf("berhasil", String.valueOf(data));
-            socket.emit("chatroom_message", (data));
-
+            Log.wtf("success", String.valueOf(data));
             Chat chat = new Chat(username, message, dateChat, roomId);
             chatRoomAdapter.add(chat);
             listViewChat.smoothScrollToPosition(0);
@@ -172,7 +173,10 @@ public class ChatGroupActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.wtf("failed send data", String.valueOf(data));
         }
+        socket.connect();
+        socket.emit("chatroom_message", (data));
     }
 
 
