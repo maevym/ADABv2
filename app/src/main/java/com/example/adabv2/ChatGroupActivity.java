@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adabv2.Model.Chat;
+import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.ActivityChatGroupBinding;
 import com.example.adabv2.databinding.ActivityViewClassBinding;
 
@@ -31,6 +32,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.socket.client.IO;
@@ -53,6 +55,7 @@ public class ChatGroupActivity extends AppCompatActivity {
     private Boolean hasConnection = false;
     private Thread tread2;
     public static final String TAG  = "ChatGroupActivity";
+    private String dateChat;
 
 
     private Socket socket;
@@ -134,6 +137,7 @@ public class ChatGroupActivity extends AppCompatActivity {
 //                sendChat();
                 String message = messageEditText.getText().toString().trim();
                 if (!TextUtils.isEmpty(message)) {
+                    dateChat = DateFormatter.DateToStringChat(new Date());
                     sendMessageToServer(message);
                     messageEditText.setText(""); // Menghapus teks setelah mengirim pesan
                 }
@@ -202,12 +206,14 @@ public class ChatGroupActivity extends AppCompatActivity {
             data.put("username", username);
             data.put("message", message);
             data.put("roomId", roomId);
+            data.put("timestamp", dateChat);
 
             // Kirim data ke server menggunakan socket
+            Log.wtf("berhasil", String.valueOf(data));
             socket.emit("chatroom_message", data);
 
             // Tambahkan pesan ke adapter agar ditampilkan di chat
-            Chat chat = new Chat(username, message, roomId);
+            Chat chat = new Chat(username, message, dateChat ,roomId);
             chatRoomAdapter.add(chat);
             listViewChat.smoothScrollToPosition(0);
             listViewChat.scrollTo(0, chatRoomAdapter.getCount()-1);
@@ -241,7 +247,7 @@ public class ChatGroupActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Chat chat = new Chat(null, null, roomId);
+                    Chat chat = new Chat(null, null,null, roomId);
                     chatRoomAdapter.add(chat);
                     listViewChat.smoothScrollToPosition(0);
                     listViewChat.scrollTo(0, chatRoomAdapter.getCount()-1);
@@ -267,7 +273,7 @@ public class ChatGroupActivity extends AppCompatActivity {
                        message = data.getString("message");
                        id = data.getString("roomId");
 
-                       Chat chat = new Chat(username,message,id);
+                       Chat chat = new Chat(username,message,dateChat, id);
                        chatRoomAdapter.add(chat);
 
                        listViewChat.smoothScrollToPosition(0);

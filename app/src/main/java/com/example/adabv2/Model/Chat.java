@@ -3,13 +3,13 @@ package com.example.adabv2.Model;
 public class Chat {
     private String username;
     private String message;
-//    private String time;
+    private String time;
     private String roomId;
 
-    public Chat(String username, String message, String roomId) {
+    public Chat(String username, String message, String time, String roomId) {
         this.username = username;
         this.message = message;
-//        this.time = time;
+        this.time = time;
         this.roomId = roomId;
     }
 
@@ -37,11 +37,11 @@ public class Chat {
         this.message = message;
     }
 
-//    public String getTime() {
-//        return time;
-//    }
-//
-//    public void setTime(String time) {
-//        this.time = time;
-//    }
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }
