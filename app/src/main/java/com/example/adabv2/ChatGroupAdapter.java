@@ -18,6 +18,9 @@ import com.example.adabv2.databinding.ItemReceivedMessageBinding;
 import com.example.adabv2.databinding.ItemSendMessageBinding;
 import com.example.adabv2.databinding.SearchItemBinding;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +31,12 @@ public class ChatGroupAdapter extends RecyclerView.Adapter {
     private static final int TYPE_MESSAGE_SENT = 0;
     private static final int TYPE_MESSAGE_RECEIVED = 1;
 
-    public ChatGroupAdapter(List<Chat> chatList){
-        this.chatList = chatList;
+    private LayoutInflater inflater;
+    private List<JSONObject> messages = new ArrayList<>();
+
+
+    public ChatGroupAdapter(LayoutInflater inflater){
+        this.inflater = inflater;
     }
 
     private class SendChatHolder extends RecyclerView.ViewHolder {
@@ -91,11 +98,36 @@ public class ChatGroupAdapter extends RecyclerView.Adapter {
 //        receivedChatHolder.textReceivedMessage.setText(chat.getMessage());
 //        receivedChatHolder.timeReceived.setText(chat.getReceivedTime());
 
+
+        JSONObject message = messages.get(position);
+
+        try {
+            if (message.getBoolean("isSent")) {
+                if (message.has("message")) {
+                    SendChatHolder messageHolder = (SendChatHolder) holder;
+                    messageHolder.textSendMessage.setText(message.getString("message_tr"));
+                    messageHolder.timeSend.setText(message.getString("timestamp"));
+
+                }
+
+            } else {
+                if (message.has("message")) {
+                    ReceivedChatHolder messageHolder = (ReceivedChatHolder) holder;
+                    messageHolder.nameReceived.setText(message.getString("name"));
+                    messageHolder.textReceivedMessage.setText(message.getString("message_tr"));
+                    messageHolder.timeReceived.setText("timestamp");
+                }
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return chatList.size();
+        return messages.size();
     }
 
 

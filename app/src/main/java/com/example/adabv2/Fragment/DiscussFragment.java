@@ -1,8 +1,11 @@
 package com.example.adabv2.Fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,6 +73,10 @@ public class DiscussFragment extends Fragment implements DiscussAdapter.DiscussC
         //dbDiscuss = Room.databaseBuilder(getContext(), DiscussDatabase.class, "searchdiscuss-database").fallbackToDestructiveMigration().build();
         callFuncAPI();
         prepareRecyclerView();
+
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 10);
 
         return view;
     }

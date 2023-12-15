@@ -42,19 +42,23 @@ public class ChatRoomAdapter extends ArrayAdapter<Chat> {
 
             convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.item_send_message,parent,false);
             TextView messageText = convertView.findViewById(R.id.fieldSendTextMessage);
+            TextView timeText = convertView.findViewById(R.id.timeSendView);
             messageText.setText(chatText.getMessage());
+            timeText.setText(chatText.getTime());
 
         }
         else {
             convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.item_received_message,parent,false);
             TextView messageText = convertView.findViewById(R.id.fieldReceivedTextMessage);
             TextView usernameText = (TextView) convertView.findViewById(R.id.nameReceivedChat);
+            TextView timeText = convertView.findViewById(R.id.timeReceived);
 
             messageText.setVisibility(View.VISIBLE);
             usernameText.setVisibility(View.VISIBLE);
 
             messageText.setText(chatText.getMessage());
             usernameText.setText(chatText.getUsername());
+            timeText.setText(chatText.getTime());
 
         }
 
