@@ -16,16 +16,17 @@ public class Discuss {
     private String class_name;
     @ColumnInfo(name = "class_code")
     private String class_code;
-//    @ColumnInfo(name = "class_type")
-//    private String class_type;
+    @ColumnInfo(name = "class_type")
+    private String class_type;
 
-//    public String getClass_type() {
-//        return class_type;
-//    }
-//
-//    public void setClass_type(String class_type) {
-//        this.class_type = class_type;
-//    }
+
+    public String getClass_type() {
+        return class_type;
+    }
+
+    public void setClass_type(String class_type) {
+        this.class_type = class_type;
+    }
 
     public String getClass_name() {
         return class_name;

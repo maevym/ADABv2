@@ -38,7 +38,7 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
         android:id="@+id/recyclerViewChatGroup"
         android:layout_below="@id/linearActionBar"
         android:layout_width="match_parent"

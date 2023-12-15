@@ -113,7 +113,8 @@ public class MainActivity extends AppCompatActivity {
         dbClassSearch = Room.databaseBuilder(getApplicationContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
         dbClassSearch.searchDAO().deleteAllSearch();
 
-        dbDiscuss = Room.databaseBuilder(getApplicationContext(), DiscussDatabase.class, "searchdiscuss-database").allowMainThreadQueries().build();
+       dbDiscuss = Room.databaseBuilder(getApplicationContext(), DiscussDatabase.class, "searchdiscuss-database").allowMainThreadQueries().build();
+        //dbDiscuss = Room.databaseBuilder(getApplicationContext(), DiscussDatabase.class, "searchdiscuss-database").fallbackToDestructiveMigration().build();
         dbDiscuss.discussWithMember().deleteAllSMember();
 
 //        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
@@ -304,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
                         newSearch.setClass_name(discussList.get(i).getClass_name());
                         newSearch.setClass_id(discussList.get(i).getClass_id());
                         newSearch.setClass_lecturer_id(discussList.get(i).getClass_lecturer_id());
-//                        newSearch.setClass_type(searchList.get(i).getClass_type());
+                        newSearch.setClass_type(discussList.get(i).getClass_type());
 
                         dbDiscuss.discussWithMember().insertDiscussMember(newSearch);
                         Log.wtf("berhasil get all", "coba" + dbClassSearch.searchDAO().getAllSearch());

@@ -67,6 +67,7 @@ public class DiscussFragment extends Fragment implements DiscussAdapter.DiscussC
         });
         userSecret = userPreferences.getUserSecret();
         dbDiscuss = Room.databaseBuilder(requireContext(), DiscussDatabase.class, "searchdiscuss-database").allowMainThreadQueries().build();
+        //dbDiscuss = Room.databaseBuilder(getContext(), DiscussDatabase.class, "searchdiscuss-database").fallbackToDestructiveMigration().build();
         callFuncAPI();
         prepareRecyclerView();
 
@@ -80,7 +81,8 @@ public class DiscussFragment extends Fragment implements DiscussAdapter.DiscussC
 //        userPreferences.setClassId(classId);
 //        Log.wtf("class id view woi", String.valueOf(classId));
         Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
-//        intent.putExtra("class", discuss.getClass_name());
+        intent.putExtra("classId", discuss.getClass_id());
+        intent.putExtra("classType", discuss.getClass_type());
         startActivity(intent);
     }
 

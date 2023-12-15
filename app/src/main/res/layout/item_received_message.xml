@@ -19,7 +19,7 @@
         android:layout_marginTop="7dp">
 
         <TextView
-            android:id="@+id/nameMemberChat"
+            android:id="@+id/nameReceivedChat"
             android:layout_weight="2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
