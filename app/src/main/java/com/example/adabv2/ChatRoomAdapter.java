@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ChatRoomAdapter extends ArrayAdapter<Chat> {
 
-
+    private String roomId;
     public ChatRoomAdapter(@NonNull Context context, int resource, @NonNull List<Chat> objects) {
         super(context, resource, objects);
     }
@@ -37,6 +37,7 @@ public class ChatRoomAdapter extends ArrayAdapter<Chat> {
             TextView messageText = convertView.findViewById(R.id.message_body);
             String userConnected = chatText.getUsername();
             messageText.setText(userConnected);
+            Log.wtf("masuk", "adapter user connected");
         }
         else if(chatText.getRoomId().equals(ChatGroupActivity.roomId)){
 
@@ -45,6 +46,7 @@ public class ChatRoomAdapter extends ArrayAdapter<Chat> {
             TextView timeText = convertView.findViewById(R.id.timeSendView);
             messageText.setText(chatText.getMessage());
             timeText.setText(chatText.getTime());
+            Log.wtf("masuk", "adapter send item message");
 
         }
         else {
@@ -59,9 +61,10 @@ public class ChatRoomAdapter extends ArrayAdapter<Chat> {
             messageText.setText(chatText.getMessage());
             usernameText.setText(chatText.getUsername());
             timeText.setText(chatText.getTime());
+            Log.wtf("masuk", "adapter received item message");
 
         }
-
+        Log.wtf("masuk", "adapter convert view");
         return convertView;
       }
 

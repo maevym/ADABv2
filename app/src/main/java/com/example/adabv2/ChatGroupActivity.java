@@ -67,7 +67,9 @@ public class ChatGroupActivity extends AppCompatActivity {
     {
         try {
             socket = IO.socket("https://adab.arutala.dev/");
+            Log.wtf("masuk", "link socket");
         } catch (URISyntaxException e) {
+            Log.wtf("error socket", e.getMessage());
 
         }
     }
@@ -80,12 +82,14 @@ public class ChatGroupActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         init();
+        Log.wtf("masuk", "init");
         classId = getIntent().getIntExtra("classId", 0);
         classType = getIntent().getStringExtra("classType");
         UserPreferences userPreferences = new UserPreferences(getApplicationContext());
         username = userPreferences.getUserName();
         Log.wtf("success get username", username);
         roomId = "CL" + classId + classType;
+        Log.wtf("masuk", "intent");
 
         Log.wtf("success roomId", roomId);
         nameGroupChat.setText(roomId);
@@ -93,28 +97,36 @@ public class ChatGroupActivity extends AppCompatActivity {
         socket.on("numClients", args -> {
             runOnUiThread(() -> {
                 int numClients = (int) args[0];
+                Log.wtf("masuk", "num client socket");
             });
         });
 
-        socket.on("chatroom_message", args -> {
-            runOnUiThread(() -> {
-                try {
-                    JSONObject data = (JSONObject) args[0];
-                    String senderUsername = data.getString("username");
-                    String messageText = data.getString("message");
-                    String timestamp = data.getString("timestamp");
-
-                    Chat chat = new Chat(senderUsername, messageText, timestamp, roomId);
-                    chatRoomAdapter.add(chat);
-                    listViewChat.smoothScrollToPosition(0);
-                    listViewChat.scrollTo(0, chatRoomAdapter.getCount() - 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            });
-        });
+//        socket.on("chatroom_message", args -> {
+//            runOnUiThread(() -> {
+//                try {
+//                    JSONObject data = (JSONObject) args[0];
+//                    String receivedRoomId = data.getString("connectedRoomId");
+//                    String messageText = data.getString("msg");
+//                    String senderUsername = data.getString("user_id");
+//                    String timestamp = data.getString("timestamp");
+//
+//
+//                    Log.wtf("masuk", "socket on message chat room message");
+//                   if(roomId.equals(receivedRoomId)){
+//                       Chat chat = new Chat(senderUsername, messageText, timestamp, roomId);
+//                       chatRoomAdapter.add(chat);
+//                       listViewChat.smoothScrollToPosition(0);
+//                       listViewChat.scrollTo(0, chatRoomAdapter.getCount() - 1);
+//                       Log.wtf("masuk", "socket on message chat id room message");
+//                   }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//        });
 
         socket.emit("join_chatroom", roomId);
+        Log.wtf("masuk", "socket emit join chatroom");
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +144,7 @@ public class ChatGroupActivity extends AppCompatActivity {
                     dateChat = DateFormatter.DateToStringChat(new Date());
                     sendMessageToServer(message);
                     messageEditText.setText("");
+                    Log.wtf("masuk", "button send");
                 }
             }
         });
@@ -161,19 +174,26 @@ public class ChatGroupActivity extends AppCompatActivity {
     private void sendMessageToServer(String message) {
         JSONObject data = new JSONObject();
         try {
-            data.put("username", username);
-            data.put("message", message);
-            data.put("roomId", roomId);
+            data.put("connectedRoomId", roomId);
+            data.put("msg", message);
+            data.put("user_id", username);
             data.put("timestamp", dateChat);
 
+            Log.wtf("masuk", "socket send message send to messsage");
+
             socket.connect();
+            Log.wtf("masuk", "socket connect");
             socket.emit("chatroom_message", data);
+
+            Log.wtf("masuk", "socket emit chatroom");
 
             Log.wtf("success", String.valueOf(data));
             Chat chat = new Chat(username, message, dateChat, roomId);
             chatRoomAdapter.add(chat);
             listViewChat.smoothScrollToPosition(0);
             listViewChat.scrollTo(0, chatRoomAdapter.getCount()-1);
+
+            Log.wtf("masuk", "socket success sendMessageTo Server");
 
         } catch (JSONException e) {
             e.printStackTrace();
