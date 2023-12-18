@@ -14,6 +14,7 @@ import com.example.adabv2.Model.Session;
 import com.example.adabv2.Model.SessionRequest;
 import com.example.adabv2.Model.TranscriptHistory;
 import com.example.adabv2.Model.TranscriptRequest;
+import com.example.adabv2.Model.UpdatePasswordRequest;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -37,13 +38,13 @@ public interface ApiService {
     @POST("user/getAllSessions")
     Call<Response<ClassSession>> classSessionAPI(@Body ClassSessionRequest classSessionRequest);
 
-//    @POST("login")
-//    Call<ResponseBody> loginUser(@Body LoginRequest loginRequest);
-
-    @POST("user/getAllClass")
+    @POST("user/getAllMember")
     Call<Response<Discuss>> discussSearch(@Body DiscussRequest discussRequest);
 
     @POST("user/getTranscriptHistory")
     Call<Response<TranscriptHistory>> saveTranscriptHistory(@Body TranscriptRequest transcriptRequest);
+
+    @POST("updatePassword")
+    Call<ResponseBody> updatePassword(@Body UpdatePasswordRequest updatePasswordRequest);
 }
 

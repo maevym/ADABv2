@@ -9,11 +9,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import com.example.adabv2.Fragment.ClassFragment;
 import com.example.adabv2.Fragment.DiscussFragment;
 import com.example.adabv2.Fragment.HomeFragment;
+import com.example.adabv2.Fragment.RegisterFragment;
 import com.example.adabv2.Fragment.ScheduleFragment;
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.ClassSession;
@@ -48,11 +51,12 @@ import retrofit2.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ExtendedFloatingActionButton fabMenu, fabClass, fabSchedule, fabDiscuss, fabHome;
-    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, progressBar;
+    private ExtendedFloatingActionButton fabMenu, fabClass, fabSchedule, fabDiscuss, fabHome, fabRegister;
+    private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, fabRegisterText, progressBar, noInternet;
     private FrameLayout popUp;
     private Animation fabOpen, fabClose;
     private ActivityMainBinding binding;
+    private Button backToLoginBtn;
 
     private boolean isOpen = false;
     private String role;
@@ -90,22 +94,25 @@ public class MainActivity extends AppCompatActivity {
         classId = userPreferences.getClassId();
         Log.wtf("class", String.valueOf(classId));
 
-
         fabMenu = binding.fabMenu;
         fabClass = binding.fabClass;
         fabSchedule = binding.fabSchedule;
         fabHome = binding.fabHome;
         fabDiscuss = binding.fabDiscuss;
+        fabRegister = binding.fabRegister;
         fabClassText = binding.fabClassText;
         fabScheduleText = binding.fabScheduleText;
         fabHomeText = binding.fabHomeText;
         fabDiscussText = binding.fabDiscussText;
+        fabRegisterText = binding.fabRegisterText;
         popUp = binding.popUp;
         progressBar = binding.progressBar;
-        noClassView = binding.noClassView;
+        noInternet = binding.noInternet;
+        backToLoginBtn = binding.buttonBackToLogin;
 
+        fabMenu.setVisibility(View.INVISIBLE);
 
-
+        // save data to local database
         dbSession = Room.databaseBuilder(getApplicationContext(),
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
         dbSession.sessionDAO().deleteAll();
@@ -119,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
 //        dbClassSession.classSessionDAO().deleteAllClassSession();
+        backToLoginBtn.setOnClickListener(v -> finish());
     }
 
     private void menuOnClickListener () {
@@ -143,12 +151,21 @@ public class MainActivity extends AppCompatActivity {
             animateFab();
             switchFragment(new DiscussFragment());
         });
+
+        fabRegister.setOnClickListener(view -> {
+            animateFab();
+            switchFragment(new RegisterFragment());
+        });
     }
 
     private void animateFab() {
         if (isOpen) {
             popUp.setVisibility(View.INVISIBLE);
-            if (!role.equals("L")) {
+            if (role.equals("L")) {
+                fabRegister.startAnimation(fabClose);
+                fabRegisterText.startAnimation(fabClose);
+                fabRegister.setClickable(false);
+            } else {
                 fabDiscuss.startAnimation(fabClose);
                 fabDiscussText.startAnimation(fabClose);
                 fabDiscuss.setClickable(false);
@@ -166,7 +183,12 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             popUp.setVisibility(View.VISIBLE);
-            if (!role.equals("L")) {
+            if (role.equals("L")) {
+                fabRegister.startAnimation(fabOpen);
+                fabRegisterText.startAnimation(fabOpen);
+                fabRegister.setClickable(true);
+            }
+            else {
                 fabDiscuss.startAnimation(fabOpen);
                 fabDiscussText.startAnimation(fabOpen);
                 fabDiscuss.setClickable(true);
@@ -193,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveSession() {
         SessionRequest sessionRequest = new SessionRequest();
-
         sessionRequest.setUser_secret(userSecret);
         sessionRequest.setDate(DateFormatter.DateToString(currentDate));
 
@@ -225,17 +246,13 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
                 }
-                progressBar.setVisibility(View.INVISIBLE);
-                popUp.setVisibility(View.INVISIBLE);
-                switchFragment(new HomeFragment(getApplicationContext()));
             }
 
             @Override
             public void onFailure(@NonNull Call<Response<Session>> call, @NonNull Throwable t) {
-                Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
                 progressBar.setVisibility(View.INVISIBLE);
-                switchFragment(new HomeFragment(getApplicationContext()));
+                noInternet.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -259,32 +276,30 @@ public class MainActivity extends AppCompatActivity {
                         newSearch.setClass_name(searchList.get(i).getClass_name());
                         newSearch.setClass_id(searchList.get(i).getClass_id());
                         newSearch.setClass_lecturer_id(searchList.get(i).getClass_lecturer_id());
-//                        newSearch.setClass_type(searchList.get(i).getClass_type());
                         dbClassSearch.searchDAO().insertSearchClass(newSearch);
                         Log.wtf("berhasil get all", "coba" + dbClassSearch.searchDAO().getAllSearch());
-
                     }
-//                    searchAdapter.notifyDataSetChanged();
                 }
                 else {
                     if (response.code() == 404) {
-                        noClassView.setVisibility(View.VISIBLE);
-
+                        dbClassSearch.searchDAO().deleteAllSearch();
                     } else {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
                 }
                 progressBar.setVisibility(View.INVISIBLE);
+                popUp.setVisibility(View.INVISIBLE);
+                fabMenu.setVisibility(View.VISIBLE);
+                switchFragment(new HomeFragment(getApplicationContext()));
             }
 
             @Override
             public void onFailure(Call<Response<Search>> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Gagal mengambil data", Toast.LENGTH_SHORT).show();
+                Log.wtf("responses", "Failed " + t.getLocalizedMessage());
                 progressBar.setVisibility(View.INVISIBLE);
-                switchFragment(new ClassFragment());
+                noInternet.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     private void discussSearchDataClass(){

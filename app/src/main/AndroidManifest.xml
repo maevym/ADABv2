@@ -30,6 +30,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+            android:name=".ChangePasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
@@ -41,10 +43,10 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".TranscriptHistoryActivity"
+            android:name=".SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".TranscriptRealtimeActivity"
+            android:name=".TranscriptActivity"
             android:exported="false" />
         <activity
             android:name=".RecordRealtimeActivity"

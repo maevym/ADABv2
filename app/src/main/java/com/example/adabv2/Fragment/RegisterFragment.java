@@ -1,11 +1,13 @@
-package com.example.adabv2;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.adabv2.Fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,29 +15,31 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.adabv2.LoginActivity;
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.DataUser;
-import com.example.adabv2.databinding.ActivityRegisterBinding;
+import com.example.adabv2.RegisterActivity;
+import com.example.adabv2.databinding.FragmentRegisterBinding;
+
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-
-    private ActivityRegisterBinding binding;
-    String[] roleUniversity = {"Select Role","Mahasiswa", "Dosen"};
-
+public class RegisterFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+    private FragmentRegisterBinding binding;
+    String[] roleUniversity = {"Select Role","Mahasiswa", "Dosen", "LSC"};
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentRegisterBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        setContentView(view);
 
         binding.spinnerRole.setOnItemSelectedListener(this);
-        ArrayAdapter adapterRole = new ArrayAdapter(this, android.R.layout.simple_spinner_item, roleUniversity)
+
+        ArrayAdapter adapterRole = new ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, roleUniversity)
         {
             @Override
             public boolean isEnabled(int position){
@@ -67,23 +71,28 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         binding.spinnerRole.setAdapter(adapterRole);
 
         binding.buttonRegister.setOnClickListener(v -> {
+            binding.usernameRegister.setError(null);
+            binding.passwordRegister.setError(null);
+            binding.emailRegister.setError(null);
+            binding.idRegister.setError(null);
             validate();
         });
 
+        return view;
     }
 
     private void validate() {
         String usernameText = binding.usernameRegister.getText().toString();
         String passwordText = binding.passwordRegister.getText().toString();
         String emailText = binding.emailRegister.getText().toString();
-        String nimText = binding.nimRegister.getText().toString();
+        String idText = binding.idRegister.getText().toString();
         String selectedValue = binding.spinnerRole.getSelectedItem().toString();
         String defaultRole = "Select Role";
         View selectedView = binding.spinnerRole.getSelectedView();
-        String mahasiwsaValue = "Mahasiswa";
+        String mahasiswaValue = "Mahasiswa";
         String dosenValue = "Dosen";
+        String lscValue = "LSC";
         String role = "";
-
 
         if(usernameText.isEmpty()){
             binding.usernameRegister.setError("nama tidak boleh kosong");
@@ -115,15 +124,9 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             return;
         }
 
-        if(nimText.isEmpty()){
-            binding.nimRegister.setError("nim tidak boleh kosong");
-            binding.nimRegister.requestFocus();
-            return;
-        }
-
-        if (nimText.length() > 10 || nimText.length() < 10){
-            binding.nimRegister.setError("nim harus mengandung 10 karakter");
-            binding.nimRegister.requestFocus();
+        if(idText.isEmpty()){
+            binding.idRegister.setError("id tidak boleh kosong");
+            binding.idRegister.requestFocus();
             return;
         }
 
@@ -141,14 +144,35 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             return;
         }
 
-        if (selectedValue.equals(mahasiwsaValue)){
+        if (selectedValue.equals(mahasiswaValue)){
             role = "M";
             Log.wtf("masuk mahasiswa",role);
+
+            if (idText.length() != 10){
+                binding.idRegister.setError("id harus mengandung 10 karakter");
+                binding.idRegister.requestFocus();
+                return;
+            }
         }
 
         else if (selectedValue.equals(dosenValue)){
             role = "D";
             Log.wtf("masuk dosen",role);
+            if (idText.length() != 5){
+                binding.idRegister.setError("id harus mengandung 5 karakter");
+                binding.idRegister.requestFocus();
+                return;
+            }
+        }
+
+        else if (selectedValue.equals(lscValue)) {
+            role = "L";
+            Log.wtf("masuk lsc",role);
+            if (idText.length() != 5){
+                binding.idRegister.setError("id harus mengandung 5 karakter");
+                binding.idRegister.requestFocus();
+                return;
+            }
         }
 
         DataUser dataUser = new DataUser();
@@ -158,8 +182,8 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         Log.wtf("masuk","berhasil data pass" );
         dataUser.setName(usernameText);
         Log.wtf("masuk","berhasil data name" );
-        dataUser.setUser_nim(nimText);
-        Log.wtf("masuk","berhasil data nim" );
+        dataUser.setUser_nim(idText);
+        Log.wtf("masuk","berhasil data id" );
         dataUser.setUser_type(role);
         Log.wtf("masuk","berhasil data role ");
         Call<ResponseBody> dataUserCall = ApiClient.request().saveUser(dataUser);
@@ -168,39 +192,37 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()){
                     ResponseBody responseBody = response.body();
-                    Toast.makeText(RegisterActivity.this,"Registrasi berhasil", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                    startActivity(intent);
+                    Toast.makeText(requireContext(),"Registrasi berhasil", Toast.LENGTH_SHORT).show();
+
+                    binding.usernameRegister.setText("");
+                    binding.passwordRegister.setText("");
+                    binding.emailRegister.setText("");
+                    binding.idRegister.setText("");
+                    binding.spinnerRole.setSelection(0);
 
                 } else {
                     if(response.code() == 401){
-                        Toast.makeText(RegisterActivity.this, "Akun sudah diregistrasi", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Akun sudah diregistrasi", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Register gagal", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Registrasi gagal", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this,"Registrasi gagal", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(),"Registrasi gagal", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
-//        String selectedRole = (String) parent.getSelectedItem();
-//        if(position > 0){
-//            Toast.makeText(getApplicationContext(), "Selected : " + selectedRole, Toast.LENGTH_SHORT).show();
-//        }
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        Toast.makeText(RegisterActivity.this, "Please select an option", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "pilih peran", Toast.LENGTH_SHORT).show();
     }
 }
