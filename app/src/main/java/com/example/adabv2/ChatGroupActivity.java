@@ -97,9 +97,9 @@ public class ChatGroupActivity extends AppCompatActivity {
                         recordBtn.setColorFilter(ContextCompat.getColor(this, R.color.blue), android.graphics.PorterDuff.Mode.SRC_IN);
                         speechRecognizer.stopListening();
                     }
+                    isStop = !isStop;
                 }
             }
-            isStop = !isStop;
         });
     }
 
