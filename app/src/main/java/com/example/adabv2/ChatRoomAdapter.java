@@ -52,11 +52,12 @@ public class ChatRoomAdapter extends ArrayAdapter<Chat> {
         else {
             convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.item_received_message,parent,false);
             TextView messageText = convertView.findViewById(R.id.fieldReceivedTextMessage);
-            TextView usernameText = (TextView) convertView.findViewById(R.id.nameReceivedChat);
+            TextView usernameText = convertView.findViewById(R.id.nameReceivedChat);
             TextView timeText = convertView.findViewById(R.id.timeReceived);
 
             messageText.setVisibility(View.VISIBLE);
             usernameText.setVisibility(View.VISIBLE);
+            timeText.setVisibility(View.VISIBLE);
 
             messageText.setText(chatText.getMessage());
             usernameText.setText(chatText.getUsername());

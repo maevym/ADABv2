@@ -2,6 +2,7 @@ package com.example.adabv2;
 
 import android.graphics.Bitmap;
 import android.telephony.TelephonyCallback;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,110 +26,127 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ChatGroupAdapter extends RecyclerView.Adapter {
+public class ChatGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Chat> chatList = new ArrayList<>();
-    private static final int TYPE_MESSAGE_SENT = 0;
-    private static final int TYPE_MESSAGE_RECEIVED = 1;
+    private static final int VIEW_TYPE_USER_CONNECTED = 0;
+    private static final int VIEW_TYPE_SEND_MESSAGE = 1;
+    private static final int VIEW_TYPE_RECEIVED_MESSAGE = 2;
 
-    private LayoutInflater inflater;
-    private List<JSONObject> messages = new ArrayList<>();
+    private List<Chat> chatList;
+    private String roomId;
 
-
-    public ChatGroupAdapter(LayoutInflater inflater){
-        this.inflater = inflater;
+    public ChatGroupAdapter(List<Chat> chatList) {
+        this.chatList = chatList;
     }
-
-    private class SendChatHolder extends RecyclerView.ViewHolder {
-        private TextView textSendMessage;
-        private TextView timeSend;
-
-        public SendChatHolder(ItemSendMessageBinding itemSendMessageBinding) {
-            super(itemSendMessageBinding.getRoot());
-            textSendMessage = itemSendMessageBinding.fieldSendTextMessage;
-            timeSend = itemSendMessageBinding.timeSendView;
-
-        }
-    }
-
-
-    private class ReceivedChatHolder extends RecyclerView.ViewHolder {
-        private TextView nameReceived;
-        private TextView textReceivedMessage;
-        private TextView timeReceived;
-
-
-        public ReceivedChatHolder(ItemReceivedMessageBinding itemReceivedMessageBinding) {
-            super(itemReceivedMessageBinding.getRoot());
-            nameReceived = itemReceivedMessageBinding.nameReceivedChat;
-            textReceivedMessage = itemReceivedMessageBinding.fieldReceivedTextMessage;
-            timeReceived = itemReceivedMessageBinding.timeReceived;
-
-        }
-    }
-
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemSendMessageBinding sendMessageBinding;
-        ItemReceivedMessageBinding receivedMessageBinding;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         switch (viewType) {
-            case TYPE_MESSAGE_SENT:
-                sendMessageBinding = ItemSendMessageBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
-                return new SendChatHolder(sendMessageBinding);
+            case VIEW_TYPE_USER_CONNECTED:
+                View userConnectedView = inflater.inflate(R.layout.user_connected, parent, false);
+                return new UserConnectedViewHolder(userConnectedView);
 
-            case TYPE_MESSAGE_RECEIVED:
-                receivedMessageBinding = ItemReceivedMessageBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-                return new ReceivedChatHolder(receivedMessageBinding);
+            case VIEW_TYPE_SEND_MESSAGE:
+                View sendMessageView = inflater.inflate(R.layout.item_send_message, parent, false);
+                return new SendMessageViewHolder(sendMessageView);
+
+            case VIEW_TYPE_RECEIVED_MESSAGE:
+                View receivedMessageView = inflater.inflate(R.layout.item_received_message, parent, false);
+                return new ReceivedMessageViewHolder(receivedMessageView);
+
+            default:
+                throw new IllegalArgumentException("Invalid view type");
         }
-        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-//        Chat chat = chatList.get(position);
-//        SendChatHolder sendChatHolder = (SendChatHolder) holder;
-//        sendChatHolder.textSendMessage.setText(chat.getMessage());
-//        sendChatHolder.timeSend.setText(chat.getSendTime());
-//
-//        ReceivedChatHolder receivedChatHolder = (ReceivedChatHolder) holder;
-//        receivedChatHolder.nameReceived.setText(chat.getNameMember());
-//        receivedChatHolder.textReceivedMessage.setText(chat.getMessage());
-//        receivedChatHolder.timeReceived.setText(chat.getReceivedTime());
+        Chat chatText = chatList.get(position);
 
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_USER_CONNECTED:
+                ((UserConnectedViewHolder) holder).bind(chatText);
+                break;
 
-        JSONObject message = messages.get(position);
+            case VIEW_TYPE_SEND_MESSAGE:
+                ((SendMessageViewHolder) holder).bind(chatText);
+                break;
 
-        try {
-            if (message.getBoolean("isSent")) {
-                if (message.has("message")) {
-                    SendChatHolder messageHolder = (SendChatHolder) holder;
-                    messageHolder.textSendMessage.setText(message.getString("message_tr"));
-                    messageHolder.timeSend.setText(message.getString("timestamp"));
-
-                }
-
-            } else {
-                if (message.has("message")) {
-                    ReceivedChatHolder messageHolder = (ReceivedChatHolder) holder;
-                    messageHolder.nameReceived.setText(message.getString("name"));
-                    messageHolder.textReceivedMessage.setText(message.getString("message_tr"));
-                    messageHolder.timeReceived.setText("timestamp");
-                }
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            case VIEW_TYPE_RECEIVED_MESSAGE:
+                ((ReceivedMessageViewHolder) holder).bind(chatText);
+                break;
         }
-
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return chatList.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        Chat chatText = chatList.get(position);
 
+        if (TextUtils.isEmpty(chatText.getMessage())) {
+            return VIEW_TYPE_USER_CONNECTED;
+        } else if (chatText.getRoomId().equals(ChatGroupActivity.roomId)) {
+            return VIEW_TYPE_SEND_MESSAGE;
+        } else {
+            return VIEW_TYPE_RECEIVED_MESSAGE;
+        }
+    }
+
+    // View holders
+
+    private static class UserConnectedViewHolder extends RecyclerView.ViewHolder {
+        TextView messageText;
+
+        UserConnectedViewHolder(View itemView) {
+            super(itemView);
+            messageText = itemView.findViewById(R.id.message_body);
+        }
+
+        void bind(Chat chatText) {
+            String userConnected = chatText.getUsername();
+            messageText.setText(userConnected);
+        }
+    }
+
+    private static class SendMessageViewHolder extends RecyclerView.ViewHolder {
+        TextView messageText;
+        TextView timeText;
+
+        SendMessageViewHolder(View itemView) {
+            super(itemView);
+            messageText = itemView.findViewById(R.id.fieldSendTextMessage);
+          //  timeText = itemView.findViewById(R.id.timeSendView);
+        }
+
+        void bind(Chat chatText) {
+            messageText.setText(chatText.getMessage());
+            //timeText.setText(chatText.getTime());
+        }
+    }
+
+    private static class ReceivedMessageViewHolder extends RecyclerView.ViewHolder {
+        TextView messageText;
+        TextView usernameText;
+        TextView timeText;
+
+        ReceivedMessageViewHolder(View itemView) {
+            super(itemView);
+            messageText = itemView.findViewById(R.id.fieldReceivedTextMessage);
+            usernameText = itemView.findViewById(R.id.nameReceivedChat);
+            timeText = itemView.findViewById(R.id.timeReceived);
+        }
+
+        void bind(Chat chatText) {
+            messageText.setText(chatText.getMessage());
+            usernameText.setText(chatText.getUsername());
+            timeText.setText(chatText.getTime());
+        }
+    }
 }
