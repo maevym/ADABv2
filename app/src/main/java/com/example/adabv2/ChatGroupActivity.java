@@ -144,6 +144,7 @@ public class ChatGroupActivity extends AppCompatActivity {
         recordBtn.setOnClickListener(v -> {
             // record message
             connectRecordSpeechToText();
+
         });
 
 
@@ -216,14 +217,11 @@ public class ChatGroupActivity extends AppCompatActivity {
 
 
     private void connectRecordSpeechToText(){
-        socket.connected();
-        if (socket.connected()) {
-            if (isPermissionGranted()) {
-                requestPermission();
-            }
-            speechToText();
+        if (isPermissionGranted()) {
+            requestPermission();
+
         } else {
-            Log.d("Socket.io", "error");
+            speechToText();
         }
 
     }
@@ -243,7 +241,7 @@ public class ChatGroupActivity extends AppCompatActivity {
 
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "id-ID");
-//        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Start Speaking");
+        //speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Start Speaking");
 
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
@@ -266,24 +264,23 @@ public class ChatGroupActivity extends AppCompatActivity {
 
             @Override
             public void onEndOfSpeech() {
-//                socket.emit("stop_talking");
+                //speechRecognizer.stopListening();
             }
 
             @Override
             public void onError(int i) {
-                // starts listening again
-//                if (i == 7 && !isStop) {
-//                    speechRecognizer.startListening(speechRecognizerIntent);
-//                }
+//              speechRecognizer.stopListening();
             }
 
             @Override
             public void onResults(Bundle bundle) {
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 if (data != null) {
+                    dateChat = DateFormatter.DateToStringChat(new Date());
                     sendMessageToServer(data.get(0));
+                    Log.wtf("berhasil masuk send recording", data.get(0));
                 }
-                speechRecognizer.startListening(speechRecognizerIntent);
+                //speechRecognizer.startListening(speechRecognizerIntent);
             }
 
             @Override
