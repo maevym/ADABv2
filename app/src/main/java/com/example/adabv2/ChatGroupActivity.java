@@ -111,7 +111,7 @@ public class ChatGroupActivity extends AppCompatActivity {
                     Date date = DateFormatter.StringToDateMillisecond(data.getString("timestamp"));
                     String timestamp = DateFormatter.DateToTime(date);
 
-                    Chat chat = new Chat(username, messageText, timestamp, roomId);
+                    Chat chat = new Chat(username, messageText, timestamp, roomId + "s");
                     chatRoomAdapter.add(chat);
                     listViewChat.smoothScrollToPosition(0);
                     listViewChat.scrollTo(0, chatRoomAdapter.getCount() - 1);
