@@ -110,6 +110,15 @@ public class ChatGroupActivity extends AppCompatActivity {
         socket.emit("join_chatroom", roomId);
         Log.wtf("masuk", "socket emit join chatroom");
 
+        receivedMessageFromServer();
+        JSONObject userId = new JSONObject();
+        try {
+            userId.put("user_id", username);
+            socket.emit("chatroom_message", userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +143,7 @@ public class ChatGroupActivity extends AppCompatActivity {
 
         recordBtn.setOnClickListener(v -> {
             // record message
+            connectRecordSpeechToText();
         });
 
 
@@ -185,21 +195,19 @@ public class ChatGroupActivity extends AppCompatActivity {
     }
 
     private void receivedMessageFromServer(){
-        JSONObject data = new JSONObject();
         try {
+            JSONObject data = new JSONObject();
             String receivedRoomId = data.getString("connectedRoomId");
             String messageText = data.getString("msg");
-            String senderUsername = data.getString("user_id");
+            String username = data.getString("user_id");
             String timestamp = data.getString("timestamp");
 
             Log.wtf("masuk", "socket on message chat room message");
-            if(roomId.equals(receivedRoomId)){
-                Chat chat = new Chat(senderUsername, messageText, timestamp, roomId);
+                Chat chat = new Chat(username, messageText, timestamp, roomId);
                 chatRoomAdapter.add(chat);
 //                listViewChat.smoothScrollToPosition(0);
 //                listViewChat.scrollTo(0, chatRoomAdapter.getCount() - 1);
                 Log.wtf("masuk", "socket on message chat id room message");
-            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -213,10 +221,7 @@ public class ChatGroupActivity extends AppCompatActivity {
             if (isPermissionGranted()) {
                 requestPermission();
             }
-//            if (realTimeTextTV.getText() == "") {
-//                socket.emit("edit","");
-//            }
-//            speechToText();
+            speechToText();
         } else {
             Log.d("Socket.io", "error");
         }
@@ -237,8 +242,8 @@ public class ChatGroupActivity extends AppCompatActivity {
         speechRecognizer.startListening(speechRecognizerIntent);
 
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, chosenLanguage);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Start Speaking");
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "id-ID");
+//        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Start Speaking");
 
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
@@ -247,7 +252,7 @@ public class ChatGroupActivity extends AppCompatActivity {
 
             @Override
             public void onBeginningOfSpeech() {
-                socket.emit("start_talking");
+//                socket.emit("start_talking");
             }
 
             @Override
@@ -261,32 +266,23 @@ public class ChatGroupActivity extends AppCompatActivity {
 
             @Override
             public void onEndOfSpeech() {
-                socket.emit("stop_talking");
+//                socket.emit("stop_talking");
             }
 
             @Override
             public void onError(int i) {
                 // starts listening again
-                if (i == 7 && !isStop) {
-                    speechRecognizer.startListening(speechRecognizerIntent);
-                }
+//                if (i == 7 && !isStop) {
+//                    speechRecognizer.startListening(speechRecognizerIntent);
+//                }
             }
 
             @Override
             public void onResults(Bundle bundle) {
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-//                String prevText = String.valueOf(realTimeTextTV.getText());
-//                if (data != null) {
-//                    if (!prevText.equals("")) {
-//                        socket.emit("history",data.get(0));
-//                        realTimeTextTV.setText(prevText + "\n" + data.get(0));
-//                        socket.emit("message", "\n" + data.get(0));
-//                    } else {
-//                        realTimeTextTV.setText(data.get(0));
-//                        socket.emit("message", data.get(0));
-//                    }
-//                    scrollView.fullScroll(View.FOCUS_DOWN);
-//                }
+                if (data != null) {
+                    sendMessageToServer(data.get(0));
+                }
                 speechRecognizer.startListening(speechRecognizerIntent);
             }
 
