@@ -47,8 +47,9 @@ public class DiscussAdapter extends RecyclerView.Adapter<DiscussAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull DiscussAdapter.MyViewHolder holder, int position) {
         Discuss discuss = discussList.get(position);
-        holder.namaDiscussMember.setText(discussList.get(position).getName());
-        holder.nimDiscussMember.setText(discussList.get(position).getUser_unique());
+        holder.namaDiscussMember.setText(discussList.get(position).getClass_name());
+        holder.nimDiscussMember.setText(discussList.get(position).getClass_code());
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

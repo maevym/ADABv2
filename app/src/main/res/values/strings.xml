@@ -32,6 +32,8 @@
     <!-- TODO: hapus yang dibawah ini -->
     <string name="kelas">Kelas</string>
     <string name="sesi">Sesi</string>
+    <string name="diskusi">Diskusi</string>
+    <string name="me">Saya</string>
     <string name="changePassword">Ubah Kata Sandi</string>
     <string name="saveButton">SIMPAN</string>
     <string name="noInternet">Tidak Ada Koneksi</string>
