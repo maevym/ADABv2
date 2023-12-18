@@ -84,10 +84,8 @@ public class DiscussFragment extends Fragment implements DiscussAdapter.DiscussC
 
     @Override
     public void selectedMember(Discuss discuss) {
-//        int classId = discuss.getClass_id();
-//        userPreferences.setClassId(classId);
-//        Log.wtf("class id view woi", String.valueOf(classId));
         Intent intent = new Intent(getActivity(), ChatGroupActivity.class);
+        intent.putExtra("className", discuss.getClass_name());
         intent.putExtra("classId", discuss.getClass_id());
         intent.putExtra("classType", discuss.getClass_type());
         startActivity(intent);
