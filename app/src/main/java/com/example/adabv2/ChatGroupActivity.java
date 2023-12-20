@@ -137,8 +137,9 @@ public class ChatGroupActivity extends AppCompatActivity {
 
                         Chat chat = new Chat(username, messageText, timestamp, roomId + "s");
                         chatRoomAdapter.add(chat);
-                        listViewChat.smoothScrollToPosition(0);
-                        listViewChat.scrollTo(0, chatRoomAdapter.getCount() - 1);
+                        chatRoomAdapter.notifyDataSetChanged();
+//                        listViewChat.smoothScrollToPosition(0);
+//                        listViewChat.scrollTo(0, chatRoomAdapter.getCount() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -161,8 +162,9 @@ public class ChatGroupActivity extends AppCompatActivity {
             String timestamp = DateFormatter.DateToTime(date);
             Chat chat = new Chat(username, message, timestamp, roomId);
             chatRoomAdapter.add(chat);
-            listViewChat.smoothScrollToPosition(0);
-            listViewChat.scrollTo(0, chatRoomAdapter.getCount()-1);
+            chatRoomAdapter.notifyDataSetChanged();
+//            listViewChat.smoothScrollToPosition(0);
+//            listViewChat.scrollTo(0, chatRoomAdapter.getCount()-1);
 
         } catch (JSONException e) {
             e.printStackTrace();
