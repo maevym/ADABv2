@@ -66,11 +66,11 @@ public class ScheduleFragment extends Fragment {
     }
 
     private void init() {
-        sessionAdapter = new SessionAdapter(sessions, getContext());
         UserPreferences userPreferences = new UserPreferences(requireContext());
         String role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
-        sessionAdapter.setUserType(role);
+        sessionAdapter = new SessionAdapter(sessions, getContext(),role);
+//        sessionAdapter.setUserType(role);
 
         todayDate = binding.todayDate;
         rv = binding.recyclerView;

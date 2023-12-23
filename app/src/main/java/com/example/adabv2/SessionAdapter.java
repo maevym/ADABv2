@@ -20,18 +20,19 @@ import java.util.Date;
 import java.util.List;
 
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHolder> {
-    List<Session> sessions;
-    String userType;
-    Context context;
+    private final List<Session> sessions;
+    private final String userType;
+    private final Context context;
 
-    public SessionAdapter(List<Session> sessions, Context context) {
+    public SessionAdapter(List<Session> sessions, Context context, String userType) {
         this.sessions = sessions;
         this.context = context;
-    }
-
-    public void setUserType(String userType){
         this.userType = userType;
     }
+
+//    public void setUserType(String userType){
+//        this.userType = userType;
+//    }
 
     @NonNull
     @Override

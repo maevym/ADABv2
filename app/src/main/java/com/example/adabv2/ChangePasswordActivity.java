@@ -22,8 +22,8 @@ import retrofit2.Response;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
-    EditText oldPasswordEdtTxt;
-    EditText newPasswordEdtTxt;
+    private EditText oldPasswordEdtTxt;
+    private EditText newPasswordEdtTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

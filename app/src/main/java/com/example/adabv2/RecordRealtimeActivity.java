@@ -68,7 +68,19 @@ public class RecordRealtimeActivity extends AppCompatActivity {
 
         init();
         connectSocket();
-        buttonOnclick();
+
+        backButton.setOnClickListener(v -> {
+            isStop = true;
+            speechRecognizer.stopListening();
+            stopConfirmation();
+        });
+
+        // stop record
+        stopButton.setOnClickListener(v -> {
+            isStop = true;
+            speechRecognizer.stopListening();
+            stopConfirmation();
+        });
     }
 
     private void init() {
@@ -85,22 +97,6 @@ public class RecordRealtimeActivity extends AppCompatActivity {
         chosenLanguage = getIntent().getStringExtra("chosenLanguage");
 
         sessionNameTV.setText(sessionName);
-    }
-
-    private void buttonOnclick() {
-        // back button
-        backButton.setOnClickListener(v -> {
-            isStop = true;
-            speechRecognizer.stopListening();
-            stopConfirmation();
-        });
-
-        // stop record
-        stopButton.setOnClickListener(v -> {
-            isStop = true;
-            speechRecognizer.stopListening();
-            stopConfirmation();
-        });
     }
 
     private void connectSocket() {
@@ -248,7 +244,7 @@ public class RecordRealtimeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         speechRecognizer.destroy();
-                        finish();
+                        onBackPressed();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
