@@ -270,6 +270,7 @@ public class RecordRealtimeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        socket.disconnect();
         speechRecognizer.destroy();
     }
 }

@@ -70,7 +70,6 @@ public class ScheduleFragment extends Fragment {
         String role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
         sessionAdapter = new SessionAdapter(sessions, getContext(),role);
-//        sessionAdapter.setUserType(role);
 
         todayDate = binding.todayDate;
         rv = binding.recyclerView;

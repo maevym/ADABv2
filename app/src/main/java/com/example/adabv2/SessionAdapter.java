@@ -30,10 +30,6 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
         this.userType = userType;
     }
 
-//    public void setUserType(String userType){
-//        this.userType = userType;
-//    }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

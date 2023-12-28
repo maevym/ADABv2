@@ -82,7 +82,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
         swipeRefreshLayout.setOnRefreshListener(this);
         fabSetting.setOnClickListener(this);
         sessionAdapter = new SessionAdapter(sessions, getContext(), role);
-//        sessionAdapter.setUserType(role);
 
         rv.hasFixedSize();
         rv.setItemViewCacheSize(20);
