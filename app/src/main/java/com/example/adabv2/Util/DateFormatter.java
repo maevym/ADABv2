@@ -40,5 +40,9 @@ public class DateFormatter {
     public static String DateToStringDate(Date date) {
         return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(date);
     }
+
+    public static String DateToStringChat(Date date) {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(date);
+    }
 }
 

@@ -38,7 +38,7 @@ public interface ApiService {
     @POST("user/getAllSessions")
     Call<Response<ClassSession>> classSessionAPI(@Body ClassSessionRequest classSessionRequest);
 
-    @POST("user/getAllMember")
+    @POST("user/getAllClass")
     Call<Response<Discuss>> discussSearch(@Body DiscussRequest discussRequest);
 
     @POST("user/getTranscriptHistory")

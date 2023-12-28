@@ -28,11 +28,14 @@ import com.example.adabv2.Fragment.ScheduleFragment;
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.ClassSession;
 import com.example.adabv2.Model.ClassSessionRequest;
+import com.example.adabv2.Model.Discuss;
+import com.example.adabv2.Model.DiscussRequest;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Model.Search;
 import com.example.adabv2.Model.SearchRequest;
 import com.example.adabv2.Model.Session;
 import com.example.adabv2.Room.ClassSessionDatabase;
+import com.example.adabv2.Room.DiscussDatabase;
 import com.example.adabv2.Room.SearchDatabase;
 import com.example.adabv2.Room.SessionDatabase;
 import com.example.adabv2.Model.SessionRequest;
@@ -60,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
     private String userSecret;
     private SessionDatabase dbSession;
     private SearchDatabase dbClassSearch;
+    private ClassSessionDatabase dbClassSession;
+    private DiscussDatabase dbDiscuss;
+    private LinearLayout noClassView;
     private final Date currentDate = new Date();
     private int classId;
 
@@ -73,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
         menuOnClickListener();
         saveSession();
         saveSearchDataClass();
+        discussSearchDataClass();
+//        saveClassSession();
+
     }
 
     private void init() {
@@ -111,6 +120,12 @@ public class MainActivity extends AppCompatActivity {
         dbClassSearch = Room.databaseBuilder(getApplicationContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
         dbClassSearch.searchDAO().deleteAllSearch();
 
+       dbDiscuss = Room.databaseBuilder(getApplicationContext(), DiscussDatabase.class, "searchdiscuss-database").allowMainThreadQueries().build();
+        //dbDiscuss = Room.databaseBuilder(getApplicationContext(), DiscussDatabase.class, "searchdiscuss-database").fallbackToDestructiveMigration().build();
+        dbDiscuss.discussWithMember().deleteAllSMember();
+
+//        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
+//        dbClassSession.classSessionDAO().deleteAllClassSession();
         backToLoginBtn.setOnClickListener(v -> finish());
     }
 
@@ -286,4 +301,57 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void discussSearchDataClass(){
+        DiscussRequest discussRequest = new DiscussRequest();
+        discussRequest.setUser_secret(userSecret);
+
+        Call<Response<Discuss>> responseCallDiscuss = ApiClient.request().discussSearch(discussRequest);
+        Log.wtf("masuk", "dapet panggil retrofit");
+        responseCallDiscuss.enqueue(new Callback<Response<Discuss>>(){
+            @Override
+            public void onResponse(Call<Response<Discuss>> call, retrofit2.Response<Response<Discuss>> response) {
+                if (response.isSuccessful()) {
+                    Response<Discuss> discussResponse  = response.body();
+                    List<Discuss> discussList = discussResponse.getValues();
+                    for (int i=0; i<discussList.size(); i++) {
+                        Discuss newSearch = new Discuss();
+                        newSearch.setClass_code(discussList.get(i).getClass_code());
+                        newSearch.setClass_name(discussList.get(i).getClass_name());
+                        newSearch.setClass_id(discussList.get(i).getClass_id());
+                        newSearch.setClass_lecturer_id(discussList.get(i).getClass_lecturer_id());
+                        newSearch.setClass_type(discussList.get(i).getClass_type());
+
+                        dbDiscuss.discussWithMember().insertDiscussMember(newSearch);
+                        Log.wtf("berhasil get all", "coba" + dbClassSearch.searchDAO().getAllSearch());
+
+                    }
+//                    searchAdapter.notifyDataSetChanged();
+                }
+                else {
+                    if (response.code() == 404) {
+                        noClassView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
+                    }
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<Response<Discuss>> call, Throwable t) {
+                Toast.makeText(MainActivity.this,"Gagal mengambil data", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
+                switchFragment(new ClassFragment());
+            }
+
+        });
+
+    }
+
+
+
+
+
 }
