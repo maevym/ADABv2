@@ -40,8 +40,8 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        final Date date = DateFormatter.StringToDateMillisecond(sessions.get(position).getSessionStart());
-        final String time = DateFormatter.DateToTime(date);
+        final Date date = DateFormatter.stringToDateMillisecond(sessions.get(position).getSessionStart());
+        final String time = DateFormatter.dateToTime(date);
 
         Log.wtf("testingHolder", sessions.get(position).getSessionStart() + " " + sessions.get(position).getClassCode() + " " + sessions.get(position).getClassName());
 
@@ -50,8 +50,8 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
         holder.time.setText(time);
         holder.location.setText(sessions.get(position).getSessionLocation());
         holder.itemView.setOnClickListener(v -> {
-            Date startDate = DateFormatter.StringToDateMillisecond(sessions.get(position).sessionStart);
-            Date endDate = DateFormatter.StringToDateMillisecond(sessions.get(position).getSessionEnd());
+            Date startDate = DateFormatter.stringToDateMillisecond(sessions.get(position).getSessionStart());
+            Date endDate = DateFormatter.stringToDateMillisecond(sessions.get(position).getSessionEnd());
             Date currentDate = new Date();
             // check if class has not started yet
             if (currentDate.before(startDate)) {
