@@ -13,28 +13,28 @@ public class Session {
     @PrimaryKey
     @ColumnInfo(name = "session_id")
     @SerializedName("session_id")
-    public int sessionID;
+    private int sessionID;
     @ColumnInfo(name = "class_id")
     @SerializedName("class_id")
-    public int classID;
+    private int classID;
     @ColumnInfo(name = "session_location")
     @SerializedName("session_location")
-    public String sessionLocation;
+    private String sessionLocation;
     @ColumnInfo(name = "sessionstrt")
     @SerializedName("sessionstrt")
-    public String sessionStart;
+    private String sessionStart;
     @ColumnInfo(name = "session_end")
     @SerializedName("session_end")
-    public String sessionEnd;
+    private String sessionEnd;
     @ColumnInfo(name = "session_name")
     @SerializedName("session_name")
-    public String sessionName;
+    private String sessionName;
     @ColumnInfo(name = "class_name")
     @SerializedName("class_name")
-    public String className;
+    private String className;
     @ColumnInfo(name = "class_code")
     @SerializedName("class_code")
-    public String classCode;
+    private String classCode;
 
     public int getSessionID() {
         return sessionID;

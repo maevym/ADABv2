@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveSession() {
         SessionRequest sessionRequest = new SessionRequest();
         sessionRequest.setUser_secret(userSecret);
-        sessionRequest.setDate(DateFormatter.DateToString(currentDate));
+        sessionRequest.setDate(DateFormatter.dateToString(currentDate));
 
         Call<Response<Session>> sessionResponseCall = ApiClient.request().saveSession(sessionRequest);
         sessionResponseCall.enqueue(new Callback<Response<Session>>() {

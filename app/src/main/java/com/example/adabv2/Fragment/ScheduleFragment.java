@@ -87,9 +87,9 @@ public class ScheduleFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(sessionAdapter);
 
-        String date = DateFormatter.DateToStringDate(currentDate);
+        String date = DateFormatter.dateToStringDate(currentDate);
         todayDate.setText(date);
-        chosenDate = DateFormatter.DateToString(currentDate);
+        chosenDate = DateFormatter.dateToString(currentDate);
 
         getTodayData();
     }
@@ -97,7 +97,7 @@ public class ScheduleFragment extends Fragment {
     private void getTodayData() {
         sessions.clear();
         for (Session session : db.sessionDAO().getAllSessions()) {
-            Date date = DateFormatter.StringToDateMillisecond(session.getSessionStart());
+            Date date = DateFormatter.stringToDateMillisecond(session.getSessionStart());
             if (date.after(currentDate)) {
                 sessions.add(session);
             }
@@ -116,8 +116,8 @@ public class ScheduleFragment extends Fragment {
             } else {
                 chosenDate = i + "-" + (i1+1) + "-" + i2;
             }
-            Date date = DateFormatter.StringToDate(chosenDate);
-            todayDate.setText(DateFormatter.DateToStringDate(date));
+            Date date = DateFormatter.stringToDate(chosenDate);
+            todayDate.setText(DateFormatter.dateToStringDate(date));
             getSessionsFromAPI();
         });
     }

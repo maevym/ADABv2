@@ -51,8 +51,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
     private SessionDatabase db;
     private final Context applicationContext;
 
-    public HomeFragment(Context applicationContect) {
-        this.applicationContext = applicationContect;
+    public HomeFragment(Context applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
         db = Room.databaseBuilder(applicationContext,
                 SessionDatabase.class,"session-database").allowMainThreadQueries().build();
 
-        String date = DateFormatter.DateToStringDate(currentDate);
+        String date = DateFormatter.dateToStringDate(currentDate);
         todayDate.setText(date);
     }
 
@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
     private void updateSession () {
         sessions.clear();
         for (Session session : db.sessionDAO().getAllSessions()) {
-            Date date = DateFormatter.StringToDateMillisecond(session.getSessionStart());
+            Date date = DateFormatter.stringToDateMillisecond(session.getSessionStart());
             if (date.after(currentDate)) {
                 sessions.add(session);
             }
