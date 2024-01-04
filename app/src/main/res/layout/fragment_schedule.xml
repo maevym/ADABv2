@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="0.35"
-                android:text="@string/scheduleHeading"
+                android:text="@string/schedule_heading"
                 android:layout_gravity="center"
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
@@ -135,13 +135,13 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:src="@drawable/learn"
-                    android:contentDescription="@string/noClass" />
+                    android:contentDescription="@string/no_class" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/noClass"
+                    android:text="@string/no_class"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>

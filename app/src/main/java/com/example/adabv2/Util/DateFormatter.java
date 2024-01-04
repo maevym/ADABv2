@@ -2,18 +2,17 @@ package com.example.adabv2.Util;
 
 import android.util.Log;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class DateFormatter {
-    public static String DateToString(Date date) {
+    public static String dateToString(Date date) {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date);
     }
 
-    public static Date StringToDateMillisecond(String date) {
+    public static Date stringToDateMillisecond(String date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
         try {
             return formatter.parse(date);
@@ -23,7 +22,7 @@ public class DateFormatter {
         }
     }
 
-    public static Date StringToDate(String date) {
+    public static Date stringToDate(String date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
             return formatter.parse(date);
@@ -33,15 +32,15 @@ public class DateFormatter {
         }
     }
 
-    public static String DateToTime(Date date) {
+    public static String dateToTime(Date date) {
         return new SimpleDateFormat("HH:mm a", Locale.getDefault()).format(date);
     }
 
-    public static String DateToStringDate(Date date) {
+    public static String dateToStringDate(Date date) {
         return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(date);
     }
 
-    public static String DateToStringChat(Date date) {
+    public static String dateToStringChat(Date date) {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(date);
     }
 }

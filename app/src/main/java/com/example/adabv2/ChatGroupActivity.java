@@ -18,8 +18,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Chat;
+import com.example.adabv2.Model.Response;
+import com.example.adabv2.Model.TranscriptMessageHistory;
+import com.example.adabv2.Model.TranscriptMessageHistoryRequest;
 import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.ActivityChatGroupBinding;
 
@@ -33,6 +38,8 @@ import java.util.List;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class ChatGroupActivity extends AppCompatActivity {
     private ListView listViewChat;
@@ -46,12 +53,14 @@ public class ChatGroupActivity extends AppCompatActivity {
     final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
     private Boolean isStop = true;
     private SpeechRecognizer speechRecognizer;
+    List<Chat> chatList = new ArrayList<>();
 
     private Socket socket;
     {
         try {
             socket = IO.socket("https://adab.arutala.dev/");
             Log.wtf("masuk", "link socket");
+
         } catch (URISyntaxException e) {
             Log.wtf("error socket", e.getMessage());
 
@@ -65,11 +74,20 @@ public class ChatGroupActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         init();
+
+
+        chatRoomAdapter = new ChatRoomAdapter(this, R.layout.item_message,chatList);
+        listViewChat.setAdapter(chatRoomAdapter);
+
+
+        getTranscriptMessageHistory();
         socket.emit("join_chatroom", roomId);
         receiveMessageFromServer();
         socket.connect();
+        getTranscriptMessageHistory();
 
         backBtn.setOnClickListener(v -> {
+//            getTranscriptMessageHistory();
             onBackPressed();
         });
 
@@ -111,10 +129,6 @@ public class ChatGroupActivity extends AppCompatActivity {
         backBtn = binding.buttonBackChat;
         messageEditText = binding.messageChatEditText;
 
-        List<Chat> chatList = new ArrayList<>();
-        chatRoomAdapter = new ChatRoomAdapter(this, R.layout.item_message,chatList);
-        listViewChat.setAdapter(chatRoomAdapter);
-
         int classId = getIntent().getIntExtra("classId", 0);
         String className = getIntent().getStringExtra("className");
         String classType = getIntent().getStringExtra("classType");
@@ -132,13 +146,12 @@ public class ChatGroupActivity extends AppCompatActivity {
                     try {
                         String messageText = data.getString("msg");
                         String username = data.getString("user_id");
-                        Date date = DateFormatter.StringToDateMillisecond(data.getString("timestamp"));
-                        String timestamp = DateFormatter.DateToTime(date);
+                        Date date = DateFormatter.stringToDateMillisecond(data.getString("timestamp"));
+                        String timestamp = DateFormatter.dateToTime(date);
 
                         Chat chat = new Chat(username, messageText, timestamp, roomId + "s");
                         chatRoomAdapter.add(chat);
-                        listViewChat.smoothScrollToPosition(0);
-                        listViewChat.scrollTo(0, chatRoomAdapter.getCount() - 1);
+                        chatRoomAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -153,16 +166,15 @@ public class ChatGroupActivity extends AppCompatActivity {
             data.put("connectedRoomId", roomId);
             data.put("msg", message);
             data.put("user_id", username);
-            data.put("timestamp", DateFormatter.DateToStringChat(date));
+            data.put("timestamp", DateFormatter.dateToStringChat(date));
 
             socket.connect();
             socket.emit("chatroom_message", data);
 
-            String timestamp = DateFormatter.DateToTime(date);
+            String timestamp = DateFormatter.dateToTime(date);
             Chat chat = new Chat(username, message, timestamp, roomId);
             chatRoomAdapter.add(chat);
-            listViewChat.smoothScrollToPosition(0);
-            listViewChat.scrollTo(0, chatRoomAdapter.getCount()-1);
+            chatRoomAdapter.notifyDataSetChanged();
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -222,4 +234,63 @@ public class ChatGroupActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void getTranscriptMessageHistory(){
+        TranscriptMessageHistoryRequest transcriptMessageHistoryRequest = new TranscriptMessageHistoryRequest();
+        Log.wtf("masuk1", "init request");
+
+        transcriptMessageHistoryRequest.setSession_id(roomId);
+        Log.wtf("masuk2", "roomId request" +  roomId);
+
+        Call<Response<TranscriptMessageHistory>> transcriptMessageResponseCall = ApiClient.request().saveTranscriptMessageHistory(transcriptMessageHistoryRequest);
+        Log.wtf("masuk3", "call response");
+        transcriptMessageResponseCall.enqueue(new Callback<Response<TranscriptMessageHistory>>() {
+            @Override
+            public void onResponse(Call<Response<TranscriptMessageHistory>> call, retrofit2.Response<Response<TranscriptMessageHistory>> response) {
+                Log.wtf("masuk4", "on response");
+
+                if(response.isSuccessful()){
+                    chatList.clear();
+                    Log.wtf("masuk5", "response success");
+                    Response<TranscriptMessageHistory> transcriptHistoryMessageResponse = response.body();
+                    Log.wtf("masuk6", "response history");
+
+                    List<TranscriptMessageHistory>  messageHistoryList = transcriptHistoryMessageResponse.getValues();
+                    for (TranscriptMessageHistory history : messageHistoryList) {
+                        String messageUserId = history.getUser_id();
+                        String messageText = history.getMessage_tr();
+                        String timestamp = history.getTimestamp();
+
+
+                        if (messageUserId != null && messageUserId.equals(username)) {
+                            Chat chatSent = new Chat(username, messageText, timestamp, roomId);
+                            chatList.add(chatSent);
+                        } else {
+                            Chat chatReceived = new Chat(messageUserId, messageText, timestamp, roomId + "s");
+                            chatList.add(chatReceived);
+                        }
+                    }
+
+                    //listViewChat.scrollTo(0, chatRoomAdapter.getCount()-1);
+                    chatRoomAdapter.notifyDataSetChanged();
+                    listViewChat.setSelection(chatRoomAdapter.getCount() - 1);
+                    Log.wtf("masuk13", "response get Message");
+
+                }
+                else {
+                    Log.wtf("masuk gagal", "response history list");
+                    Toast.makeText(ChatGroupActivity.this, "Failed to fetch data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<TranscriptMessageHistory>> call, Throwable t) {
+                Toast.makeText(ChatGroupActivity.this, "Failed" + t.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+
 }

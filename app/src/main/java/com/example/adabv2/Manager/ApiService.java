@@ -13,6 +13,8 @@ import com.example.adabv2.Model.SearchRequest;
 import com.example.adabv2.Model.Session;
 import com.example.adabv2.Model.SessionRequest;
 import com.example.adabv2.Model.TranscriptHistory;
+import com.example.adabv2.Model.TranscriptMessageHistory;
+import com.example.adabv2.Model.TranscriptMessageHistoryRequest;
 import com.example.adabv2.Model.TranscriptRequest;
 import com.example.adabv2.Model.UpdatePasswordRequest;
 
@@ -46,5 +48,10 @@ public interface ApiService {
 
     @POST("updatePassword")
     Call<ResponseBody> updatePassword(@Body UpdatePasswordRequest updatePasswordRequest);
+
+    @POST("user/getMessageHistory")
+    Call<Response<TranscriptMessageHistory>> saveTranscriptMessageHistory(@Body TranscriptMessageHistoryRequest transcriptMessageHistoryRequest);
+
+
 }
 

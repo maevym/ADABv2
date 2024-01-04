@@ -26,7 +26,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class TranscriptActivity extends AppCompatActivity {
-
     private ActivityTranscriptBinding binding;
     private ImageView buttonBack;
     private TextView textRealTimeTV;
@@ -44,7 +43,7 @@ public class TranscriptActivity extends AppCompatActivity {
 
         init();
         getTranscriptHistory();
-        buttonOnClick();
+        buttonBack.setOnClickListener(v -> onBackPressed());
         if(!sessionHasPassed) {
             connectSocket();
         }
@@ -79,9 +78,9 @@ public class TranscriptActivity extends AppCompatActivity {
                     List<TranscriptHistory> transcriptHistories = transcriptHistoryResponse.getValues();
                     TranscriptHistory transcriptHistory = transcriptHistories.get(0);
                     if (transcriptHistory.getMessage().isEmpty()) {
-                        noTranscript.setVisibility(View.VISIBLE);
                         scrollView.setVisibility(View.INVISIBLE);
                     } else {
+                        noTranscript.setVisibility(View.INVISIBLE);
                         textRealTimeTV.setText(transcriptHistory.getMessage());
                     }
                 }
@@ -95,10 +94,6 @@ public class TranscriptActivity extends AppCompatActivity {
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
             }
         });
-    }
-
-    private void buttonOnClick() {
-        buttonBack.setOnClickListener(v -> finish());
     }
 
     private void connectSocket() {

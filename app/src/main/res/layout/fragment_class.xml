@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:text="@string/kelas"
+                    android:text="@string/menu_class"
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
