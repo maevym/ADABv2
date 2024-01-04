@@ -50,24 +50,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class MainActivity extends AppCompatActivity {
-
     private ExtendedFloatingActionButton fabMenu, fabClass, fabSchedule, fabDiscuss, fabHome, fabRegister;
     private CardView fabHomeText, fabClassText, fabScheduleText, fabDiscussText, fabRegisterText, progressBar, noInternet;
     private FrameLayout popUp;
     private Animation fabOpen, fabClose;
     private ActivityMainBinding binding;
-    private Button backToLoginBtn;
-
+    Button backToLoginBtn;
     private boolean isOpen = false;
     private String role;
     private String userSecret;
     private SessionDatabase dbSession;
     private SearchDatabase dbClassSearch;
-    private ClassSessionDatabase dbClassSession;
     private DiscussDatabase dbDiscuss;
     private LinearLayout noClassView;
     private final Date currentDate = new Date();
-    private int classId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
         saveSession();
         saveSearchDataClass();
         discussSearchDataClass();
-//        saveClassSession();
-
     }
 
     private void init() {
@@ -91,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         UserPreferences userPreferences = new UserPreferences(getApplicationContext());
         role = userPreferences.getUserType();
         userSecret = userPreferences.getUserSecret();
-        classId = userPreferences.getClassId();
+        int classId = userPreferences.getClassId();
         Log.wtf("class", String.valueOf(classId));
 
         fabMenu = binding.fabMenu;
@@ -113,23 +107,19 @@ public class MainActivity extends AppCompatActivity {
         fabMenu.setVisibility(View.INVISIBLE);
 
         // save data to local database
-        dbSession = Room.databaseBuilder(getApplicationContext(),
-                SessionDatabase.class,"session-database").allowMainThreadQueries().build();
+        dbSession = Room.databaseBuilder(getApplicationContext(), SessionDatabase.class,"session-database").allowMainThreadQueries().build();
         dbSession.sessionDAO().deleteAll();
 
         dbClassSearch = Room.databaseBuilder(getApplicationContext(), SearchDatabase.class, "search-database").allowMainThreadQueries().build();
         dbClassSearch.searchDAO().deleteAllSearch();
 
-       dbDiscuss = Room.databaseBuilder(getApplicationContext(), DiscussDatabase.class, "searchdiscuss-database").allowMainThreadQueries().build();
-        //dbDiscuss = Room.databaseBuilder(getApplicationContext(), DiscussDatabase.class, "searchdiscuss-database").fallbackToDestructiveMigration().build();
+        dbDiscuss = Room.databaseBuilder(getApplicationContext(), DiscussDatabase.class, "searchdiscuss-database").allowMainThreadQueries().build();
         dbDiscuss.discussWithMember().deleteAllSMember();
-
-//        dbClassSession = Room.databaseBuilder(getApplicationContext(), ClassSessionDatabase.class, "classsession-database").allowMainThreadQueries().build();
-//        dbClassSession.classSessionDAO().deleteAllClassSession();
-        backToLoginBtn.setOnClickListener(v -> finish());
     }
 
     private void menuOnClickListener () {
+        backToLoginBtn.setOnClickListener(v -> onBackPressed());
+
         fabMenu.setOnClickListener(view -> animateFab());
 
         fabSchedule.setOnClickListener(view -> {
@@ -257,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void saveSearchDataClass(){
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setUser_secret(userSecret);
@@ -266,9 +255,10 @@ public class MainActivity extends AppCompatActivity {
         Log.wtf("masuk", "dapet panggil retrofit");
         responseCallSearch.enqueue(new Callback<Response<Search>>(){
             @Override
-            public void onResponse(Call<Response<Search>> call, retrofit2.Response<Response<Search>> response) {
+            public void onResponse(@NonNull Call<Response<Search>> call, @NonNull retrofit2.Response<Response<Search>> response) {
                 if (response.isSuccessful()) {
                     Response<Search> searchResponse  = response.body();
+                    assert searchResponse != null;
                     List<Search> searchList = searchResponse.getValues();
                     for (int i=0; i<searchList.size(); i++) {
                         Search newSearch = new Search();
@@ -294,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Response<Search>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Response<Search>> call, @NonNull Throwable t) {
                 Log.wtf("responses", "Failed " + t.getLocalizedMessage());
                 progressBar.setVisibility(View.INVISIBLE);
                 noInternet.setVisibility(View.VISIBLE);
@@ -310,9 +300,10 @@ public class MainActivity extends AppCompatActivity {
         Log.wtf("masuk", "dapet panggil retrofit");
         responseCallDiscuss.enqueue(new Callback<Response<Discuss>>(){
             @Override
-            public void onResponse(Call<Response<Discuss>> call, retrofit2.Response<Response<Discuss>> response) {
+            public void onResponse(@NonNull Call<Response<Discuss>> call, @NonNull retrofit2.Response<Response<Discuss>> response) {
                 if (response.isSuccessful()) {
                     Response<Discuss> discussResponse  = response.body();
+                    assert discussResponse != null;
                     List<Discuss> discussList = discussResponse.getValues();
                     for (int i=0; i<discussList.size(); i++) {
                         Discuss newSearch = new Discuss();
@@ -326,12 +317,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.wtf("berhasil get all", "coba" + dbClassSearch.searchDAO().getAllSearch());
 
                     }
-//                    searchAdapter.notifyDataSetChanged();
                 }
                 else {
                     if (response.code() == 404) {
-                        noClassView.setVisibility(View.VISIBLE);
-
+                        dbDiscuss.discussWithMember().deleteAllSMember();
                     } else {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
@@ -340,18 +329,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Response<Discuss>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Response<Discuss>> call, @NonNull Throwable t) {
                 Toast.makeText(MainActivity.this,"Gagal mengambil data", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.INVISIBLE);
                 switchFragment(new ClassFragment());
             }
-
         });
 
     }
-
-
-
-
 
 }

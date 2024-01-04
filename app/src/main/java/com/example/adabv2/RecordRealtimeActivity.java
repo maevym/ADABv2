@@ -44,7 +44,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class RecordRealtimeActivity extends AppCompatActivity {
-
     private ActivityRecordRealtimeBinding binding;
     private ImageView backButton;
     private TextView realTimeTextTV;
@@ -115,8 +114,10 @@ public class RecordRealtimeActivity extends AppCompatActivity {
         socket.emit("join_room", String.valueOf(sessionId));
 
         if (socket.connected()) {
-            if (isPermissionGranted()) {
-                requestPermission();
+            boolean isPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED;
+
+            if (isPermissionGranted) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_RECORD_AUDIO_REQUEST);
             }
             if (realTimeTextTV.getText() == "") {
                 socket.emit("edit","");
@@ -226,14 +227,6 @@ public class RecordRealtimeActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_RECORD_AUDIO_REQUEST);
-    }
-
-    private boolean isPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED;
     }
 
     private void stopConfirmation() {

@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="52sp"
-        android:text="@string/adab"
+        android:text="@string/app_name"
         android:layout_marginTop="100dp"
         android:layout_marginLeft="16dp"
         android:textColor="#3C6DB9"
@@ -21,7 +21,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/signinuntukmelanjutkan"
+        android:text="@string/login_desc"
         android:layout_marginLeft="18dp"
         android:textColor="#3C6DB9"
         android:textSize="16sp"
@@ -42,7 +42,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/format_form"
-            android:hint="@string/Email"
+            android:hint="@string/email"
             android:paddingLeft="16dp"
             android:paddingRight="21dp"
             android:singleLine="true" />
@@ -52,7 +52,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
             android:background="#ffffff"
-            android:text="@string/Email"
+            android:text="@string/email"
             android:padding="1dp"
             android:textColor="#3C6DB9"/>
     </RelativeLayout>
@@ -72,7 +72,7 @@
             android:background="@drawable/format_form"
             android:paddingLeft="16dp"
             android:paddingRight="21dp"
-            android:hint="@string/katasandi"
+            android:hint="@string/password"
             android:inputType="textPassword"/>
         <TextView
             android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
             android:background="#ffffff"
-            android:text="@string/katasandi"
+            android:text="@string/password"
             android:padding="1dp"
             android:textColor="#3C6DB9"/>
     </RelativeLayout>
@@ -92,7 +92,7 @@
         android:layout_marginTop="25dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="20dp"
-        android:text="@string/buttonlogin"
+        android:text="@string/login_button"
         android:background="@drawable/button_regis_login"
         android:backgroundTint="@color/orange"
         app:backgroundTint="@null"

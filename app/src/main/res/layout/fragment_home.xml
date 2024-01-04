@@ -112,14 +112,14 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:src="@drawable/learn"
-                        android:contentDescription="@string/noClass" />
+                        android:contentDescription="@string/no_class" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_gravity="center"
                         android:layout_weight="0.2"
-                        android:text="@string/noClass"
+                        android:text="@string/no_class"
                         android:textSize="22sp"
                         android:textStyle="bold" />
                 </LinearLayout>
