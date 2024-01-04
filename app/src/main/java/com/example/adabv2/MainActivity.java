@@ -55,14 +55,13 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout popUp;
     private Animation fabOpen, fabClose;
     private ActivityMainBinding binding;
-    Button backToLoginBtn;
+    private Button backToLoginBtn;
     private boolean isOpen = false;
     private String role;
     private String userSecret;
     private SessionDatabase dbSession;
     private SearchDatabase dbClassSearch;
     private DiscussDatabase dbDiscuss;
-    private LinearLayout noClassView;
     private final Date currentDate = new Date();
 
     @Override
