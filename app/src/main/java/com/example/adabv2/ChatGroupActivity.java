@@ -102,25 +102,7 @@ public class ChatGroupActivity extends AppCompatActivity {
             }
         });
 
-        recordBtn.setOnClickListener(v -> {
-            if (socket.connected()) {
-                final boolean isPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED;
-                if (isPermissionGranted) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_RECORD_AUDIO_REQUEST);
-                }
-                else {
-                    if (isStop) {
-                        recordBtn.setColorFilter(ContextCompat.getColor(this, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
-                        speechToText();
-                    }
-                    else {
-                        recordBtn.setColorFilter(ContextCompat.getColor(this, R.color.blue), android.graphics.PorterDuff.Mode.SRC_IN);
-                        speechRecognizer.stopListening();
-                    }
-                    isStop = !isStop;
-                }
-            }
-        });
+        recordFunc();
     }
 
     private void init() {
@@ -143,6 +125,28 @@ public class ChatGroupActivity extends AppCompatActivity {
         username = userPreferences.getUserName();
         roomId = "CL" + classId + classType;
         nameGroupChat.setText(className);
+    }
+
+    private void recordFunc(){
+        recordBtn.setOnClickListener(v -> {
+            if (socket.connected()) {
+                final boolean isPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED;
+                if (isPermissionGranted) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_RECORD_AUDIO_REQUEST);
+                }
+                else {
+                    if (isStop) {
+                        recordBtn.setColorFilter(ContextCompat.getColor(this, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                        speechToText();
+                    }
+                    else {
+                        recordBtn.setColorFilter(ContextCompat.getColor(this, R.color.blue), android.graphics.PorterDuff.Mode.SRC_IN);
+                        speechRecognizer.stopListening();
+                    }
+                    isStop = !isStop;
+                }
+            }
+        });
     }
 
     private void receiveMessageFromServer() {
