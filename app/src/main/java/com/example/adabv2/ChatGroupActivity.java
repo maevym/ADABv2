@@ -152,8 +152,8 @@ public class ChatGroupActivity extends AppCompatActivity {
                     try {
                         String messageText = data.getString("msg");
                         String username = data.getString("user_id");
-                        Date date = DateFormatter.StringToDateMillisecond(data.getString("timestamp"));
-                        String timestamp = DateFormatter.DateToTime(date);
+                        Date date = DateFormatter.stringToDateMillisecond(data.getString("timestamp"));
+                        String timestamp = DateFormatter.dateToTime(date);
 
                         Chat chat = new Chat(username, messageText, timestamp, roomId + "s");
                         chatRoomAdapter.add(chat);
@@ -172,12 +172,12 @@ public class ChatGroupActivity extends AppCompatActivity {
             data.put("connectedRoomId", roomId);
             data.put("msg", message);
             data.put("user_id", username);
-            data.put("timestamp", DateFormatter.DateToStringChat(date));
+            data.put("timestamp", DateFormatter.dateToStringChat(date));
 
             socket.connect();
             socket.emit("chatroom_message", data);
 
-            String timestamp = DateFormatter.DateToTime(date);
+            String timestamp = DateFormatter.dateToTime(date);
             Chat chat = new Chat(username, message, timestamp, roomId);
             chatRoomAdapter.add(chat);
             chatRoomAdapter.notifyDataSetChanged();
