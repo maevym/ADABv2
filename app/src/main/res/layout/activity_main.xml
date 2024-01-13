@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:textSize="22sp"
-                android:text="@string/noInternet"
+                android:text="@string/no_internet"
                 android:textStyle="bold"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -74,7 +74,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/button_regis_login"
                 android:backgroundTint="@color/orange"
-                android:text="@string/backToLogin"
+                android:text="@string/back_to_login"
                 app:backgroundTint="@null"/>
             
         </LinearLayout>
@@ -167,7 +167,7 @@
             android:paddingRight="5dp"
             android:paddingBottom="5dp"
             android:textSize="14sp"
-            android:text="@string/menuHome"
+            android:text="@string/menu_home"
             android:textColor="@color/black" />
     </androidx.cardview.widget.CardView>
 
@@ -207,7 +207,7 @@
             android:paddingRight="5dp"
             android:paddingBottom="5dp"
             android:textSize="14sp"
-            android:text="@string/menuSchedule"
+            android:text="@string/menu_schedule"
             android:textColor="@color/black" />
     </androidx.cardview.widget.CardView>
 
@@ -247,7 +247,7 @@
             android:paddingRight="5dp"
             android:paddingBottom="5dp"
             android:textSize="14sp"
-            android:text="@string/menuClass"
+            android:text="@string/menu_class"
             android:textColor="@color/black" />
     </androidx.cardview.widget.CardView>
 
@@ -287,7 +287,7 @@
             android:paddingRight="5dp"
             android:paddingBottom="5dp"
             android:textSize="14sp"
-            android:text="@string/menuDiscussion"
+            android:text="@string/menu_discussion"
             android:textColor="@color/black" />
     </androidx.cardview.widget.CardView>
 
@@ -327,7 +327,7 @@
             android:paddingRight="5dp"
             android:paddingBottom="5dp"
             android:textSize="14sp"
-            android:text="@string/menuRegister"
+            android:text="@string/menu_register"
             android:textColor="@color/black" />
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

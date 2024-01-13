@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:text="@string/diskusi"
+                    android:text="@string/menu_discussion"
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"

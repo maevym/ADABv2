@@ -1,10 +1,13 @@
 package com.example.adabv2;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,9 +21,11 @@ import com.example.adabv2.Model.ClassSession;
 import com.example.adabv2.Model.ClassSessionRequest;
 import com.example.adabv2.Model.Response;
 import com.example.adabv2.Room.ClassSessionDatabase;
+import com.example.adabv2.Util.DateFormatter;
 import com.example.adabv2.databinding.ActivityClassSessionBinding;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -45,7 +50,6 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
         binding = ActivityClassSessionBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
 
         userPreferences = new UserPreferences(getApplicationContext());
         classId = userPreferences.getClassId();
@@ -144,22 +148,6 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
         return classSessionRequest;
     }
 
-//    public void callFuncAPI (){
-//        classSessionList.clear();
-//        List<ClassSession> classSessions = dbClassSession.classSessionDAO().getAllClassSession();
-//        for (ClassSession classSession : classSessions) {
-//            classSessionList.add(classSession);
-//        }
-//
-//        if (classSessionList.isEmpty()) {
-//            recyclerViewClassSession.setVisibility(View.INVISIBLE);
-//            noSessionView.setVisibility(View.VISIBLE);
-//        } else {
-//            recyclerViewClassSession.setVisibility(View.VISIBLE);
-//            noSessionView.setVisibility(View.INVISIBLE);
-//        }
-//    }
-
     public void prepareRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewClassSession.setLayoutManager(linearLayoutManager);
@@ -175,9 +163,54 @@ public class ClassSessionActivity extends AppCompatActivity implements ClassSess
         Log.wtf("masuk preAdapter","masuk");
     }
 
-
     @Override
     public void selectedClassSession(ClassSession classSession) {
-        Toast.makeText(this, "Selected Class Session " + classSession.getSession_name(), Toast.LENGTH_SHORT).show();
+        // pindah ke transcript activity
+        Date startDate = DateFormatter.stringToDateMillisecond(classSession.getSession_start());
+        Date endDate = DateFormatter.stringToDateMillisecond(classSession.getSession_end());
+        Date currentDate = new Date();
+        // check if class has not started yet
+        if (currentDate.before(startDate)) {
+            Toast.makeText(this, R.string.class_not_started, Toast.LENGTH_LONG).show();
+        }
+        // check if current time is within interval startDate and endDate
+        else if (currentDate.before(endDate) && currentDate.after(startDate) || currentDate.equals(startDate)) {
+            if (userPreferences.getUserType().equals("D")) {
+                chooseLanguage(classSession);
+            } else {
+                Intent intent = new Intent(this, TranscriptActivity.class);
+                intent.putExtra("sessionID", classSession.getSession_id());
+                intent.putExtra("sessionName", classSession.getSession_name());
+                intent.putExtra("sessionHasPassed", false);
+                startActivity(intent);
+            }
+        }
+        // check if class already in the past
+        else {
+            Intent intent = new Intent(this, TranscriptActivity.class);
+            intent.putExtra("sessionID", classSession.getSession_id());
+            intent.putExtra("sessionName", classSession.getSession_name());
+            intent.putExtra("sessionHasPassed", true);
+            this.startActivity(intent);
+        }
+    }
+
+    private void chooseLanguage(ClassSession classSession) {
+        final String[] languages = {"Indonesia", "Inggris", "Jepang", "Mandarin"};
+        final String[] languagesID = {"id-ID", "en-US", "ja-JP", "zh"};
+        final String[] selectedItem = {"id-ID"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomAlertDialog);
+        builder.setTitle(R.string.choose_language)
+                .setNegativeButton(R.string.cancel, (di, i) -> di.dismiss())
+                .setSingleChoiceItems(languages, 0, (di,i) -> selectedItem[0] = languagesID[i])
+                .setPositiveButton(R.string.continues, (di,i) -> {
+                    Intent intent = new Intent(this, RecordRealtimeActivity.class);
+                    intent.putExtra("sessionID", classSession.getSession_id());
+                    intent.putExtra("sessionName", classSession.getSession_name());
+                    intent.putExtra("chosenLanguage", selectedItem[0]);
+                    this.startActivity(intent);
+                })
+                .show();
     }
 }

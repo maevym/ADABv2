@@ -44,7 +44,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class RecordRealtimeActivity extends AppCompatActivity {
-
     private ActivityRecordRealtimeBinding binding;
     private ImageView backButton;
     private TextView realTimeTextTV;
@@ -68,7 +67,19 @@ public class RecordRealtimeActivity extends AppCompatActivity {
 
         init();
         connectSocket();
-        buttonOnclick();
+
+        backButton.setOnClickListener(v -> {
+            isStop = true;
+            speechRecognizer.stopListening();
+            stopConfirmation();
+        });
+
+        // stop record
+        stopButton.setOnClickListener(v -> {
+            isStop = true;
+            speechRecognizer.stopListening();
+            stopConfirmation();
+        });
     }
 
     private void init() {
@@ -87,22 +98,6 @@ public class RecordRealtimeActivity extends AppCompatActivity {
         sessionNameTV.setText(sessionName);
     }
 
-    private void buttonOnclick() {
-        // back button
-        backButton.setOnClickListener(v -> {
-            isStop = true;
-            speechRecognizer.stopListening();
-            stopConfirmation();
-        });
-
-        // stop record
-        stopButton.setOnClickListener(v -> {
-            isStop = true;
-            speechRecognizer.stopListening();
-            stopConfirmation();
-        });
-    }
-
     private void connectSocket() {
         getTranscriptHistory();
         try {
@@ -119,8 +114,10 @@ public class RecordRealtimeActivity extends AppCompatActivity {
         socket.emit("join_room", String.valueOf(sessionId));
 
         if (socket.connected()) {
-            if (isPermissionGranted()) {
-                requestPermission();
+            boolean isPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED;
+
+            if (isPermissionGranted) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_RECORD_AUDIO_REQUEST);
             }
             if (realTimeTextTV.getText() == "") {
                 socket.emit("edit","");
@@ -232,14 +229,6 @@ public class RecordRealtimeActivity extends AppCompatActivity {
         });
     }
 
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_RECORD_AUDIO_REQUEST);
-    }
-
-    private boolean isPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED;
-    }
-
     private void stopConfirmation() {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(RecordRealtimeActivity.this, R.style.CustomAlertDialog);
         alertBuilder.setTitle("Stop Recording?")
@@ -248,7 +237,7 @@ public class RecordRealtimeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         speechRecognizer.destroy();
-                        finish();
+                        onBackPressed();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -274,6 +263,7 @@ public class RecordRealtimeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        socket.disconnect();
         speechRecognizer.destroy();
     }
 }

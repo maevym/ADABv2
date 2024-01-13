@@ -23,7 +23,7 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/menuRegister"
+                android:text="@string/menu_register"
                 android:textColor="@color/white"
                 android:gravity="center"
                 android:layout_gravity="center_vertical"
@@ -50,7 +50,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/format_form"
-                android:hint="@string/Nama"
+                android:hint="@string/name"
                 android:paddingLeft="16dp"
                 android:paddingRight="21dp"
                 android:singleLine="true" />
@@ -60,7 +60,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="7dp"
                 android:background="#ffffff"
-                android:text="@string/Nama"
+                android:text="@string/name"
                 android:padding="1dp"
                 android:textColor="#3C6DB9"/>
         </RelativeLayout>
@@ -79,7 +79,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/format_form"
-                android:hint="@string/Email"
+                android:hint="@string/email"
                 android:paddingLeft="16dp"
                 android:paddingRight="21dp"
                 android:singleLine="true" />
@@ -90,7 +90,7 @@
                 android:layout_marginTop="7dp"
                 android:background="#ffffff"
                 android:paddingHorizontal="2dp"
-                android:text="@string/Email"
+                android:text="@string/email"
                 android:textColor="#3C6DB9"
                 android:padding="1dp"/>
         </RelativeLayout>
@@ -109,7 +109,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/format_form"
-                android:hint="@string/ID"
+                android:hint="@string/id"
                 android:paddingLeft="16dp"
                 android:paddingRight="21dp"
                 android:singleLine="true" />
@@ -119,7 +119,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="7dp"
                 android:background="#ffffff"
-                android:text="@string/ID"
+                android:text="@string/id"
                 android:textColor="#3C6DB9"
                 android:padding="1dp"/>
         </RelativeLayout>
@@ -138,7 +138,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/format_form"
-                android:hint="@string/katasandi"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:paddingLeft="16dp"
                 android:paddingRight="21dp"
@@ -149,7 +149,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="7dp"
                 android:background="#ffffff"
-                android:text="@string/katasandi"
+                android:text="@string/password"
                 android:padding="1dp"
                 android:textColor="#3C6DB9"/>
         </RelativeLayout>
@@ -184,7 +184,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="7dp"
                 android:background="#ffffff"
-                android:text="@string/Peran"
+                android:text="@string/role"
                 android:padding="1dp"
                 android:textColor="#3C6DB9"/>
 
@@ -201,7 +201,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="20dp"
-            android:text="@string/buttondaftar"
+            android:text="@string/register_button"
             android:background="@drawable/button_regis_login"
             android:backgroundTint="@color/orange"
             app:backgroundTint="@null"

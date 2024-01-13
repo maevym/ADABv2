@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="4"
-                android:text="@string/transcriptHeading"
+                android:text="@string/transcript_heading"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -80,7 +80,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:visibility="invisible">
+                android:visibility="visible">
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
@@ -92,14 +92,14 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:src="@drawable/nothing"
-                    android:contentDescription="@string/noTranscript" />
+                    android:contentDescription="@string/no_transcript" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
                     android:layout_weight="0.2"
-                    android:text="@string/noTranscript"
+                    android:text="@string/no_transcript"
                     android:textSize="22sp"
                     android:textStyle="bold" />
             </LinearLayout>

@@ -113,10 +113,6 @@ public class ChatGroupActivity extends AppCompatActivity {
         backBtn = binding.buttonBackChat;
         messageEditText = binding.messageChatEditText;
 
-//        List<Chat> chatList = new ArrayList<>();
-//        chatRoomAdapter = new ChatRoomAdapter(this, R.layout.item_message,chatList);
-//        listViewChat.setAdapter(chatRoomAdapter);
-
         int classId = getIntent().getIntExtra("classId", 0);
         String className = getIntent().getStringExtra("className");
         String classType = getIntent().getStringExtra("classType");
@@ -162,8 +158,6 @@ public class ChatGroupActivity extends AppCompatActivity {
                         Chat chat = new Chat(username, messageText, timestamp, roomId + "s");
                         chatRoomAdapter.add(chat);
                         chatRoomAdapter.notifyDataSetChanged();
-//                        listViewChat.smoothScrollToPosition(0);
-//                        listViewChat.scrollTo(0, chatRoomAdapter.getCount() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -187,8 +181,6 @@ public class ChatGroupActivity extends AppCompatActivity {
             Chat chat = new Chat(username, message, timestamp, roomId);
             chatRoomAdapter.add(chat);
             chatRoomAdapter.notifyDataSetChanged();
-//            listViewChat.smoothScrollToPosition(0);
-//            listViewChat.scrollTo(0, chatRoomAdapter.getCount()-1);
 
         } catch (JSONException e) {
             e.printStackTrace();
