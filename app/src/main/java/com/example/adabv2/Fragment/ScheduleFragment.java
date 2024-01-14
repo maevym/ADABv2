@@ -95,12 +95,7 @@ public class ScheduleFragment extends Fragment {
 
     private void getTodayData() {
         sessions.clear();
-        for (Session session : db.sessionDAO().getAllSessions()) {
-            Date date = DateFormatter.stringToDateMillisecond(session.getSessionStart());
-            if (date.after(currentDate)) {
-                sessions.add(session);
-            }
-        }
+        sessions.addAll(db.sessionDAO().getAllSessions());
         if (sessions.isEmpty()) {
             rv.setVisibility(View.INVISIBLE);
             noClassView.setVisibility(View.VISIBLE);
