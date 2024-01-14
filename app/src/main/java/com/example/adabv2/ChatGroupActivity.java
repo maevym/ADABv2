@@ -22,7 +22,9 @@ import android.widget.Toast;
 
 import com.example.adabv2.Manager.ApiClient;
 import com.example.adabv2.Model.Chat;
+import com.example.adabv2.Model.ClassSession;
 import com.example.adabv2.Model.Response;
+import com.example.adabv2.Model.TranscriptHistory;
 import com.example.adabv2.Model.TranscriptMessageHistory;
 import com.example.adabv2.Model.TranscriptMessageHistoryRequest;
 import com.example.adabv2.Util.DateFormatter;
@@ -100,6 +102,28 @@ public class ChatGroupActivity extends AppCompatActivity {
             }
         });
 
+        recordFunc();
+    }
+
+    private void init() {
+        TextView nameGroupChat = binding.nameGroup;
+        listViewChat = binding.recyclerViewChatGroup;
+        recordBtn = binding.recordButton;
+        sendBtn = binding.sendBtn;
+        backBtn = binding.buttonBackChat;
+        messageEditText = binding.messageChatEditText;
+
+        int classId = getIntent().getIntExtra("classId", 0);
+        String className = getIntent().getStringExtra("className");
+        String classType = getIntent().getStringExtra("classType");
+
+        UserPreferences userPreferences = new UserPreferences(getApplicationContext());
+        username = userPreferences.getUserName();
+        roomId = "CL" + classId + classType;
+        nameGroupChat.setText(className);
+    }
+
+    private void recordFunc(){
         recordBtn.setOnClickListener(v -> {
             if (socket.connected()) {
                 final boolean isPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED;
@@ -119,24 +143,6 @@ public class ChatGroupActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void init() {
-        TextView nameGroupChat = binding.nameGroup;
-        listViewChat = binding.recyclerViewChatGroup;
-        recordBtn = binding.recordButton;
-        sendBtn = binding.sendBtn;
-        backBtn = binding.buttonBackChat;
-        messageEditText = binding.messageChatEditText;
-
-        int classId = getIntent().getIntExtra("classId", 0);
-        String className = getIntent().getStringExtra("className");
-        String classType = getIntent().getStringExtra("classType");
-
-        UserPreferences userPreferences = new UserPreferences(getApplicationContext());
-        username = userPreferences.getUserName();
-        roomId = "CL" + classId + classType;
-        nameGroupChat.setText(className);
     }
 
     private void receiveMessageFromServer() {

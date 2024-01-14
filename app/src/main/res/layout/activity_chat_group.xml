@@ -69,7 +69,7 @@
            android:layout_width="match_parent"
            android:layout_height="56dp"
            android:background="@drawable/format_form"
-           android:padding="8dp"
+           android:paddingLeft="17dp"
            android:hint="Ketik Pesan"
            android:textSize="24sp"
            android:layout_toStartOf="@id/sendBtn"
