@@ -35,5 +35,6 @@
     <string name="change_password">Ubah Kata Sandi</string>
     <string name="save_button">SIMPAN</string>
     <string name="no_internet">Tidak Ada Koneksi</string>
+    <string name="no_session">Tidak Ada Sesi</string>
     <string name="back_to_login">KEMBALI KE LOGIN</string>
 </resources>

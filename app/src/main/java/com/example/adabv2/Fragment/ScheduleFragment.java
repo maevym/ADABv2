@@ -105,9 +105,18 @@ public class ScheduleFragment extends Fragment {
 
     private void pickDate() {
         calendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
-            if (i2 < 10) {
-                chosenDate = i + "-" + (i1+1) + "-0" + i2;
-            } else {
+            if (i1 < 10 || i2 < 10) {
+                if (i1 < 10 && i2 >= 10) {
+                    chosenDate = i + "-" + "0" + (i1+1) + "-" + i2;
+                }
+                if (i2 < 10 && i1 >= 10) {
+                    chosenDate = i + "-" + (i1+1) + "-0" + i2;
+                }
+                if (i1 < 10 && i2 < 10) {
+                    chosenDate = i + "-0" + (i1+1) + "-0" + i2;
+                }
+            }
+            else {
                 chosenDate = i + "-" + (i1+1) + "-" + i2;
             }
             Date date = DateFormatter.stringToDate(chosenDate);
