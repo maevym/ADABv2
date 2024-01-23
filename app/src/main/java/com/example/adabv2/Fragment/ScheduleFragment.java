@@ -99,6 +99,8 @@ public class ScheduleFragment extends Fragment {
         if (sessions.isEmpty()) {
             rv.setVisibility(View.INVISIBLE);
             noClassView.setVisibility(View.VISIBLE);
+        } else {
+            sessionAdapter.notifyDataSetChanged();
         }
 
     }

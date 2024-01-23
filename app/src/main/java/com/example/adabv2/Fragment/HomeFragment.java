@@ -112,8 +112,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
     private void updateSession () {
         sessions.clear();
         for (Session session : db.sessionDAO().getAllSessions()) {
-            Date date = DateFormatter.stringToDateMillisecond(session.getSessionStart());
-            if (date.after(currentDate)) {
+            Date startDate = DateFormatter.stringToDateMillisecond(session.getSessionStart());
+            Date endDate = DateFormatter.stringToDateMillisecond(session.getSessionEnd());
+            if (currentDate.before(endDate) && currentDate.after(startDate) || currentDate.equals(startDate) || currentDate.before(startDate)) {
                 sessions.add(session);
             }
         }

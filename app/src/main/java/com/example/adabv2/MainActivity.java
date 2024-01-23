@@ -61,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private String userSecret;
     private SessionDatabase dbSession;
     private SearchDatabase dbClassSearch;
-    private ClassSessionDatabase dbClassSession;
     private DiscussDatabase dbDiscuss;
-    private LinearLayout noClassView;
     private final Date currentDate = new Date();
 
     @Override
@@ -116,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
         dbDiscuss = Room.databaseBuilder(getApplicationContext(), DiscussDatabase.class, "searchdiscuss-database").allowMainThreadQueries().build();
         dbDiscuss.discussWithMember().deleteAllSMember();
-        backToLoginBtn.setOnClickListener(v -> finish());
     }
 
     private void menuOnClickListener () {
