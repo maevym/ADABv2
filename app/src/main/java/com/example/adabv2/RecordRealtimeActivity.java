@@ -146,6 +146,7 @@ public class RecordRealtimeActivity extends AppCompatActivity {
                         noTranscript.setVisibility(View.VISIBLE);
                     } else {
                         realTimeTextTV.setText(transcriptHistory.getMessage());
+                        noTranscript.setVisibility(View.INVISIBLE);
                     }
                 }
                 else {
