@@ -78,9 +78,11 @@ public class TranscriptActivity extends AppCompatActivity {
                     List<TranscriptHistory> transcriptHistories = transcriptHistoryResponse.getValues();
                     TranscriptHistory transcriptHistory = transcriptHistories.get(0);
                     if (transcriptHistory.getMessage().isEmpty()) {
+                        noTranscript.setVisibility(View.VISIBLE);
                         scrollView.setVisibility(View.INVISIBLE);
                     } else {
                         noTranscript.setVisibility(View.INVISIBLE);
+                        scrollView.setVisibility(View.VISIBLE);
                         textRealTimeTV.setText(transcriptHistory.getMessage());
                     }
                 }
@@ -112,7 +114,10 @@ public class TranscriptActivity extends AppCompatActivity {
 
         socket.on("message", args ->
             runOnUiThread(() -> {
-                textRealTimeTV.setText(args[0].toString());
+                String prevText = String.valueOf(textRealTimeTV.getText());
+                noTranscript.setVisibility(View.INVISIBLE);
+                scrollView.setVisibility(View.VISIBLE);
+                textRealTimeTV.setText(prevText + "\n" + args[0].toString());
                 scrollView.fullScroll(View.FOCUS_DOWN);
             })
         );

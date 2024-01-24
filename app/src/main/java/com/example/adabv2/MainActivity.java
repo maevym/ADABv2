@@ -228,12 +228,14 @@ public class MainActivity extends AppCompatActivity {
 
                         dbSession.sessionDAO().insertAllSession(newSession);
                     }
+                    switchFragment(new HomeFragment(getApplicationContext()));
                 } else {
                     if (response.code() == 404) {
                         dbSession.sessionDAO().deleteAll();
                     } else {
                         Toast.makeText(MainActivity.this, "Gagal mengambil data", Toast.LENGTH_LONG).show();
                     }
+                    switchFragment(new HomeFragment(getApplicationContext()));
                 }
             }
 
@@ -279,7 +281,6 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
                 popUp.setVisibility(View.INVISIBLE);
                 fabMenu.setVisibility(View.VISIBLE);
-                switchFragment(new HomeFragment(getApplicationContext()));
             }
 
             @Override
@@ -314,7 +315,6 @@ public class MainActivity extends AppCompatActivity {
 
                         dbDiscuss.discussWithMember().insertDiscussMember(newSearch);
                         Log.wtf("berhasil get all", "coba" + dbClassSearch.searchDAO().getAllSearch());
-
                     }
                 }
                 else {
@@ -325,6 +325,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 progressBar.setVisibility(View.INVISIBLE);
+                popUp.setVisibility(View.INVISIBLE);
+                fabMenu.setVisibility(View.VISIBLE);
             }
 
             @Override

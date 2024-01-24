@@ -97,7 +97,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
 
     private void sortItems () {
         sessions.clear();
-        updateSession();
+        for (Session session : db.sessionDAO().getAllSessions()) {
+            Date startDate = DateFormatter.stringToDateMillisecond(session.getSessionStart());
+            Date endDate = DateFormatter.stringToDateMillisecond(session.getSessionEnd());
+            if (currentDate.before(endDate) && currentDate.after(startDate) || currentDate.equals(startDate) || currentDate.before(startDate)) {
+                sessions.add(session);
+            }
+        }
+
+        if (sessions.isEmpty()) {
+            rv.setVisibility(View.INVISIBLE);
+            noClassView.setVisibility(View.VISIBLE);
+            return;
+        }
+
         Collections.sort(sessions, (session, t1) -> {
             try {
                 return Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).parse(session.getSessionStart())).compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).parse(t1.getSessionStart()));
@@ -106,25 +119,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
                 return 0;
             }
         });
-        sessionAdapter.notifyDataSetChanged();
-    }
 
-    private void updateSession () {
-        sessions.clear();
-        for (Session session : db.sessionDAO().getAllSessions()) {
-            Date startDate = DateFormatter.stringToDateMillisecond(session.getSessionStart());
-            Date endDate = DateFormatter.stringToDateMillisecond(session.getSessionEnd());
-            if (currentDate.before(endDate) && currentDate.after(startDate) || currentDate.equals(startDate) || currentDate.before(startDate)) {
-                sessions.add(session);
-            }
-        }
-        if (sessions.isEmpty()) {
-            rv.setVisibility(View.INVISIBLE);
-            noClassView.setVisibility(View.VISIBLE);
-        } else {
-            rv.setVisibility(View.VISIBLE);
-            noClassView.setVisibility(View.INVISIBLE);
-        }
+        sessionAdapter.notifyDataSetChanged();
+        rv.setVisibility(View.VISIBLE);
+        noClassView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -138,8 +136,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Swip
     @Override
     public void onRefresh() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            updateSession();
-            sessionAdapter.notifyDataSetChanged();
+            sortItems ();
             swipeRefreshLayout.setRefreshing(false);
         }, 1000);
     }

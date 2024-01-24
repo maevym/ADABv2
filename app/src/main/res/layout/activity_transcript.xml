@@ -51,18 +51,19 @@
             android:id="@+id/session_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
+            android:gravity="center_vertical"
             android:text=""
             android:layout_marginHorizontal="20dp"
             android:layout_marginVertical="15dp"
             android:textColor="@color/blue"
             android:textStyle="bold"
-            android:textSize="28sp"/>
+            android:textSize="22sp"/>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="6.5"
+            android:layout_weight="6.3"
             app:cardCornerRadius="16sp"
             app:strokeWidth="2dp"
             android:layout_marginHorizontal="16sp"
@@ -80,7 +81,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:visibility="visible">
+                android:visibility="invisible">
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"

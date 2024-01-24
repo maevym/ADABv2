@@ -100,6 +100,14 @@ public class ScheduleFragment extends Fragment {
             rv.setVisibility(View.INVISIBLE);
             noClassView.setVisibility(View.VISIBLE);
         } else {
+            Collections.sort(sessions, (session, t1) -> {
+                try {
+                    return Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).parse(session.getSessionStart())).compareTo(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).parse(t1.getSessionStart()));
+                } catch (ParseException e) {
+                    Log.wtf("error", e);
+                    return 0;
+                }
+            });
             sessionAdapter.notifyDataSetChanged();
         }
 
