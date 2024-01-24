@@ -315,7 +315,6 @@ public class MainActivity extends AppCompatActivity {
 
                         dbDiscuss.discussWithMember().insertDiscussMember(newSearch);
                         Log.wtf("berhasil get all", "coba" + dbClassSearch.searchDAO().getAllSearch());
-
                     }
                 }
                 else {
