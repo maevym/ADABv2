@@ -209,9 +209,11 @@ public class RecordRealtimeActivity extends AppCompatActivity {
                     if (!prevText.equals("")) {
                         socket.emit("history",data.get(0));
                         realTimeTextTV.setText(prevText + "\n" + data.get(0));
+                        noTranscript.setVisibility(View.INVISIBLE);
                         socket.emit("message", "\n" + data.get(0));
                     } else {
                         realTimeTextTV.setText(data.get(0));
+                        noTranscript.setVisibility(View.INVISIBLE);
                         socket.emit("message", data.get(0));
                     }
                     scrollView.fullScroll(View.FOCUS_DOWN);
